@@ -7,24 +7,8 @@
         <el-container>
           <el-main>
             <el-row>
-              <el-col :span="8" style="padding-right: 10px"><div class="person-passage" />
-                <el-card class="card1">
-                    <div class="userpassage">
-                      <img src="../assets/1.png" class="user">
-                      <div class="passage1">
-                      <p class="username">{{ username }}</p>
-                      <p class="useridentity">{{ identity }}</p>
-                      <p class="userid">id:<span class="id1">{{ userid }}</span></p>
-                      </div>
-                    </div>
-                </el-card>
-                <el-card class="card2" style="height: 390px;"> 
-                  <div id="graph" style="height: 390px;">
-                  </div>
-                </el-card>
-              </el-col>
-              <el-col :span="16" style="padding-left: 40px;padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
-                <el-card style="height:640px">
+              <el-col :span="16" style="padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
+                <el-card style="height:640px" class="collectcard">
                   <el-table :data="history" style="width: 100%">
                     <el-table-column prop="date" label="收藏时间" width="150" />
                     <el-table-column prop="name" label="学术成果名称" width="180" />
@@ -39,6 +23,18 @@
                       </template>
                     </el-table-column>
                   </el-table>
+                </el-card>
+              </el-col>
+              <el-col :span="8" style="padding-right: 10px"><div class="person-passage" />
+                <el-card class="card114515">
+                  <div class="findcollect">
+                    <el-input v-model="input" placeholder="输入你需要查找的收藏成果" class="collectinput" />
+                    <el-button class="collectbutton" type="success">搜索</el-button>
+                  </div>
+                </el-card>
+                <el-card class="collectcard2" style="height: 390px;"> 
+                  <div id="graph" style="height: 390px;">
+                  </div>
                 </el-card>
               </el-col>
             </el-row>
@@ -119,11 +115,25 @@
   }
   </script>
   <style>
-  .userpassage {
-    display: flex;
-    align-items: center;
+  .card114515{
+    height: 120px;
   }
-  
+  .collectcard{
+    border-top-color: #688f4e;
+    border-top-width: 10px;
+  }
+  .collectcard2{
+    margin-top: 140px;
+  }
+  .collectinput{
+    width: 240px;
+    margin-right: 20px;
+    margin-top: 20px;
+  }
+  .collectbutton{
+    margin-top: 20px;
+    color: #ffffff;
+  }
   .passage1{
     align-items: c
   }
@@ -158,20 +168,8 @@
     font-size: 14px;
   }
   
-  .zone{
-    margin-bottom: 32px;
-    margin-top: 32px;
-  }
   
-  .item {
-    margin-bottom: 32px;
-  }
-  
-  .card1 {
-    width: 480px;
-  }
-  
-  .card2{
+  .collectcard3{
     width: 480px;
     margin-top: 64px;
   }

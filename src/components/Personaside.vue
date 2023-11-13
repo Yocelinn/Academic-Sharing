@@ -2,7 +2,7 @@
     <el-row class="tac" >
       <el-menu
               active-text-color="#ffd04b"
-              background-color="#545c64"
+              background-color="#b1d182"
               class="el-menu-vertical-demo"
               text-color="#fff"
               @open="handleOpen"
