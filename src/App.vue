@@ -30,12 +30,12 @@ nav a.router-link-exact-active {
 :root {  
   --primary-color: #8fc0a4;  
   --green-dark: #4a7c59;  
-  --green-mid:#68b0ab;
+  --green-blue:#68b0ab;
   --green-light:#c8d5b9;
-  --light-yellow:#faf3dd;
-  --light-white:#F4F1E9;
-  --light-green:#B1D182;
-
-
+  --green-yellow:#B1D182;
+  --green:#688F4E;
+  --green-darkest:#28463C;
+  --yellow-light:#faf3dd;
+  --yellow-lightest:#F4F1E9;
 }
 </style>

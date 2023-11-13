@@ -49,24 +49,22 @@
                           <div class="sr-statistic">
                               共xx条结果
                           </div>
-                         <el-dropdown v-model="timeRange" style="margin-right:10px">
-                          <el-button type="primary" >{{ timeRange }}</el-button>
-                          <template #dropdown>
-                            <el-dropdown-menu >
-                              <el-dropdown-item v-for="item in TimeRangeOptions" :key="item.value" :value="item.value" @click="handleChange(item.label)">{{ item.label }}</el-dropdown-item>
-                            </el-dropdown-menu>
-                          </template>
-                          </el-dropdown>
-                          <el-dropdown  v-model="RankingMethod">
-                            <el-button type="primary">{{RankingMethod}}</el-button>
-                            <template #dropdown>
-                              <el-dropdown-menu>
-                                <el-dropdown-item command="comprehensive">综合排序</el-dropdown-item>
-                                <el-dropdown-item command="reletive">相关排序</el-dropdown-item>
-                                <el-dropdown-item command="time">时间排序</el-dropdown-item>
-                              </el-dropdown-menu>
-                            </template>
-                          </el-dropdown>
+                          <el-select v-model="timeRange" placeholder="时间范围" @change="handleTimeRangeChange">
+                            <el-option
+                              v-for="item in TimeRangeOptions"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item"
+                            />
+                          </el-select>
+                          <el-select v-model="RankingMethod" placeholder="综合排序" @change="handleRankingChange">
+                            <el-option
+                              v-for="item in RankingOptions"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item"
+                            />
+                          </el-select>
                       </div>
                     </el-tab-pane>
                     </div>
@@ -94,16 +92,18 @@
   
   <script>
   import PaperResult from "@/components/SearchResults/PaperResult.vue";
-import { defineComponent,ref,h, onMounted } from "vue";
+  import { defineComponent,ref,h, onMounted } from "vue";
+  import axios from 'axios';
   export default defineComponent ( {
     components: {
       PaperResult,
     },
     setup(){
         const active_sr_classifier=ref();
-        var timeRange=ref("时间范围");
-        const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'}]
+        const timeRange=ref("时间范围");
+        const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'},{value:'10years',label:"近十年"}]
         const RankingMethod=ref("综合排序");
+        const RankingOptions=[{value:'comprehensive',label:"综合排序"},{value:'reletive',label:"相关排序"},{value:'time',label:"时间排序"}]
         const papers=ref([
           {
             id: 1,
@@ -167,13 +167,20 @@ import { defineComponent,ref,h, onMounted } from "vue";
                              {id:3,title:"作者"}])
         const activeNames = ref(['1'])
         const checkList=ref([])
-        function handleChange(value){
-          timeRange=value;
+        function handleTimeRangeChange(){
           console.log(timeRange)
         }
+        function handleRankingChange(){
+          console.log(RankingMethod)
+        }
+        function getResults(){
+
+        }
+
+
         return {
             papers,academyTypes,grouptype,activeNames,checkList,active_sr_classifier,timeRange,RankingMethod,
-            TimeRangeOptions,handleChange
+            TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange
         }
     },
    
@@ -181,6 +188,7 @@ import { defineComponent,ref,h, onMounted } from "vue";
   </script>
   
   <style scoped>
+  
   .top-doctype {
     background-color: #047bca;
     display: flex;
@@ -349,6 +357,16 @@ border:none;
 }
 :deep(.el-tabs__header ){
   margin:0;
+}
+:deep(.el-input__wrapper){
+  background-color:var(--primary-color);
+  width:80px;
+  margin-left:20px;
+
+}
+:deep(.el-input__inner){
+  color:white;
+  font-weight:900;
 }
   </style>
   
