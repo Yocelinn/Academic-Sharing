@@ -3,7 +3,7 @@ import HomeView from '../views/HomeView.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/',              // 首页
     name: 'home',
     component: HomeView
   },
@@ -23,12 +23,22 @@ const routes = [
   {
     path: '/PaperSearchResults',  // 论文搜索结果页
     name: 'PaperSearchResults',
-    component: () => import('../components/SearchResults/PaperResults.vue')
+    component: () => import('../views/SearchResults.vue')
   },
   {
-    path: '/net',  // 专家关系网络组件,只是一个组件
-    name: 'paperDetail',
-    component: () => import('../components/Net.vue')
+    path: '/history',  // 历史记录
+    name: 'History',
+    component: () => import('../views/History.vue')
+  },
+  {
+    path: '/collect',  // 收藏夹
+    name: 'Collect',
+    component: () => import('../views/Collect.vue')
+  },
+  {
+    path: '/person',  // 个人主页
+    name: 'PersonPage',
+    component: () => import('../views/PersonPage.vue')
   },
 ]
 
