@@ -27,22 +27,17 @@ const routes = [
   {
     path: '/person',
     name: 'person',
-    component: () => import('../Person/PersonPage.vue')
+    component: () => import('../views/PersonPage.vue')
   },
   {
     path: '/history',
     name: 'history',
-    component: () => import('../Person/History.vue')
+    component: () => import('../views/History.vue')
   },
   {
     path: '/collect',
     name: 'collect',
-    component: () => import('../Person/Collect.vue')
-  },
-  {
-    path: '/mine',
-    name: 'mine',
-    component: () => import('../Person/Mine.vue')
+    component: () => import('../views/Collect.vue')
   },
   {
     path: '/test',
