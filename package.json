@@ -12,6 +12,7 @@
     "echarts": "^5.4.3",
     "echarts-wordcloud": "^2.1.0",
     "element-plus": "^2.3.14",
+    "element-plus": "^2.4.2",
     "vue": "^3.2.13",
     "vue-router": "^4.2.5",
     "vuex": "^4.0.0"
