@@ -114,7 +114,7 @@
         }
       },
       mounted(){
-        this.initChart();
+        // this.initChart();
       },
       methods: {
         initChart() {

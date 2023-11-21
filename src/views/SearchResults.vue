@@ -93,7 +93,6 @@
   <script>
   import PaperResult from "@/components/SearchResults/PaperResult.vue";
   import { defineComponent,ref,h, onMounted } from "vue";
-  import axios from 'axios';
   export default defineComponent ( {
     components: {
       PaperResult,

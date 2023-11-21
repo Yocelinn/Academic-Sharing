@@ -1,42 +1,52 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import NetView from '../components/Net.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/HomeView.vue')
+  },
+  {
+
+    path: '/testForSearchBox',
+    name: 'testForSearchBox',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/testForSearchBox.vue')
+  },
+  {
+    path: '/seniorSearchPage',
+    name: 'seniorSearchPage',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/seniorSearchPage.vue')
+  },
+  {
+    path: '/findDoor',
+    name: 'findDoor',
+    component: function () {
+      return import(/* webpackChunkName: "about" */ '../views/findDoorPage.vue')
+    },
   },
   {
     path: '/person',
     name: 'person',
-    component: () => import('../Person/PersonPage.vue')
+    component: () => import('../views/PersonPage.vue')
   },
   {
     path: '/history',
     name: 'history',
-    component: () => import('../Person/History.vue')
+    component: () => import('../views/History.vue')
   },
   {
     path: '/collect',
     name: 'collect',
-    component: () => import('../Person/Collect.vue')
-  },
-  {
-    path: '/mine',
-    name: 'mine',
-    component: () => import('../Person/Mine.vue')
-  },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('../Person/test.vue')
-  },
-  {
-    path:'/author',
-    name: 'author',
-    component: HomeView
+    component: () => import('../views/Collect.vue')
   },
   {
     path: '/searchResults',
@@ -82,6 +92,11 @@ const routes = [
       },
     ]
   }
+  // {
+  //   path: '/net',  // 专家关系网络组件,只是一个组件
+  //   name: 'paperDetail',
+  //   component: () => import('../components/Net.vue')
+  // },
 ]
 
 const router = createRouter({

@@ -4,7 +4,6 @@
     <router-link to="/about">About</router-link>
   </nav>
   <router-view/>
-  <!-- <Net :wordData="wordData"/> -->
 </template>
 
 <script>
