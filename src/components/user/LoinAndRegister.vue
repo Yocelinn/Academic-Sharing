@@ -1,5 +1,5 @@
 <template>
-    <el-button type="success" plain @click="this.enterDialog()" class="enterButton">
+    <el-button type="success" plain @click="this.enterDialog()" id="enterButton">
         登录
     </el-button>
     <el-dialog v-model="this.open.login" width="50%">
@@ -48,6 +48,20 @@
 
 export default {
     name: 'LoginAndRegister',
+    props: {
+        width:{
+            type: String,
+            default: "100%"
+        },
+        height:{
+            type: String,
+            default: "50px"
+        },
+        fontSize:{
+            type: String,
+            default: "large"
+        },
+    },
     data() {
         return{
             open: {
@@ -163,15 +177,18 @@ export default {
         sendVerCode(){
 
         },
+    },
+    mounted(){
+        var tmp=document.getElementById("enterButton");
+        tmp.style.width=this.width;
+        tmp.style.height=this.height;
+        tmp.style.fontSize=this.fontSize;
     }
 }
 
 </script>
 
 <style scoped>
-.enterButton{
-
-}
 .title{
     position: relative;
     width: 95%;

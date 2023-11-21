@@ -1,8 +1,8 @@
 <template class="hotArea">
     <div class="hot-title">
-        时下热点
+        热点领域
     </div>
-    <button class="typeButton" @click="this.switchShowType()">切换扇形图</button>
+    <button class="typeButton" @click="this.switchShowType()">{{ this.typeString }}</button>
     <div v-show="this.showType==='barGraph'" class="barGraph">
         <div id="bar"></div>
         <div id="barTitle"></div>
@@ -50,7 +50,6 @@ export default{
         },
         loadBar(){
             var barGraph=document.getElementById("bar");
-            console.log(barGraph.childNodes);
             var barList=[];
             var maxCount=0;
             for(var i=0;i<10;i++){
