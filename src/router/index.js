@@ -1,7 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import NetView from '../components/Net.vue'
 
 const routes = [
+  {
+    path: '/',
+    name: 'home',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/HomeView.vue')
+  },
   {
     path: '/testForSearchBox',
     name: 'testForSearchBox',
@@ -24,6 +31,7 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '../views/findDoorPage.vue')
     },
+  },
   {
     path: '/person',
     name: 'person',
@@ -40,16 +48,6 @@ const routes = [
     component: () => import('../views/Collect.vue')
   },
   {
-    path: '/test',
-    name: 'test',
-    component: () => import('../Person/test.vue')
-  },
-  {
-    path:'/author',
-    name: 'author',
-    component: HomeView
-  },
-  {
     path: '/searchResults',
     name: 'searchResults',
     component: () => import(/* webpackChunkName: "about" */ '../views/SearchResults.vue')
@@ -59,17 +57,11 @@ const routes = [
     name: 'PaperDetail',
     component: () => import('../views/PaperDetail.vue')
   },
-  {
-    path: '/PaperSearchResults',  // 论文搜索结果页
-    name: 'PaperSearchResults',
-    component: () => import('../components/SearchResults/PaperResults.vue')
-  },
-  {
-    path: '/net',  // 专家关系网络组件,只是一个组件
-    name: 'paperDetail',
-    component: () => import('../components/Net.vue')
-  },
-  },
+  // {
+  //   path: '/net',  // 专家关系网络组件,只是一个组件
+  //   name: 'paperDetail',
+  //   component: () => import('../components/Net.vue')
+  // },
 ]
 
 const router = createRouter({
