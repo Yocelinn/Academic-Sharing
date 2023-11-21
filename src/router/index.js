@@ -10,6 +10,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/HomeView.vue')
   },
   {
+
     path: '/testForSearchBox',
     name: 'testForSearchBox',
     // route level code-splitting
@@ -50,13 +51,47 @@ const routes = [
   {
     path: '/searchResults',
     name: 'searchResults',
-    component: () => import(/* webpackChunkName: "about" */ '../views/SearchResults.vue')
+    component: () => import('../views/SearchResults.vue')
   },
   {
     path: '/paper/detail',  // 论文详情页
     name: 'PaperDetail',
     component: () => import('../views/PaperDetail.vue')
   },
+  {
+    path: '/PaperSearchResults',  // 论文搜索结果页
+    name: 'PaperSearchResults',
+    component: () => import('../components/SearchResults/PaperResult.vue')
+  },
+  {
+    path: '/net',  // 专家关系网络组件,只是一个组件
+    name: 'paperDetail',
+    component: () => import('../components/Net.vue')
+  },
+  {
+    path: '/manage',
+    redirect: '/manage/welcome',
+    name: 'ManageView',
+    component: () => import('../views/ManageView.vue'),
+    children: [
+      {
+        path: '/manage/welcome', 
+        component: () => import('../components/manage/Welcome.vue')
+      },
+      {
+        path: '/manage/scholar', 
+        component: () => import('../components/manage/Scholar.vue')
+      },
+      {
+        path: '/manage/comments', 
+        component: () => import('../components/manage/Comments.vue')
+      },
+      {
+        path: '/manage/paper', 
+        component: () => import('../components/manage/Paper.vue')
+      },
+    ]
+  }
   // {
   //   path: '/net',  // 专家关系网络组件,只是一个组件
   //   name: 'paperDetail',
