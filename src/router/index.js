@@ -59,11 +59,6 @@ const routes = [
     component: () => import('../views/PaperDetail.vue')
   },
   {
-    path: '/PaperSearchResults',  // 论文搜索结果页
-    name: 'PaperSearchResults',
-    component: () => import('../components/SearchResults/PaperResult.vue')
-  },
-  {
     path: '/net',  // 专家关系网络组件,只是一个组件
     name: 'paperDetail',
     component: () => import('../components/Net.vue')
