@@ -6,7 +6,7 @@
         <div id="home" class="address" style="width: 5%;left: 20%;" @click="">首页</div>
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
         <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
-        <div id="" class="address" style="width: 10%;right: 10%;">
+        <div id="" class="button" style="width: 10%;right: 10%;">
             <LoinAndRegister width="80px" height="50px" font-size="16px"></LoinAndRegister>
         </div>
     </div>
@@ -81,6 +81,15 @@ export default {
     left: 0;
     background: rgba(255, 255, 255, 0.3);
     color: white;
+}
+.button{
+    position: absolute;
+    display: grid;
+    place-items: center;
+    height: 100%;
+    font-size: large;
+    color: #cdd0e5;
+    top: 0%;
 }
 .choose{
     position: absolute;

@@ -15,7 +15,7 @@
                 <el-form-item label="密码" prop="password">
                     <el-input type="password" v-model="this.login.password" maxlength="25"></el-input>
                 </el-form-item>
-                <el-button class="loginButton" type="success" @click="this.login()">登录</el-button>
+                <el-button class="loginButton" type="success" @click="this.logIn()">登录</el-button>
             </el-form>
             <el-image v-else :src="require('@/assets/LoginAndRegister/register.jpg')" fit="fill"/>
         </div>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { Login } from '@/api/user';
 
 export default {
     name: 'LoginAndRegister',
@@ -168,8 +169,11 @@ export default {
             this.loginButtonType='info';
             this.registerButtonType='success';
         },
-        login(){
-
+        logIn(){
+            var promise=Login(this.login.email, this.login.password);
+            promise.then((result) => {
+                console.log(result);
+            })
         },
         register(){
 
