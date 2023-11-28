@@ -64,19 +64,9 @@ const routes = [
     component: () => import('../views/details/PatentDetail.vue')
   },
   {
-    path: '/PaperSearchResults',  // 论文搜索结果页
-    name: 'PaperSearchResults',
-    component: () => import('../views/SearchResults.vue')
-  },
-  {
     path: '/history',  // 历史记录
     name: 'History',
     component: () => import('../views/History.vue')
-  },
-  {
-    path: '/net',  // 专家关系网络组件,只是一个组件
-    name: 'relationNet',
-    component: () => import('../components/Net.vue')
   },
   {
     path: '/manage',
@@ -102,11 +92,6 @@ const routes = [
       },
     ]
   }
-  // {
-  //   path: '/net',  // 专家关系网络组件,只是一个组件
-  //   name: 'paperDetail',
-  //   component: () => import('../components/Net.vue')
-  // },
 ]
 
 const router = createRouter({
