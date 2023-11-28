@@ -1,30 +1,92 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/HomeView.vue')
   },
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  // },
-  // {
-  //   path: '/paper/detail',  // 论文详情页
-  //   name: 'PaperDetail',
-  //   component: () => import('../views/PaperDetail.vue')
-  // },
-  // {
-  //   path: '/PaperSearchResults',  // 论文搜索结果页
-  //   name: 'PaperSearchResults',
-  //   component: () => import('../components/SearchResults/PaperResults.vue')
-  // },
+  {
+
+    path: '/testForSearchBox',
+    name: 'testForSearchBox',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/testForSearchBox.vue')
+  },
+  {
+    path: '/seniorSearchPage',
+    name: 'seniorSearchPage',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/seniorSearchPage.vue')
+  },
+  {
+    path: '/findDoor',
+    name: 'findDoor',
+    component: function () {
+      return import(/* webpackChunkName: "about" */ '../views/findDoorPage.vue')
+    },
+  },
+  {
+    path: '/person',
+    name: 'person',
+    component: () => import('../views/PersonPage.vue')
+  },
+  {
+    path: '/history',
+    name: 'history',
+    component: () => import('../views/History.vue')
+  },
+  {
+    path: '/collect',
+    name: 'collect',
+    component: () => import('../views/Collect.vue')
+  },
+  {
+    path: '/searchResults',
+    name: 'searchResults',
+    component: () => import('../views/SearchResults.vue')
+  },
+  {
+    path: '/paper/detail',  // 论文详情页
+    name: 'PaperDetail',
+    component: () => import('../views/PaperDetail.vue')
+  },
+  {
+    path: '/net',  // 专家关系网络组件,只是一个组件
+    name: 'paperDetail',
+    component: () => import('../components/Net.vue')
+  },
+  {
+    path: '/manage',
+    redirect: '/manage/welcome',
+    name: 'ManageView',
+    component: () => import('../views/ManageView.vue'),
+    children: [
+      {
+        path: '/manage/welcome', 
+        component: () => import('../components/manage/Welcome.vue')
+      },
+      {
+        path: '/manage/scholar', 
+        component: () => import('../components/manage/Scholar.vue')
+      },
+      {
+        path: '/manage/comments', 
+        component: () => import('../components/manage/Comments.vue')
+      },
+      {
+        path: '/manage/paper', 
+        component: () => import('../components/manage/Paper.vue')
+      },
+    ]
+  }
   // {
   //   path: '/net',  // 专家关系网络组件,只是一个组件
   //   name: 'paperDetail',
