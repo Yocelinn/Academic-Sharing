@@ -1,24 +1,67 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const routes = [
   {
     path: '/',              // 首页
     name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/HomeView.vue')
+  },
+  {
+
+    path: '/testForSearchBox',
+    name: 'testForSearchBox',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/testForSearchBox.vue')
+  },
+  {
+    path: '/seniorSearchPage',
+    name: 'seniorSearchPage',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/seniorSearchPage.vue')
+  },
+  {
+    path: '/findDoor',
+    name: 'findDoor',
+    component: function () {
+      return import(/* webpackChunkName: "about" */ '../views/findDoorPage.vue')
+    },
+  },
+  {
+    path: '/person',
+    name: 'person',
+    component: () => import('../views/PersonPage.vue')
+  },
+  {
+    path: '/history',
+    name: 'history',
+    component: () => import('../views/History.vue')
+  },
+  {
+    path: '/collect',
+    name: 'collect',
+    component: () => import('../views/Collect.vue')
+  },
+  {
+    path: '/searchResults',
+    name: 'searchResults',
+    component: () => import('../views/SearchResults.vue')
   },
   {
     path: '/paper/detail',  // 论文详情页
     name: 'PaperDetail',
-    component: () => import('../views/PaperDetail.vue')
+    component: () => import('../views/details/PaperDetail.vue')
+  },
+  {
+    path: '/patent/detail',  // 专利详情页
+    name: 'PatentDetail',
+    component: () => import('../views/details/PatentDetail.vue')
   },
   {
     path: '/PaperSearchResults',  // 论文搜索结果页
@@ -31,15 +74,39 @@ const routes = [
     component: () => import('../views/History.vue')
   },
   {
-    path: '/collect',  // 收藏夹
-    name: 'Collect',
-    component: () => import('../views/Collect.vue')
+    path: '/net',  // 专家关系网络组件,只是一个组件
+    name: 'relationNet',
+    component: () => import('../components/Net.vue')
   },
   {
-    path: '/person',  // 个人主页
-    name: 'PersonPage',
-    component: () => import('../views/PersonPage.vue')
-  },
+    path: '/manage',
+    redirect: '/manage/welcome',
+    name: 'ManageView',
+    component: () => import('../views/ManageView.vue'),
+    children: [
+      {
+        path: '/manage/welcome', 
+        component: () => import('../components/manage/Welcome.vue')
+      },
+      {
+        path: '/manage/scholar', 
+        component: () => import('../components/manage/Scholar.vue')
+      },
+      {
+        path: '/manage/comments', 
+        component: () => import('../components/manage/Comments.vue')
+      },
+      {
+        path: '/manage/paper', 
+        component: () => import('../components/manage/Paper.vue')
+      },
+    ]
+  }
+  // {
+  //   path: '/net',  // 专家关系网络组件,只是一个组件
+  //   name: 'paperDetail',
+  //   component: () => import('../components/Net.vue')
+  // },
 ]
 
 const router = createRouter({

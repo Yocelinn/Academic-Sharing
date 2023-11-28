@@ -799,6 +799,7 @@ export default {
       radio: 10,
       selectValue: "Option1",
       titleList: [],
+      input : '',
     };
   },
   mounted() {

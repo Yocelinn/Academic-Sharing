@@ -2,7 +2,7 @@
     <div class="page-container">
       <div class="nav-container">
         <nav class="vertical-nav">
-            <ul><div class="nav-label"><el-icon><Promotion /></el-icon>导航信息</div>
+            <ul><div class="nav-label"><el-icon><Position /></el-icon>导航信息</div>
             <li><div class="section-text" :class="{ 'active': selectedSection === 'section1' }" @click="scrollToSection('#section1')">作品基本信息</div></li>
             <li><div class="section-text" :class="{ 'active': selectedSection === 'section2' }" @click="scrollToSection('#section2')">相关文献推荐</div></li>
             <li><div class="section-text" :class="{ 'active': selectedSection === 'section3' }" @click="scrollToSection('#section3')">交流评论</div></li>
@@ -91,28 +91,31 @@
             <el-card shadow="hover" class="other-info-card">
               <div class="info-box">
                 <div class="info-title"><el-icon><Link /></el-icon>文章来源</div>
-                <button class="button-list">去往来源</button>
+                
+                <div class="button-container">
+                  <div class="button-list"><el-icon><Reading /></el-icon>去往来源</div>
+                </div>
               </div>
               <div class="info-box">
                 
                 <div class="info-title"><el-icon><Operation /></el-icon>常用操作</div>
                 <div class="button-container">
-                  <div class="button-list">收藏</div>
-                  <div class="button-list">推荐</div>
+                  <div class="button-list"><el-icon><Star /></el-icon>收藏</div>
+                  <div class="button-list"><el-icon><Promotion /></el-icon>推荐</div>
                 </div>
               </div>
               <div class="info-box">
 
                 <div class="info-title"><el-icon><Edit /></el-icon>问题反馈</div>
                 <div class="button-container">
-                  <div class="button-list">数据错误</div>
-                  <div class="button-list">撤稿申请</div>
+                  <div class="button-list"><el-icon><Warning /></el-icon>数据错误</div>
+                  <div class="button-list"><el-icon><Remove /></el-icon>撤稿申请</div>
                 </div>
               </div>
             </el-card>
 
         </el-col>
-      
+        <el-backtop :right="100" :bottom="100" color="#8fc0a9"/>
     </div>
         
   </template>
@@ -308,6 +311,8 @@ import { onMounted,ref } from 'vue';
     word-wrap: break-word;
     flex: 1;
     font-size: 15px;
+    align-items: center;
+    display: flex;
   }
   .button-list {
     margin-right: 20px;
@@ -317,6 +322,9 @@ import { onMounted,ref } from 'vue';
     display: block;
     border: none;
     box-shadow: 0 0.0625rem 0.125rem #0000004d;
+    align-items: center;
+    display: flex;
+
   }
   /* 相关文献推荐 */
   .recommend-card {
@@ -414,6 +422,7 @@ import { onMounted,ref } from 'vue';
     height: 600px;
     width: 300px;
     margin: 20px;
+    background-color: #ebf6f1;
   }
   .info-box {
     border-bottom: #55ab8b 1px solid;
@@ -421,13 +430,17 @@ import { onMounted,ref } from 'vue';
   }
   .info-title {
     display: flex;
-    font-size: 16px;
     font-weight: 500;
-    margin: 5px 0 10px 0 ;
+    margin: 5px 0 20px 0 ;
     align-items: center;
   }
   .button-container {
     display: flex;
+    align-items: center;
+    font-size: 15px;
+  }
+  .el-backtop ::v-deep {
+    color: #69a57b;
   }
   </style>
   
