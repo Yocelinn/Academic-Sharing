@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/',
+    path: '/',              // 首页
     name: 'home',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -56,17 +56,17 @@ const routes = [
   {
     path: '/paper/detail',  // 论文详情页
     name: 'PaperDetail',
-    component: () => import('../views/PaperDetail.vue')
+    component: () => import('../views/details/PaperDetail.vue')
   },
   {
-    path: '/PaperSearchResults',  // 论文搜索结果页
-    name: 'PaperSearchResults',
-    component: () => import('../components/SearchResults/PaperResult.vue')
+    path: '/patent/detail',  // 专利详情页
+    name: 'PatentDetail',
+    component: () => import('../views/details/PatentDetail.vue')
   },
   {
-    path: '/net',  // 专家关系网络组件,只是一个组件
-    name: 'paperDetail',
-    component: () => import('../components/Net.vue')
+    path: '/history',  // 历史记录
+    name: 'History',
+    component: () => import('../views/History.vue')
   },
   {
     path: '/manage',
@@ -92,11 +92,6 @@ const routes = [
       },
     ]
   }
-  // {
-  //   path: '/net',  // 专家关系网络组件,只是一个组件
-  //   name: 'paperDetail',
-  //   component: () => import('../components/Net.vue')
-  // },
 ]
 
 const router = createRouter({

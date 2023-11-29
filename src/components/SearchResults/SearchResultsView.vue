@@ -25,7 +25,6 @@
                     :title="thing.title" :name="thing.id" class="sr-collapse-item">
                         <el-checkbox-group v-model="checkList" class="sr-check-group">
                             <el-checkbox v-for="option in thing.select" :key="option.id" :label="option.value">
-                                
                             </el-checkbox>
                         </el-checkbox-group>    
                     </el-collapse-item>
@@ -214,14 +213,11 @@
 
           })
         }
-
-
         return {
             papers,academyTypes,grouptype,activeNames,checkList,active_sr_classifier,timeRange,RankingMethod,
             TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange,getResults,
             count,getGroupClassifier
-        
-          }
+        }
     },
    
   })
