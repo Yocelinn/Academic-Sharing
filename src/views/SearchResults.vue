@@ -42,7 +42,7 @@
                     @tab-click="handleClick"
                     stretch="true"
                   >
-                    <div v-for="item in academyTypes" :key="item.id">
+                    <div v-for="item in academyTypes" :key="item.id" @click="changeCurAcademyType(item)">
                       <el-tab-pane :label=item.type>
                         <div class="sr-toolbar">
                           <!-- 统计数、排序等结果展示处理工具 -->
@@ -94,7 +94,7 @@
   import PaperResult from "@/components/SearchResults/PaperResult.vue";
   import { defineComponent,ref,h, onMounted } from "vue";
   import {post,get} from "../api/api.js"
-  export default defineComponent ( {
+  export default defineComponent ({
     components: {
       PaperResult,
     },
@@ -111,7 +111,9 @@
         // getGroupClassifier();
 
       })
+        var aggregations=ref();//当前类别下选中的过滤关键词，每次改变curAcademyType时会被清空
         const active_sr_classifier=ref();
+        const sizePerPage=ref(6);
         const timeRange=ref("时间范围");
         const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'},{value:'10years',label:"近十年"}]
         const RankingMethod=ref("综合排序");
@@ -167,16 +169,14 @@
           // // 可以添加更多虚拟论文数据
         
       })
-        const academyTypes=ref([{id:1,type:"总库",num:10000},
-                            {id:2,type:"学术期刊",num:1000},
-                            {id:3,type:"学位论文",num:1000},
-                            {id:4,type:"会议",num:1000},
-                            {id:5,type:"报纸",num:1000},
-                            {id:6,type:"年鉴",num:1000},
-                            {id:7,type:"图书",num:1000},
-                            {id:8,type:"专利",num:1000},
-                            {id:9,type:"成果",num:1000},
-                        ])
+        const academyTypes=ref([{id:1,type:"论文",key:"articles"},
+                            {id:2,type:"专利",key:"patents"},
+                            {id:4,type:"快报",key:"bulletins"},
+                            {id:5,type:"动态快讯",key:"reports"},
+                            {id:6,type:"科学数据",key:"sciencedata"},
+                            {id:7,type:"图书",key:"books"},
+                        ])  
+        var curAcademyType=ref() //当前选中的成果类别，保存的是academyTypes的key
         const grouptype=ref([{id:1,title:"学科",select:[{id:1,value:"生物学"},{id:2,value:"物理学"}]},
                              {id:2,title:"发表年度",select:[{id:1,value:"2023年"},{id:2,value:"2022年"},{id:3,value:"2021年"},{id:2,value:"2020年"}]},
                              {id:3,title:"作者"}])
@@ -199,8 +199,12 @@
         function handleRankingChange(){
           console.log(RankingMethod)
         }
+        function changeCurAcademyType(item){
+          curAcademyType=item.key;
+          // getResults();
+        }
         function getResults(){
-            post(":8089/api/search/articles",{"page":1,"size":6,"order_field":"date"})
+            post(":8089/api/search/`{curAcademyType}`",{"page":1,"size":sizePerPage,"order_field":"date","aggregations":aggregations})
             .then(response=>{
               papers.value.total=response.total;
               papers.value.content=response.content;
@@ -208,10 +212,9 @@
             })
         }
         function getGroupClassifier(){
-          post(":8089/api/search/articles/aggregation",{"page":1,"size":6,"order_field":"date"})
+          post(":8089/api/search/`{curAcademyType}`/aggregation",{"page":1,"size":sizePerPage,"order_field":"date"})
           .then(response=>{
               
-
           })
         }
 
@@ -219,8 +222,7 @@
         return {
             papers,academyTypes,grouptype,activeNames,checkList,active_sr_classifier,timeRange,RankingMethod,
             TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange,getResults,
-            count,getGroupClassifier
-        
+            count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage
           }
     },
    
