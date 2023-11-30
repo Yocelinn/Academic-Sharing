@@ -1,5 +1,5 @@
 <template>
-  <LoinAndRegister></LoinAndRegister>
+  <navigationBar page="1"></navigationBar>
   <div class="searchBlock">
     <el-image class="searchBackgroundImage" :src="require('@/assets/home/searchBackgroundImage.jpg')" fit="fill" />
   </div>
@@ -16,17 +16,32 @@
   <div class="hotAreasBlock">
     <hotArea></hotArea>
   </div>
+  <div class="hotPaperBlock">
+    <hotPaper></hotPaper>
+  </div>
+  <div class="informationBlock">
+    <information></information>
+  </div>
+  <div class="statementBlock">
+    <statement></statement>
+  </div>
 </template>
 
 <script>
-import LoinAndRegister from '@/components/user/LoinAndRegister.vue';
+import navigationBar from '@/components/home/navigationBar.vue';
 import hotArea from '@/components/home/hotArea.vue';
+import hotPaper from '@/components/home/hotPaper.vue';
+import information from '@/components/home/information.vue';
+import statement from '@/components/home/statement.vue';
 
 export default {
   name: 'HomeView',
   components: {
-    LoinAndRegister,
     hotArea,
+    navigationBar,
+    hotPaper,
+    information,
+    statement,
   }
 
 }
@@ -90,6 +105,24 @@ export default {
   width: 100%;
   min-width: 1200px;
   height: 450px;
+}
+.hotPaperBlock{
+  position: relative;
+  width: 100%;
+  min-width: 1200px;
+  height: 500px;
+}
+.informationBlock{
+  position: relative;
+  width: 100%;
+  min-width: 1200px;
+  height: 250px;
+}
+.statementBlock{
+  position: relative;
+  width: 100%;
+  min-width: 1200px;
+  height: 50px;
 }
 
 </style>
