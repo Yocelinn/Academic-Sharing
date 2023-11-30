@@ -37,6 +37,7 @@
             <el-button type="info" plain v-if="scope.row.status==0">待处理</el-button>
             <el-button type="warning" plain v-if="scope.row.status==1">处理中</el-button>
             <el-button type="success" plain v-if="scope.row.status==2">已处理</el-button>
+            <el-button type="danger" plain v-if="scope.row.status==3">已驳回</el-button>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180px">
@@ -59,7 +60,7 @@
         :total="total">
       </el-pagination>
       
-      <el-dialog title="查看信息" v-model="infoVisible" width="50%">
+      <el-dialog title="查看信息" v-model="infoVisible" width="50%" destroy-on-close>
         <el-form :model="infoForm" ref="infoFormRef" label-width="70px">
           <el-form-item label="发起人" prop="scholarName">
             <el-input v-model="infoForm.scholarName" disabled></el-input>
@@ -77,7 +78,7 @@
         </span>
       </el-dialog>
 
-      <el-dialog title="处理" v-model="handleVisible" width="50%">
+      <el-dialog title="处理" v-model="handleVisible" width="50%" destroy-on-close>
         <el-form :model="handleForm" ref="handleFormRef" label-width="70px">
           <el-form-item label="发起人" prop="scholarName">
             <el-input v-model="handleForm.scholarName" disabled></el-input>
@@ -92,8 +93,21 @@
 
         <span class="dialog-footer">
           <el-button @click="cancelHandle">取 消</el-button>
+          <el-button type="danger" @click="rejectHandle">驳 回</el-button>
           <el-button type="primary" @click="finishHandle">确 定</el-button>
         </span>
+      </el-dialog>
+
+      <el-dialog v-model="rejectDialogVisible" title="Warning" width="30%" center>
+        <span>
+          该请求已驳回，要重新打开吗？
+        </span>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="rejectDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="reOpen">确 定</el-button>
+          </span>
+        </template>
       </el-dialog>
     </el-card>
   </div>
@@ -148,6 +162,7 @@ export default {
       total: 3,
       infoVisible: false,
       handleVisible: false,
+      rejectDialogVisible: false,
       infoForm: {
         id: 1,
         scholarName: 'Test',
@@ -185,6 +200,9 @@ export default {
       }
       else if(s.status === 1){
         ElMessage('该事务正在处理中！')
+      }
+      else if(s.status === 3){
+        this.rejectDialogVisible = true
       }else{
         this.infoVisible = true
       }
@@ -204,8 +222,23 @@ export default {
           scholar.status = 2
         }
       }
-      console.log(this.scholarList)
       this.handleVisible = false
+    },
+    rejectHandle() {
+      for(var scholar of this.scholarList){
+        if(scholar.id === this.handleForm.id){
+          scholar.status = 3
+        }
+      }
+      this.handleVisible = false
+    },
+    reOpen() {
+      for(var scholar of this.scholarList){
+        if(scholar.id === this.handleForm.id){
+          scholar.status = 0
+        }
+      }
+      this.rejectDialogVisible = false
     }
   },
 }
