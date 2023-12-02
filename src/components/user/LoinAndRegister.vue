@@ -1,5 +1,5 @@
 <template>
-    <el-button type="success" plain @click="this.enterDialog()" class="enterButton">
+    <el-button type="success" plain @click="this.enterDialog()" id="enterButton">
         登录
     </el-button>
     <el-dialog v-model="this.open.login" width="50%">
@@ -15,7 +15,7 @@
                 <el-form-item label="密码" prop="password">
                     <el-input type="password" v-model="this.login.password" maxlength="25"></el-input>
                 </el-form-item>
-                <el-button class="loginButton" type="success" @click="this.login()">登录</el-button>
+                <el-button class="loginButton" type="success" @click="this.logIn()">登录</el-button>
             </el-form>
             <el-image v-else :src="require('@/assets/LoginAndRegister/register.jpg')" fit="fill"/>
         </div>
@@ -45,9 +45,24 @@
 </template>
 
 <script>
+import { Login } from '@/api/user';
 
 export default {
     name: 'LoginAndRegister',
+    props: {
+        width:{
+            type: String,
+            default: "100%"
+        },
+        height:{
+            type: String,
+            default: "50px"
+        },
+        fontSize:{
+            type: String,
+            default: "large"
+        },
+    },
     data() {
         return{
             open: {
@@ -154,8 +169,11 @@ export default {
             this.loginButtonType='info';
             this.registerButtonType='success';
         },
-        login(){
-
+        logIn(){
+            var promise=Login(this.login.email, this.login.password);
+            promise.then((result) => {
+                console.log(result);
+            })
         },
         register(){
 
@@ -163,15 +181,18 @@ export default {
         sendVerCode(){
 
         },
+    },
+    mounted(){
+        var tmp=document.getElementById("enterButton");
+        tmp.style.width=this.width;
+        tmp.style.height=this.height;
+        tmp.style.fontSize=this.fontSize;
     }
 }
 
 </script>
 
 <style scoped>
-.enterButton{
-
-}
 .title{
     position: relative;
     width: 95%;
