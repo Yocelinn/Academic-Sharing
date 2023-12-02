@@ -6,7 +6,7 @@ export function GetCommentByWorkId(workId){
 }
 
 export function DisplayWorkHomePage(workId){
-    return get('/works/displayWorkHomePage/?workID'+workId)
+    return get('/works/displayWorkHomePage/?workId='+workId)
 }
 
 export function GetAuthorIdByWorkId(workId){
