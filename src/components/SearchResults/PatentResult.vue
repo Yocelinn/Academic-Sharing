@@ -17,7 +17,7 @@
              
               <div class="abstract-container" :id="`abstract-container_${paper.id}`">
                  <div class="abstract">
-                  摘要:{{  paper.abstracts}} 
+                  <span class="alias-info">摘要:</span>{{  paper.abstracts}} 
                   </div>
                  
               </div>
@@ -47,21 +47,22 @@ export default defineComponent({
   setup(){
     var displayAll=ref(true)
     function toggleText(id) {
-      displayAll.value=!displayAll.value;
-      const cid='abstract-container_'+id;
-      // console.log(cid)
-      // var textContainer = document.querySelector('.abstract-container');
-      var textContainer=document.getElementById(cid);
-      // var paragraphText = textContainer.querySelector('.abstract'); 
-      console.log(textContainer)
-      if (textContainer.style.maxHeight) {
-          textContainer.style.maxHeight = null;
-      } else {
-          textContainer.style.maxHeight = textContainer.scrollHeight + 'px';
-          // console.log(textContainer.scrollHeight)
-      }
-      // console.log(displayAll.value)
-  }
+        displayAll.value=!displayAll.value;
+        const cid='abstract-container_'+id;
+        // console.log(cid)
+        // var textContainer = document.querySelector('.abstract-container');
+        var textContainer=document.getElementById(cid)
+        var abstractContainer=textContainer.getElementsByClassName('abstract');
+        // console.log(textContainer)
+        // console.log(abstractContainer)
+        if (textContainer.style.maxHeight) {
+            textContainer.style.maxHeight = null;
+        } else {
+            textContainer.style.maxHeight = textContainer.scrollHeight + 'px';
+            // console.log(textContainer.scrollHeight)
+        }
+        // console.log(displayAll.value)
+    }
   return {toggleText,displayAll}
   }
 })

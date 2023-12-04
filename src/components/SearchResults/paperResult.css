@@ -43,23 +43,28 @@
   font-size:15px;
   color:rgb(73, 73, 73);
   margin-bottom:10px;
+  font-weight:450;
 }
 .abstract-container{
   overflow: hidden;
-  max-height: 70px; /* 设置初始最大高度，显示三行文本 */
+  max-height: 68px; 
   position: relative;
-  transition: max-height 0.5s ease; /* 添加渐变效果 */
+  transition: max-height 0.8s ease; /* 添加渐变效果 */
   
 }
 
 .abstract {
-  /* margin-top: 6px;
+  margin-top: 6px;
   text-overflow: ellipsis;
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical; */
+  /* display: -webkit-box;
+  -webkit-line-clamp: 3; */
+  /* -webkit-box-orient: vertical; */
   margin-bottom: 10px; /* 确保按钮不会与文本重叠 */
+  font-weight:450;
+  font-size:15px;
+  color:rgb(50, 49, 49);
+
 
 }
 .button-block{
@@ -89,3 +94,8 @@
   font-weight:800;
   margin:5px;
 }
+.keywords-tag:hover{
+  transform: scale(1.05); /* 设置放大比例，可以根据需要调整 */
+  transition: transform 0.3s ease; /* 添加渐变效果，使过渡更平滑 */
+}
+

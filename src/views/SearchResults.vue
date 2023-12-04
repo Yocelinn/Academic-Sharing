@@ -9,8 +9,9 @@
                   分类浏览
                 </div>
                 <!-- 左侧分类筛选 -->
-                <el-skeleton :loading="loading" animated >
+               
                 <el-collapse class="sr-left-classfier" v-model="activeNames" >
+                  <el-skeleton :loading="loading" animated style="text-align: start;">
                     <el-collapse-item v-for="thing in grouptype" :key="thing.tag" 
                     :title="thing.content.alias" :name="thing.tag" class="sr-collapse-item">
                    
@@ -19,9 +20,9 @@
                             </el-checkbox>
                         </el-checkbox-group>    
                     </el-collapse-item>
-               
+                  </el-skeleton>
                 </el-collapse>
-                </el-skeleton>
+                
               </div>
             </div>
             <div class="sr-main">
@@ -37,9 +38,9 @@
                       <el-tab-pane :label=item.type :name="item.key">
                         <div class="sr-toolbar">
                           <!-- 统计数、排序等结果展示处理工具 -->
-                          <el-skeleton :loading="loading" animated >
+                          <el-skeleton :loading="loading" animated style="text-align: start;">
                           <div class="sr-statistic">
-                              共{{ papers_total }}条结果
+                              共<span class="sr-num">&ensp;{{ papers_total }}&ensp;</span>条结果
                           </div>
                         </el-skeleton>
                           <el-select v-model="timeRange" placeholder="时间范围" @change="handleTimeRangeChange">
@@ -63,13 +64,17 @@
                     </div>
                 </el-tabs>
               </div>
-              <el-skeleton :rows="5" :loading="loading" animated>
-                <div class="sr-paper-results">
+              <!-- <el-skeleton :rows="5" :loading="loading" animated style="text-align: start;"> -->
+                <div class="sr-paper-results"  ref="srPaperResultsRef">
                     <!-- 学术成果列表项 -->
-                    <div class="sr-form-item">
-                      <div v-if="curAcademyType==='articles'">
+                    <div class="sr-form-item" >
+                      <div v-if="curAcademyType==='articles'" >
                         <div v-for="paper in articles.content" :key="paper.id">
+                            <!-- <article-result :paper="paper" /> -->
                             <article-result :paper="paper" />
+                            <el-skeleton  :rows="5" :loading="loading" animated style="text-align: start;">
+                                <!-- 骨架屏内容 -->
+                            </el-skeleton>
                         </div>
                       </div>
                       <div v-else-if="curAcademyType==='patents'">
@@ -97,9 +102,13 @@
                             <book-result :paper="paper" />
                         </div>
                       </div>
+                      
                     </div>
+                    <el-divider v-if="isLastPage===true">
+                        <el-icon><star-filled /></el-icon>
+                      </el-divider>
                 </div>
-                </el-skeleton>
+                <!-- </el-skeleton> -->
             </div>
         </div>
     </div>
@@ -112,7 +121,7 @@
   import ReportResult from "@/components/SearchResults/ReportResult.vue";
   import SciencedataResult from "@/components/SearchResults/ScienceResult.vue";
   import BookResult from "@/components/SearchResults/BookResult.vue"
-  import { defineComponent,ref,h, onMounted } from "vue";
+  import { defineComponent,ref,h, onMounted,onUnmounted,computed } from "vue";
   import {post,get} from "../api/api.js"
   export default defineComponent ({
     components: {
@@ -131,13 +140,30 @@
           loading.value=true;
           await getResults();
           await getGroupClassifier();
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          const srPaperResultsElement = srPaperResultsRef.value;
+          console.log("addScrollListener")
+          console.log(srPaperResultsElement)
+          if (srPaperResultsElement) {
+            srPaperResultsElement.addEventListener('scroll', handleScroll);
+            console.log("addScrollListener")
+          }
           // await new Promise(resolve => setTimeout(resolve, 100));
           // loading.value=false;
         }
         catch(error){
           console.log("ERROR:onMOUNTED INIT pagedata")
         }
-      })
+      });
+      onUnmounted(() => {
+        const srPaperResultsElement = srPaperResultsRef.value;
+        console.log("removeScrollListener")
+        if (srPaperResultsElement) {
+          srPaperResultsElement.removeEventListener('scroll', handleScroll);
+        }
+      });
+      
       //————————————————————————————————一些调用接口用的全局变量————————————————————————————
         var aggregations=ref({});//当前类别下选中的过滤关键词，每次改变curAcademyType时会被清空
         var curAcademyType=ref("articles") //当前选中的成果类别，保存的是academyTypes的key
@@ -145,7 +171,43 @@
         var curPage=ref(1);
         var loading=ref(false);
       //——————————————————————————————————————...——————————————————————————————————————  
-        const timeRange=ref("时间范围");
+      var isLastPage=ref(false)
+      const articlesWithSkeleton = computed(() => {
+            const loadedContent = articles.value.content || [];
+            const skeletonCount = loading.value ? sizePerPage.value : 0;
+            const skeletonArray = new Array(skeletonCount).fill({ isContent: false });
+
+            // 将已加载的内容与骨架屏合并，并添加 isContent 属性标记
+            return loadedContent.map(content => ({ ...content, isContent: true })).concat(skeletonArray);
+        });
+
+ 
+      const srPaperResultsRef = ref(null);  
+       const handleScroll = () => {
+          const element = srPaperResultsRef.value;
+          // console.log(element)
+          if (element) {
+            const scrollTop = element.scrollTop;
+            const scrollHeight = element.scrollHeight;
+            const clientHeight = element.clientHeight;
+            if(isLastPage.value===true){
+              console.log("It's lastPage")
+            }
+            else if ((scrollTop + clientHeight >= scrollHeight - 100)) {
+              // You can adjust the threshold (100 in this example) based on your preference
+              papersLoad();
+            }
+          }
+        };
+        async function papersLoad(){
+          curPage.value++;
+          loading.value=true;
+          await getResults();
+          await getGroupClassifier();
+          console.log("page:"+curPage.value)
+          loading.value=false;
+        }
+       const timeRange=ref("时间范围");
         const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'},{value:'10years',label:"近十年"}]
         const RankingMethod=ref("综合排序");
         const RankingOptions=[{value:'comprehensive',label:"综合排序"},{value:'reletive',label:"相关排序"},{value:'time',label:"时间排序"}]
@@ -153,8 +215,15 @@
         var articles=ref({}),patents=ref({}),bulletins=ref({}),reports=ref({}),sciencedata=ref({}),books=ref({})
         var papers_total=ref()
         function init(){
-          aggregations.value={};
+          // aggregations.value={};
           curPage.value=1;
+          articles.value={};
+          patents.value={};
+          bulletins.value={};
+          reports.value={};
+          sciencedata.value={};
+          books.value={};
+
         }
         //默认六种学术成果类型
         const academyTypes=ref([{id:1,type:"论文",key:"articles"},
@@ -179,6 +248,9 @@
         //                        )
         const activeNames = ref(['1'])
         const checkList=ref({})
+        
+      
+       
         function handleTimeRangeChange(){
           console.log(timeRange)
         }
@@ -186,7 +258,11 @@
           console.log(RankingMethod)
         }
        async function handleClassfierChange(){
-          console.log(aggregations.value);
+        console.log("ClassiferChanged")
+          // console.log(aggregations.value);
+          // curPage.value=1;
+          init();
+          console.log(curPage.value)
           loading.value=true;
           await getResults();
           await getGroupClassifier();
@@ -197,6 +273,7 @@
           console.log("Type Changed")
           // curAcademyType=active_sr_classifier
           console.log(curAcademyType.value)
+          aggregations.value={};
           init();
           loading.value=true;
           await getResults();
@@ -214,28 +291,42 @@
           }
           post(`/search/${curAcademyType.value}`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
           .then(response=>{
+            console.log(response)
             papers_total.value=response.total
-            if(curAcademyType.value==="articles"){  articles.value=response;}
-            else if(curAcademyType.value==="patents"){ patents.value=response;}
-            else if(curAcademyType.value==="bulletins"){  bulletins.value=response; }
-            else if(curAcademyType.value==="reports"){  reports.value=response; }
-            else if(curAcademyType.value==="sciencedata"){  sciencedata.value=response;}
-            else if(curAcademyType.value==="books"){  books.value=response;  }
+            isLastPage.value=response.is_last;
+            if(curPage.value===1){
+              if(curAcademyType.value==="articles"){  articles.value=response;}
+              else if(curAcademyType.value==="patents"){ patents.value=response;}
+              else if(curAcademyType.value==="bulletins"){  bulletins.value=response; }
+              else if(curAcademyType.value==="reports"){  reports.value=response; }
+              else if(curAcademyType.value==="sciencedata"){  sciencedata.value=response;}
+              else if(curAcademyType.value==="books"){  books.value=response;  }
+            }
+            else{
+              if(curAcademyType.value==="articles"){  articles.value.content.push(...response.content);}
+              else if(curAcademyType.value==="patents"){ patents.value.content.push(...response.content);}
+              else if(curAcademyType.value==="bulletins"){ bulletins.value.content.push(...response.content); }
+              else if(curAcademyType.value==="reports"){  reports.value.content.push(...response.content); }
+              else if(curAcademyType.value==="sciencedata"){  sciencedata.value.content.push(...response.content);}
+              else if(curAcademyType.value==="books"){  books.value.content.push(...response.content);  }
+            }
+            loading.value=false;
+            
           })
         }
         async function getGroupClassifier(){
           const aObject = JSON.parse(JSON.stringify(aggregations.value))
           const jsonString={};
-          console.log(aggregations.value)
+          // console.log(aggregations.value)
           for (const key in aObject) {
             if (aObject.hasOwnProperty(key)) {
               jsonString[key] = aObject[key].join(', ');
             }
           }
-          console.log(jsonString)
+          // console.log(jsonString)
           post(`/search/${curAcademyType.value}/aggregations`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
           .then(response=>{
-            console.log("getClassifier")
+            // console.log("getClassifier")
               grouptype.value=response;
               console.log(grouptype.value)
               loading.value=false;
@@ -248,7 +339,8 @@
             articles,patents,bulletins,reports,sciencedata,books,papers_total,
             academyTypes,grouptype,activeNames,checkList,timeRange,RankingMethod,
             TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange,getResults,handleClassfierChange,
-            count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage,curPage,loading,init
+            count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage,curPage,loading,init,papersLoad,
+            srPaperResultsRef ,handleScroll,articlesWithSkeleton,isLastPage
           }
     },
    
@@ -324,12 +416,15 @@
     padding:0 20px;
    
 }
+
 .sr-paper-results{
+
  max-height: 100vh; 
   overflow-y: auto;
 }
 .sr-statistic{
   flex:1;
+  
      /* height: 34px;
 padding: 2px 20px;
 line-height: 34px; */
@@ -340,6 +435,10 @@ border: 1px solid #eee;
 border-bottom-color: #d9e0e9;
     text-align: center;; */
     text-align: start;
+}
+.sr-num{
+  font-weight:700;
+
 }
 .sr-toolbar{
   display:flex;
@@ -353,7 +452,7 @@ clear: both;
 border: 1px solid #eee;
 border-bottom-color: #d9e0e9;
 text-align: end;
-font-size:17px;
+font-size:15px;
 
 }
 :deep(.el-collapse-item__content ){

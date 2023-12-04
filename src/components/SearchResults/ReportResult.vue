@@ -51,9 +51,10 @@
         const cid='abstract-container_'+id;
         // console.log(cid)
         // var textContainer = document.querySelector('.abstract-container');
-        var textContainer=document.getElementById(cid);
-        // var paragraphText = textContainer.querySelector('.abstract'); 
-        console.log(textContainer)
+        var textContainer=document.getElementById(cid)
+        var abstractContainer=textContainer.getElementsByClassName('abstract');
+        // console.log(textContainer)
+        // console.log(abstractContainer)
         if (textContainer.style.maxHeight) {
             textContainer.style.maxHeight = null;
         } else {
