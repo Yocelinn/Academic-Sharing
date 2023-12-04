@@ -143,11 +143,11 @@
           await new Promise(resolve => setTimeout(resolve, 2000));
 
           const srPaperResultsElement = srPaperResultsRef.value;
-          console.log("addScrollListener")
-          console.log(srPaperResultsElement)
+          // console.log("addScrollListener")
+          // console.log(srPaperResultsElement)
           if (srPaperResultsElement) {
             srPaperResultsElement.addEventListener('scroll', handleScroll);
-            console.log("addScrollListener")
+            // console.log("addScrollListener")
           }
           // await new Promise(resolve => setTimeout(resolve, 100));
           // loading.value=false;
@@ -204,7 +204,7 @@
           loading.value=true;
           await getResults();
           await getGroupClassifier();
-          console.log("page:"+curPage.value)
+          // console.log("page:"+curPage.value)
           loading.value=false;
         }
        const timeRange=ref("时间范围");
@@ -214,7 +214,7 @@
         var count=ref(0);
         var articles=ref({}),patents=ref({}),bulletins=ref({}),reports=ref({}),sciencedata=ref({}),books=ref({})
         var papers_total=ref()
-        function init(){
+        async function init(){
           // aggregations.value={};
           curPage.value=1;
           articles.value={};
@@ -223,6 +223,7 @@
           reports.value={};
           sciencedata.value={};
           books.value={};
+          // console.log("init "+curPage.value)
 
         }
         //默认六种学术成果类型
@@ -258,11 +259,11 @@
           console.log(RankingMethod)
         }
        async function handleClassfierChange(){
-        console.log("ClassiferChanged")
+        // console.log("ClassiferChanged")
           // console.log(aggregations.value);
           // curPage.value=1;
-          init();
-          console.log(curPage.value)
+          await init();
+          // console.log(curPage.value)
           loading.value=true;
           await getResults();
           await getGroupClassifier();
@@ -270,11 +271,11 @@
           loading.value=false;
         }
         async function changeCurAcademyType(){
-          console.log("Type Changed")
+          // console.log("Type Changed")
           // curAcademyType=active_sr_classifier
-          console.log(curAcademyType.value)
+          // console.log(curAcademyType.value)
           aggregations.value={};
-          init();
+          await init();
           loading.value=true;
           await getResults();
           await getGroupClassifier();
@@ -289,27 +290,28 @@
               jsonString[key] = aObject[key].join(', ');
             }
           }
+          // console.log("searchPage"+curPage.value)
           post(`/search/${curAcademyType.value}`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
           .then(response=>{
-            console.log(response)
+            // console.log(response)
             papers_total.value=response.total
             isLastPage.value=response.is_last;
-            if(curPage.value===1){
-              if(curAcademyType.value==="articles"){  articles.value=response;}
-              else if(curAcademyType.value==="patents"){ patents.value=response;}
-              else if(curAcademyType.value==="bulletins"){  bulletins.value=response; }
-              else if(curAcademyType.value==="reports"){  reports.value=response; }
-              else if(curAcademyType.value==="sciencedata"){  sciencedata.value=response;}
-              else if(curAcademyType.value==="books"){  books.value=response;  }
-            }
-            else{
-              if(curAcademyType.value==="articles"){  articles.value.content.push(...response.content);}
-              else if(curAcademyType.value==="patents"){ patents.value.content.push(...response.content);}
-              else if(curAcademyType.value==="bulletins"){ bulletins.value.content.push(...response.content); }
-              else if(curAcademyType.value==="reports"){  reports.value.content.push(...response.content); }
-              else if(curAcademyType.value==="sciencedata"){  sciencedata.value.content.push(...response.content);}
-              else if(curAcademyType.value==="books"){  books.value.content.push(...response.content);  }
-            }
+            // if(curPage.value===1 ||JSON.stringify(articles.value)=="{}"||JSON.stringify(patents.value)=="{}"||JSON.stringify(bulletins.value)=="{}"||JSON.stringify(reports.value)=="{}"||JSON.stringify(sciencedata.value)=="{}"||JSON.stringify(books.value)=="{}"){
+              if(curAcademyType.value==="articles"){  JSON.stringify(articles.value)=="{}"?articles.value=response:articles.value.content.push(...response.content);}
+              else if(curAcademyType.value==="patents"){ JSON.stringify(patents.value)=="{}"?patents.value=response:patents.value.content.push(...response.content);}
+              else if(curAcademyType.value==="bulletins"){  JSON.stringify(bulletins.value)=="{}"?bulletins.value=response:bulletins.value.content.push(...response.content); }
+              else if(curAcademyType.value==="reports"){  JSON.stringify(reports.value)=="{}"?reports.value=response:reports.value.content.push(...response.content); }
+              else if(curAcademyType.value==="sciencedata"){  JSON.stringify(sciencedata.value)=="{}"?sciencedata.value=response:sciencedata.value.content.push(...response.content);}
+              else if(curAcademyType.value==="books"){  JSON.stringify(books.value)=="{}"?books.value=response:books.value.content.push(...response.content);  }
+            // }
+            // else{
+            //   if(curAcademyType.value==="articles"){  articles.value.content.push(...response.content);}
+            //   else if(curAcademyType.value==="patents"){ patents.value.content.push(...response.content);}
+            //   else if(curAcademyType.value==="bulletins"){ bulletins.value.content.push(...response.content); }
+            //   else if(curAcademyType.value==="reports"){  reports.value.content.push(...response.content); }
+            //   else if(curAcademyType.value==="sciencedata"){  sciencedata.value.content.push(...response.content);}
+            //   else if(curAcademyType.value==="books"){  books.value.content.push(...response.content);  }
+            // }
             loading.value=false;
             
           })
@@ -328,7 +330,7 @@
           .then(response=>{
             // console.log("getClassifier")
               grouptype.value=response;
-              console.log(grouptype.value)
+              // console.log(grouptype.value)
               loading.value=false;
           })
           .catch(error => {
