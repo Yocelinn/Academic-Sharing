@@ -91,12 +91,16 @@ const routes = [
         component: () => import('../components/manage/Paper.vue')
       },
     ]
-  }
+  },
   // {
   //   path: '/net',  // 专家关系网络组件,只是一个组件
   //   name: 'paperDetail',
   //   component: () => import('../components/Net.vue')
   // },
+  {
+    path: '/institution',
+    component: () => import("../views/InstitutionView.vue")
+  }
 ]
 
 const router = createRouter({
