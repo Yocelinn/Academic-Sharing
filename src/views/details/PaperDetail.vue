@@ -13,40 +13,45 @@
         <section id="section1">
             <el-card shadow="never" class="detail-card">
                 <div class="title">
-                    <h1 class="paper-title">知识图谱构建技术综述</h1>
+                    <!-- <h1 class="paper-title" v-html="detailInfo.title">{{ detailInfo.title }}</h1> -->
+                    <h1 class="paper-title" v-html="detailInfo.title"></h1>
+
                 </div>
                 <div class="author">
                   <el-icon style="margin-right:10px"><Avatar /></el-icon>
-                  <div class="author-item" v-for="(item, index) in authors" :key="index">
-                    {{ item }} 
-                  </div> 
+                  <div class="author-list">
+                    <div class="author-item" v-for="(item, index) in detailInfo.authors" :key="index">
+                      {{ item.authorName }} <div v-if="index < detailInfo.authors.length-1"> , </div>
+                    </div> 
+                  </div>
                   </div>
                 <div class="institution">
                  1. 电子科技大学信息与软件工程学院
                 </div>
                 <div class="detail">
-                  <div class="content-container">
-                    <div class="little-title">关键词：</div>
-                    <div class="content"> 知识图谱; 语义网; 信息检索; 语义搜索引擎; 自然语言处理;</div>
-                    
-                  </div>
-                </div>
-                <div class="detail">
+                    <div class="content-container">
+                      <div class="little-title">关键词：</div>
+                      <div class="content"> 
+                          <div class="keyword-item"  v-for="(keyword, index) in detailInfo.keywords" :key="index" >
+                            {{ keyword }}
+                          </div>
+                      </div>
+                      
+                    </div>
                     <div class="content-container">
                         <div class="little-title">摘要：</div>
-                        <div class="content">谷歌知识图谱技术近年来引起了广泛关注,由于公开披露的技术资料较少,使人一时难以看清该技术的内涵和价值.从知识图谱的定义和技术架构出发,对构建知识图谱涉及的关键技术进行了自底向上的全面解析.
-                          1)对知识图谱的定义和内涵进行了说明,并给出了构建知识图谱的技术框架,按照输入的知识素材的抽象程度将其划分为3个层次:信息抽取层、知识融合层和知识加工层;2)分别对每个层次涉及的关键技术的研究现状进行分类说明,逐步揭示知识图谱技术的奥秘,及其与相关学科领域的关系;
-                          3)对知识图谱构建技术当前面临的重大挑战和关键问题进行了总结.</div>
+                        <!-- <div class="content">{{ detailInfo.abstractContent }}</div> -->
+                        <div v-html="detailInfo.abstractContent" class="content"></div>
                     </div>
                 
                     <div class="content-container">
                         <div class="little-title">发表日期：</div>
-                        <div class="content">2016/06/15</div>
+                        <div class="content">{{ detailInfo.publicationDate }}</div>
                     </div>
                 
                     <div class="content-container">
                         <div class="little-title">文献编号：</div>
-                        <div class="content">123-12345</div>
+                        <!-- <div class="content">123-12345</div> -->
                     </div>
                 </div>
                 <!-- <div class="button-list">
@@ -64,11 +69,13 @@
             </div>
             <ol class="paper-list">
               <li class="list-item" v-for="(item, index) in paperList" :key="index">
-                <div class="recommend-papar-name"> {{ item.name }} </div>
-                <div class="detail-list" >
+                <div class="recommend-papar-name" @click="gotoPaper(item.workId)" v-html=" item.workName "></div>
+                <!--因为v-html，有的文章标题是有格式的
+                  <div class="recommend-papar-name" @click="gotoPaper(item.workId)"> {{ item.workName }} </div> -->
+                <!-- <div class="detail-list" >
                   <div class="detail-item" v-for="(person, index) in item.authors" :key="index"> {{ person }}. </div>
-                </div>
-                <div class="detail-list"> {{ item.resource }} </div>
+                </div> -->
+                <div class="detail-list"> {{ item.sourceName }}, {{ item.publicationYear }}</div>
               </li>
             </ol>
           </div>
@@ -93,7 +100,9 @@
                 <div class="info-title"><el-icon><Link /></el-icon>文章来源</div>
                 
                 <div class="button-container">
-                  <div class="button-list"><el-icon><Reading /></el-icon>去往来源</div>
+                  <a class="button-list"  target="_blank" :href="detailInfo.source.soureId"><el-icon><Connection /></el-icon>去往来源</a>
+                  <a class="button-list"  target="_blank" :href="detailInfo.location.pdf_url"><el-icon><Reading /></el-icon>查看全文</a>
+
                 </div>
               </div>
               <div class="info-box">
@@ -103,6 +112,12 @@
                   <div class="button-list"><el-icon><Star /></el-icon>收藏</div>
                   <div class="button-list"><el-icon><Promotion /></el-icon>推荐</div>
                 </div>
+              </div>
+              <div class="info-box">
+                
+                <div class="info-title"><el-icon><Histogram /></el-icon>被引次数：
+                  <div style="font-style: italic; color:gray">{{detailInfo.citedByCount}}</div></div>
+                
               </div>
               <div class="info-box">
 
@@ -121,60 +136,129 @@
   </template>
   
   <script>
-import { onMounted,ref } from 'vue';
+import { onMounted,ref,watch } from 'vue';
+import { useRoute } from 'vue-router';
+import * as PaperApi from '../../api/paper'
   
   export default {
     name: 'PaperDetail',
-    setup() {
-      const paperList = ref([
-        { id: '', name: '', authors:[], resource: ''},
-      ]);
+    setup(props, { router }) {
+      // 通过 useRoute 对象获取路由参数
+      var workId = useRoute().query.workId;
+      const paperList = ref({});
+      const detailInfo = ref({
+        title: '',
+        authors: [{}],
+        keywords: [''],
+        publicationDate: '',
+        workId: '',
+        abstractContent: '',
+        source: {},
+        location: {},
+        citedByCount: 0,
+      })
+      // const routeChanged = ref(false);
+
+      // 监听路由变化
+      
       
       onMounted( () => {
         getPaperList();
+        getDetailInfo();
+        
       })
 
       function getPaperList() {
-        paperList.value = [
-          { 
-            name:  '基于深度学习的食品安全风险知识图谱构建方法[J]. ',
-            authors: ['袁刚','郭爽','唐琦','许入文','王金国','韩春晓','温圣军','张文通'],
-            resource: '质量安全与检验检测,2023(05)'
-          },
-          { 
-            name: '主流知识图谱存储系统试验对比[J]',
-            authors: ['葛唯益','王振宇','王羽','陆辰','姜晓夏'],
-            resource: '指挥信息系统与技术,2019(05)'
-          },
-          { 
-            name: '面向档案的知识图谱构建方法研究[J]', 
-            authors: ['王电化','钱涛','钱立新','盛琦','夏春梅'],
-            resource: '湖北科技学院学报,2020(01)'
-          },
-          { 
-            name: '知识图谱可视化查询技术综述[J]',
-            authors: ['王鑫','傅强','王林','徐大为','王昊奋'],
-            resource: '计算机工程,2020(06)'
-          },
-          { 
-            name: '知识图谱学习和推理研究进展[J]',
-            authors: ['吴运兵','杨帆','赖国华','林开标'],
-            resource: '小型微型计算机系统,2016(09)'
-          }
-        ];
+        if(workId == null){
+          workId = 'https://openalex.org/W2741809807';
+        } else {
+          console.log(workId)
+        }
+        // paperList.value = [
+        //   { 
+        //     name:  '基于深度学习的食品安全风险知识图谱构建方法[J]. ',
+        //     authors: ['袁刚','郭爽','唐琦','许入文','王金国','韩春晓','温圣军','张文通'],
+        //     resource: '质量安全与检验检测,2023(05)'
+        //   },
+        //   { 
+        //     name: '主流知识图谱存储系统试验对比[J]',
+        //     authors: ['葛唯益','王振宇','王羽','陆辰','姜晓夏'],
+        //     resource: '指挥信息系统与技术,2019(05)'
+        //   },
+        //   { 
+        //     name: '面向档案的知识图谱构建方法研究[J]', 
+        //     authors: ['王电化','钱涛','钱立新','盛琦','夏春梅'],
+        //     resource: '湖北科技学院学报,2020(01)'
+        //   },
+        //   { 
+        //     name: '知识图谱可视化查询技术综述[J]',
+        //     authors: ['王鑫','傅强','王林','徐大为','王昊奋'],
+        //     resource: '计算机工程,2020(06)'
+        //   },
+        //   { 
+        //     name: '知识图谱学习和推理研究进展[J]',
+        //     authors: ['吴运兵','杨帆','赖国华','林开标'],
+        //     resource: '小型微型计算机系统,2016(09)'
+        //   }
+        // ];
+          PaperApi.GetReferenceById(workId)
+          .then( (response) => {
+            if(response.code == 200) {
+              paperList.value = response.data;
+              console.log(paperList.value)
+              console.log(response)
+            } else {
+              console.log(response.code)
+            }
+          })
       }
+      function getDetailInfo() {
+        if(workId == null){
+          workId = 'https://openalex.org/W2741809807';
+        }
+        PaperApi.DisplayWorkHomePage(workId)
+        .then((response) => {
+          // console.log(response)
+          if(response.code == 200) {
+            detailInfo.value = response.data;
+            console.log(detailInfo.value)
+          } else {
+            console.log(response.code)
+          }
+        })
+      }
+    
 
       return {
-        paperList
+        paperList,
+        detailInfo,
       };
 
       
     },
     data() {
       return {
-        selectedSection: null,
-        authors:['刘峤' , '李杨','段宏', '刘瑶', '秦志光'],
+        selectedSection: 'section1',
+        
       };
+    },
+    mounted() {
+        // 添加 Intersection Observer
+        const observer = new IntersectionObserver(this.handleIntersection, {
+          rootMargin: '-50% 0px -50% 0px', // 根据需要调整
+        });
+
+        // 监听每个 section 元素
+        document.querySelectorAll('section').forEach((section) => {
+          observer.observe(section);
+        });
+    },
+    watch: { // 监听，当路由发生变化的时候执行
+        $route(to, from){
+            // console.log(from.path); // 从哪来
+            // console.log(to.path); // 到哪去
+            location.reload()
+        },
     },
     methods: {
       scrollToSection(selector) {
@@ -184,7 +268,19 @@ import { onMounted,ref } from 'vue';
           this.selectedSection = selector.slice(1); // 更新选中项
         }
       },
-      
+      handleIntersection(entries) {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // entry.target 是当前进入视口的元素
+            this.selectedSection = entry.target.id;
+          }
+        });
+      },
+      gotoPaper(paperId) {
+        var workId = String(paperId)
+        this.$router.push({name:'PaperDetail', query:{workId} });
+        console.log(paperId)
+      }
     }
   }
   </script>
@@ -274,11 +370,18 @@ import { onMounted,ref } from 'vue';
     font-size: 16px;
     display: flex;
   }
+  .author-list {
+    flex: 1;
+    line-height: 18px;
+    display: flex;
+    flex-wrap: wrap;
+  }
   .author-item {
-    margin-right: 8px;
-    text-align: left;
+    margin-right: 10px;
+    /* word-break: break-all; */
     cursor: pointer;
     border-bottom: white 1px solid;
+    display: flex;
   }
   .author-item:hover {
     border-bottom: #45bc82 1px dotted;
@@ -313,6 +416,12 @@ import { onMounted,ref } from 'vue';
     font-size: 15px;
     align-items: center;
     display: flex;
+  }
+  .keyword-item {
+    border: #45bc82 1px solid;
+    border-radius: 15px;
+    margin-right: 5px;
+    padding: 2px 3px;
   }
   .button-list {
     margin-right: 20px;
@@ -439,8 +548,14 @@ import { onMounted,ref } from 'vue';
     align-items: center;
     font-size: 15px;
   }
-  .el-backtop ::v-deep {
+  a {
+    text-decoration: none;
+  }
+  :deep(.el-backtop) {
     color: #69a57b;
+  }
+  :deep(.el-icon) {
+    margin-right: 3px;
   }
   </style>
   

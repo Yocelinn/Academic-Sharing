@@ -54,7 +54,7 @@ const routes = [
     component: () => import('../views/SearchResults.vue')
   },
   {
-    path: '/paper/detail',  // 论文详情页
+    path: '/paper/detail/:workId?',  // 论文详情页
     name: 'PaperDetail',
     component: () => import('../views/details/PaperDetail.vue')
   },
