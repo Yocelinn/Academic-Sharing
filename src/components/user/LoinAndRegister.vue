@@ -2,7 +2,7 @@
     <el-button type="success" plain @click="this.enterDialog()" id="enterButton">
         登录
     </el-button>
-    <el-dialog v-model="this.open.login" width="50%">
+    <el-dialog v-model="this.open.login" width="50%" style="min-width: 800px;">
         <div class="title">
             <el-button class="titile-login" text :type="this.loginButtonType" @click="this.switchLoginForm()">登录</el-button>
             <el-button class="titile-register" text :type="this.registerButtonType" @click="this.switchRegisterForm()">注册</el-button>
@@ -15,7 +15,8 @@
                 <el-form-item label="密码" prop="password">
                     <el-input type="password" v-model="this.login.password" maxlength="25"></el-input>
                 </el-form-item>
-                <el-button class="loginButton" type="success" @click="this.logIn()">登录</el-button>
+                <el-button class="loginButton" type="success" @click="this.loginClick()">登录</el-button>
+                <el-button class="forgetButton" type="success" text="true">忘记密码?</el-button>
             </el-form>
             <el-image v-else :src="require('@/assets/LoginAndRegister/register.jpg')" fit="fill"/>
         </div>
@@ -34,10 +35,10 @@
                     <el-input type="text" v-model="this.register.email" maxlength="25"></el-input>
                 </el-form-item>
                 <el-form-item label="验证码" prop="vercode" label-width="20%">
-                    <el-input type="text" v-model="this.register.vercode" maxlength="6" @click="this.register()" style="width: 65%;"></el-input>
+                    <el-input type="text" v-model="this.register.vercode" maxlength="6" @click="this.sendVerCode()" style="width: 65%;"></el-input>
                     <el-button type="success">获取验证码</el-button>
                 </el-form-item>
-                <el-button class="registerButton" type="success" @click="this.sendVerCode()">注册</el-button>
+                <el-button class="registerButton" type="success" @click="this.registerClick()">注册</el-button>
             </el-form>
             <el-image v-else class="registerImage" :src="require('@/assets/LoginAndRegister/login.jpg')" fit="fill"/>
         </div>
@@ -45,7 +46,7 @@
 </template>
 
 <script>
-import { Login } from '@/api/user';
+import { Login, Register } from '@/api/user';
 
 export default {
     name: 'LoginAndRegister',
@@ -169,14 +170,19 @@ export default {
             this.loginButtonType='info';
             this.registerButtonType='success';
         },
-        logIn(){
-            var promise=Login(this.login.email, this.login.password);
-            promise.then((result) => {
-                console.log(result);
+        loginClick(){
+            this.$refs.loginRef.validate((valid) => {
+                if(valid){
+
+                }
             })
         },
-        register(){
+        registerClick(){
+            this.$refs.registerRef.validate((valid) => {
+                if(valid){
 
+                }
+            })
         },
         sendVerCode(){
 
@@ -241,13 +247,19 @@ export default {
 }
 .loginButton{
     position: relative;
-    width: 75px;
+    width: 100px;
     height: 40px;
+    left: 20%;
     font-size: larger;
+}
+.forgetButton{
+    position: relative;
+    left: 25%;
+    top: 0%;
 }
 .registerButton{
     position: relative;
-    width: 75px;
+    width: 100px;
     height: 40px;
     font-size: larger;
 }
