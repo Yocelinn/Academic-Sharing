@@ -5,8 +5,9 @@ import { ElMessage } from 'element-plus';
 
 export function post(url, data){
     return new Promise((resolve, reject)=>{
-        axios.post('http://114.115.179.52:8089/api'+url,data,{headers:{'Authorization': store.state.authorization}}).then(response=>
-            {resolve(response.data)}).catch((error)=>{
+        axios.post('http://114.115.179.52:8089/api'+url,data,{headers:{'Authorization': store.state.authorization}}).then(response=>{
+            resolve(response.data)
+        }).catch((error)=>{
                 ElMessage({
                     message: "网络连接失败",
                     grouping: true,
@@ -15,11 +16,11 @@ export function post(url, data){
             });
     });
 }
-
-export function get(url){
+export function get(url, param){
     return new Promise((resolve, reject)=>{
-        axios.get('http://114.115.179.52:8089/api'+url,{headers:{"Authorization": store.state.authorization}}).then(response=>
-            {resolve(response.data)}).catch((error)=>{
+        axios.get('http://114.115.179.52:8089/api'+url,{params:param,headers:{"Authorization": store.state.authorization}}).then(response=>{
+            resolve(response.data)
+        }).catch((error)=>{
                 ElMessage({
                     message: "网络连接失败",
                     grouping: true,
