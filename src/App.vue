@@ -1,11 +1,10 @@
 <template>
-  <nav>
-    <!-- <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> -->
-  </nav>
   <router-view/>
 </template>
 
+<script>
+
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -26,5 +25,16 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
+}
+:root {  
+  --primary-color: #8fc0a4;  
+  --green-dark: #4a7c59;  
+  --green-blue:#68b0ab;
+  --green-light:#c8d5b9;
+  --green-yellow:#B1D182;
+  --green:#688F4E;
+  --green-darkest:#28463C;
+  --yellow-light:#faf3dd;
+  --yellow-lightest:#F4F1E9;
 }
 </style>

@@ -1,0 +1,101 @@
+.card{
+  padding: 10px 10px;
+  margin:0 0 20px 0;
+}
+.result {
+ 
+  text-align: left;
+  display: flex;
+
+}
+.info{
+  width:100%;
+  /* border-right: 1px solid #ddd; padding-right: 10px; */
+}
+.title {
+  font-size: 20px;
+  font-weight: bolder;
+  color:var(--green-dark);
+  cursor: pointer;
+  margin-bottom: 20px;;
+}
+
+.authors {
+  font-size:16px;
+  font-weight:900;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.keywords{
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.alias-info{
+  font-size:16px;
+  font-weight:900;
+  color:grey;
+}
+.author-icon{
+  margin-right:5px;
+  inline-size: none;
+}
+.date{
+  font-size:15px;
+  color:rgb(73, 73, 73);
+  margin-bottom:10px;
+  font-weight:450;
+}
+.abstract-container{
+  overflow: hidden;
+  max-height: 68px; 
+  position: relative;
+  transition: max-height 0.8s ease; /* 添加渐变效果 */
+  
+}
+
+.abstract {
+  margin-top: 6px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  /* display: -webkit-box;
+  -webkit-line-clamp: 3; */
+  /* -webkit-box-orient: vertical; */
+  margin-bottom: 10px; /* 确保按钮不会与文本重叠 */
+  font-weight:450;
+  font-size:15px;
+  color:rgb(50, 49, 49);
+
+
+}
+.button-block{
+  display: flex;
+  justify-content: space-between;
+}
+.expand-button{
+  /* position: absolute; */
+  bottom: 0;
+  right: 0;
+  /* margin-top:10px; */
+
+  flex:1;
+  align-self:flex-end;
+  text-align: end;
+  background-color:transparent;
+  /* border: 1px solid #ccc; */
+  border:none;
+  padding: 5px 10px;
+  cursor: pointer;
+  color:var(--green-dark);
+  font-size:13px;
+  font-weight:700;
+}
+.keywords-tag{
+  font-size:15px;
+  font-weight:800;
+  margin:5px;
+}
+.keywords-tag:hover{
+  transform: scale(1.05); /* 设置放大比例，可以根据需要调整 */
+  transition: transform 0.3s ease; /* 添加渐变效果，使过渡更平滑 */
+}
+

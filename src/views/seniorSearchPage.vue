@@ -42,7 +42,7 @@
             <div style="height: 20px; margin-left: 50px">文献分类</div>
             <div
               style="
-                background-color: #79bbff;
+                background-color: #42b983;
                 height: 20px;
                 width: 20px;
                 cursor: pointer;
@@ -942,7 +942,7 @@ export default {
   height: 100px;
   width: 30px;
   margin-top: 40px;
-  background-color: #79bbff;
+  background-color: #42b983;
   color: white;
   cursor: pointer;
 }
@@ -954,13 +954,13 @@ export default {
 }
 .elButton {
   margin-left: 40px;
-  box-shadow: 2px 2px 5px #409eff;
+  box-shadow: 2px 2px 5px #42b983;
 }
 .mainContainer {
   display: flex;
   margin-top: 20px;
   height: 350px;
   width: 1000px;
-  box-shadow: 2px 2px 5px #409eff;
+  box-shadow: 2px 2px 5px #42b983;
 }
 </style>
