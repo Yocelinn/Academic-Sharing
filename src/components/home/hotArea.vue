@@ -23,6 +23,7 @@ export default{
             hotAreaList:[{name: "1", count: "3000"},{name: "1", count: "3000"},{name: "1", count: "2500"},{name: "1", count: "3000"},
             {name: "1", count: "3000"},{name: "1", count: "3000"},{name: "1", count: "1000"},{name: "1", count: "3000"},
             {name: "1", count: "3000"},{name: "1", count: "3000"},],
+            heightList:[0,0,0,0,0,0,0,0,0,0],
         }
     },
     methods: {
@@ -63,7 +64,8 @@ export default{
                 barList[i-1].style.position="absolute";
                 barList[i-1].style.left=((i-1)*10+2.5)+"%";
                 barList[i-1].style.bottom="0%";
-                barList[i-1].style.height=this.hotAreaList[i-1].count/maxCount*75+"%";
+                this.heightList[i-1]=this.hotAreaList[i-1].count/maxCount*75;
+                barList[i-1].style.height="0%";
                 barList[i-1].style.width="5%";
                 barList[i-1].style.backgroundColor="#68b0ab";
                 var number=document.createElement("div");
@@ -78,12 +80,22 @@ export default{
             }
             for(var i=0;i<10;i++){
                 barGraph.appendChild(barList[i]);
+                this.barDraw(barList[i], this.heightList[i]);
             }
         },
         loadPie(){
 
         },
-
+        barDraw(object, height){
+            var init=0;
+            var timer=setInterval(function(){
+                if(init>=height){
+                    clearInterval(timer);
+                }
+                init++;
+                object.style.height=init+"%";
+            },10)
+        }
     },
     mounted(){
         this.getData();

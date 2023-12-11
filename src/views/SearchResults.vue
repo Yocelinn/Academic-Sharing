@@ -1,15 +1,5 @@
 <template>
     <div>
-        <!-- <div class="top-doctype">
-            检索类型筛选
-            <div class="doctype-menu">
-                <li v-for="doctype in doctypes" :key="doctype.id" >
-                    {{ doctype.type }}
-                    <br>
-                    {{ doctype.num }}
-                </li>     
-            </div>
-        </div> -->
         <div class="sr-body">
             <!-- 检索结果页面主体 -->
             <div class="sr-left-aside" >
@@ -19,36 +9,40 @@
                   分类浏览
                 </div>
                 <!-- 左侧分类筛选 -->
-
-                <el-collapse class="sr-left-classfier" v-model="activeNames" @change="handleChange">
-                    <el-collapse-item v-for="thing in grouptype" :key="thing.id" 
-                    :title="thing.title" :name="thing.id" class="sr-collapse-item">
-                        <el-checkbox-group v-model="checkList" class="sr-check-group">
-                            <el-checkbox v-for="option in thing.select" :key="option.id" :label="option.value">
-                                
+               
+                <el-collapse class="sr-left-classfier" v-model="activeNames" >
+                  <el-skeleton :loading="loading" animated style="text-align: start;">
+                    <el-collapse-item v-for="thing in grouptype" :key="thing.tag" 
+                    :title="thing.content.alias" :name="thing.tag" class="sr-collapse-item">
+                   
+                        <el-checkbox-group v-model="aggregations[thing.tag]" class="sr-check-group" @change="handleClassfierChange" >
+                            <el-checkbox class="sr-check-item" v-for="option in thing.content.aggregations" :key="option.value" :label="option.key">
                             </el-checkbox>
                         </el-checkbox-group>    
                     </el-collapse-item>
-               
+                  </el-skeleton>
                 </el-collapse>
+                
               </div>
             </div>
             <div class="sr-main">
                 <div class="sr-classifier">
                   <el-tabs
-                    v-model="active_sr_classifier"
+                    v-model="curAcademyType"
                     type="card"
                     class="demo-tabs"
-                    @tab-click="handleClick"
+                    @tab-change="changeCurAcademyType()"
                     stretch="true"
                   >
                     <div v-for="item in academyTypes" :key="item.id">
-                      <el-tab-pane :label=item.type>
+                      <el-tab-pane :label=item.type :name="item.key">
                         <div class="sr-toolbar">
                           <!-- 统计数、排序等结果展示处理工具 -->
+                          <el-skeleton :loading="loading" animated style="text-align: start;">
                           <div class="sr-statistic">
-                              共xx条结果
+                              共<span class="sr-num">&ensp;{{ papers_total }}&ensp;</span>条结果
                           </div>
+                        </el-skeleton>
                           <el-select v-model="timeRange" placeholder="时间范围" @change="handleTimeRangeChange">
                             <el-option
                               v-for="item in TimeRangeOptions"
@@ -70,171 +64,292 @@
                     </div>
                 </el-tabs>
               </div>
-                <div class="sr-paper-results">
-                    <!-- <el-table :data="papers" stripe style="width: 100%"  class="sr-form-header" >
-                        <el-table-column prop="title" label="标题" width="350" header-align="center" />
-                        <el-table-column prop="authors" label="作者" width="150" align="center"  />
-                        <el-table-column prop="source" label="来源" width="150" align="center" />
-                        <el-table-column prop="date" label="发表时间" width="150" align="center" />
-                        <el-table-column prop="db" label="数据库" align="center" />
-                    </el-table> -->
+              <!-- <el-skeleton :rows="5" :loading="loading" animated style="text-align: start;"> -->
+                <div class="sr-paper-results"  ref="srPaperResultsRef">
                     <!-- 学术成果列表项 -->
-                    <div class="sr-form-item">
-                        <div v-for="paper in papers" :key="paper.id">
-                            <paper-result :paper="paper" />
+                    <div class="sr-form-item" >
+                      <div v-if="curAcademyType==='articles'" >
+                        <div v-for="paper in articles.content" :key="paper.id">
+                            <!-- <article-result :paper="paper" /> -->
+                            <article-result :paper="paper" />
+                            <el-skeleton  :rows="5" :loading="loading" animated style="text-align: start;">
+                                <!-- 骨架屏内容 -->
+                            </el-skeleton>
                         </div>
+                      </div>
+                      <div v-else-if="curAcademyType==='patents'">
+                        <div v-for="paper in patents.content" :key="paper.id">
+                            <patent-result :paper="paper" />
+                        </div>
+                      </div>
+                      <div v-else-if="curAcademyType==='bulletins'">
+                        <div v-for="paper in bulletins.content" :key="paper.id">
+                            <bulletin-result :paper="paper" />
+                        </div>
+                      </div>
+                      <div v-else-if="curAcademyType==='reports'">
+                        <div v-for="paper in reports.content" :key="paper.id">
+                            <report-result :paper="paper" />
+                        </div>
+                      </div>
+                      <div v-else-if="curAcademyType==='sciencedata'">
+                        <div v-for="paper in sciencedata.content" :key="paper.id">
+                            <sciencedata-result :paper="paper" />
+                        </div>
+                      </div>
+                      <div v-else-if="curAcademyType==='books'">
+                        <div v-for="paper in books.content" :key="paper.id">
+                            <book-result :paper="paper" />
+                        </div>
+                      </div>
+                      
                     </div>
+                    <el-divider v-if="isLastPage===true">
+                        <el-icon><star-filled /></el-icon>
+                      </el-divider>
                 </div>
+                <!-- </el-skeleton> -->
             </div>
         </div>
     </div>
   </template>
   
   <script>
-  import PaperResult from "@/components/SearchResults/PaperResult.vue";
-  import { defineComponent,ref,h, onMounted } from "vue";
-  export default defineComponent ( {
+  import ArticleResult from "@/components/SearchResults/ArticleResult.vue";
+  import PatentResult from "@/components/SearchResults/PatentResult.vue";
+  import BulletinResult from "@/components/SearchResults/BulletinResult.vue";
+  import ReportResult from "@/components/SearchResults/ReportResult.vue";
+  import SciencedataResult from "@/components/SearchResults/ScienceResult.vue";
+  import BookResult from "@/components/SearchResults/BookResult.vue"
+  import { defineComponent,ref,h, onMounted,onUnmounted,computed } from "vue";
+  import {post,get} from "../api/api.js"
+  export default defineComponent ({
     components: {
-      PaperResult,
+      ArticleResult,PatentResult,BulletinResult,ReportResult,SciencedataResult,BookResult
     },
+    // props:{
+    //   type,//学术成果类型
+    //   strategy,//搜索框标签
+    //   query,//搜索框内容
+    //   page,//第几页
+    //   aggregation//分类选择条件
+    // },
     setup(){
-        const active_sr_classifier=ref();
-        const timeRange=ref("时间范围");
+      onMounted(async ()=>{
+      try{
+          loading.value=true;
+          await getResults();
+          await getGroupClassifier();
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          const srPaperResultsElement = srPaperResultsRef.value;
+          // console.log("addScrollListener")
+          // console.log(srPaperResultsElement)
+          if (srPaperResultsElement) {
+            srPaperResultsElement.addEventListener('scroll', handleScroll);
+            // console.log("addScrollListener")
+          }
+          // await new Promise(resolve => setTimeout(resolve, 100));
+          // loading.value=false;
+        }
+        catch(error){
+          console.log("ERROR:onMOUNTED INIT pagedata")
+        }
+      });
+      onUnmounted(() => {
+        const srPaperResultsElement = srPaperResultsRef.value;
+        console.log("removeScrollListener")
+        if (srPaperResultsElement) {
+          srPaperResultsElement.removeEventListener('scroll', handleScroll);
+        }
+      });
+      
+      //————————————————————————————————一些调用接口用的全局变量————————————————————————————
+        var aggregations=ref({});//当前类别下选中的过滤关键词，每次改变curAcademyType时会被清空
+        var curAcademyType=ref("articles") //当前选中的成果类别，保存的是academyTypes的key
+        const sizePerPage=ref(6);
+        var curPage=ref(1);
+        var loading=ref(false);
+      //——————————————————————————————————————...——————————————————————————————————————  
+      var isLastPage=ref(false)
+      const articlesWithSkeleton = computed(() => {
+            const loadedContent = articles.value.content || [];
+            const skeletonCount = loading.value ? sizePerPage.value : 0;
+            const skeletonArray = new Array(skeletonCount).fill({ isContent: false });
+
+            // 将已加载的内容与骨架屏合并，并添加 isContent 属性标记
+            return loadedContent.map(content => ({ ...content, isContent: true })).concat(skeletonArray);
+        });
+
+ 
+      const srPaperResultsRef = ref(null);  
+       const handleScroll = () => {
+          const element = srPaperResultsRef.value;
+          // console.log(element)
+          if (element) {
+            const scrollTop = element.scrollTop;
+            const scrollHeight = element.scrollHeight;
+            const clientHeight = element.clientHeight;
+            if(isLastPage.value===true){
+              console.log("It's lastPage")
+            }
+            else if ((scrollTop + clientHeight >= scrollHeight - 100)) {
+              // You can adjust the threshold (100 in this example) based on your preference
+              papersLoad();
+            }
+          }
+        };
+        async function papersLoad(){
+          curPage.value++;
+          loading.value=true;
+          await getResults();
+          await getGroupClassifier();
+          // console.log("page:"+curPage.value)
+          loading.value=false;
+        }
+       const timeRange=ref("时间范围");
         const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'},{value:'10years',label:"近十年"}]
         const RankingMethod=ref("综合排序");
         const RankingOptions=[{value:'comprehensive',label:"综合排序"},{value:'reletive',label:"相关排序"},{value:'time',label:"时间排序"}]
-        const papers=ref([
-          {
-            id: 1,
-            title: "Joining of SiC ceramics using high-silicon aluminum alloy fillers assisted by laser cladding",
-            authors: ["作者1", "作者2"],
-            source: "xxx",
-            date:"2023-09-01",
-            db:"xxx",
-            abstract:"xxxxxxxxxxxxxxxxx"
-          },
-          {
-            id: 2,
-            title: "论文标题2",
-            authors: ["作者3", "作者4"],
-            source: "xxx",
-            date:"2023-09-01",
-            db:"xxx",
-            abstract:"xxxxxxxxxxxxxxxxx"
-          },
-          {
-            id: 3,
-            title: "论文标题2",
-            authors: ["作者3", "作者4"],
-            source: "xxx",
-            date:"2023-09-01",
-            db:"xxx",
-            abstract:"xxxxxxxxxxxxxxxxx"
-          },
-          {
-            id: 2,
-            title: "论文标题2",
-            authors: ["作者3", "作者4"],
-            source: "xxx",
-            date:"2023-09-01",
-            db:"xxx",
-            abstract:"xxxxxxxxxxxxxxxxx"
-          },
-          {
-            id: 2,
-            title: "论文标题2",
-            authors: ["作者3", "作者4"],
-            source: "xxx",
-            date:"2023-09-01",
-            db:"xxx",
-            abstract:"xxxxxxxxxxxxxxxxx"
-          },
-          // 可以添加更多虚拟论文数据
-        ],)
-        const academyTypes=ref([{id:1,type:"总库",num:10000},
-                            {id:2,type:"学术期刊",num:1000},
-                            {id:3,type:"学位论文",num:1000},
-                            {id:4,type:"会议",num:1000},
-                            {id:5,type:"报纸",num:1000},
-                            {id:6,type:"年鉴",num:1000},
-                            {id:7,type:"图书",num:1000},
-                            {id:8,type:"专利",num:1000},
-                            {id:9,type:"成果",num:1000},
-                        ])
-        const grouptype=ref([{id:1,title:"学科",select:[{id:1,value:"生物学"},{id:2,value:"物理学"}]},
-                             {id:2,title:"发表年度",select:[{id:1,value:"2023年"},{id:2,value:"2022年"},{id:3,value:"2021年"},{id:2,value:"2020年"}]},
-                             {id:3,title:"作者"}])
+        var count=ref(0);
+        var articles=ref({}),patents=ref({}),bulletins=ref({}),reports=ref({}),sciencedata=ref({}),books=ref({})
+        var papers_total=ref()
+        async function init(){
+          // aggregations.value={};
+          curPage.value=1;
+          articles.value={};
+          patents.value={};
+          bulletins.value={};
+          reports.value={};
+          sciencedata.value={};
+          books.value={};
+          // console.log("init "+curPage.value)
+
+        }
+        //默认六种学术成果类型
+        const academyTypes=ref([{id:1,type:"论文",key:"articles"},
+                            {id:2,type:"专利",key:"patents"},
+                            {id:4,type:"快报",key:"bulletins"},
+                            {id:5,type:"动态快讯",key:"reports"},
+                            {id:6,type:"科学数据",key:"sciencedata"},
+                            {id:7,type:"图书",key:"books"}
+                        ])  
+        
+        var grouptype=ref({})
+        // var groupClassifier=ref([{id:1,"type": {}},
+        //                           {id:2,"subject":{}},
+        //                           {id:3,"year": {}},
+        //                           {id:4,"source": {}},
+        //                           {id:5,"collection": {}},
+        //                           {id:6,"lang": {}},
+        //                           {id:7,"funding": {}},
+        //                           {id:8,"institution": {}},
+        //                           {id:9,"license": {}}
+        //                         ]
+        //                        )
         const activeNames = ref(['1'])
-        const checkList=ref([])
+        const checkList=ref({})
+        
+      
+       
         function handleTimeRangeChange(){
           console.log(timeRange)
         }
         function handleRankingChange(){
           console.log(RankingMethod)
         }
-        function getResults(){
-
+       async function handleClassfierChange(){
+        // console.log("ClassiferChanged")
+          // console.log(aggregations.value);
+          // curPage.value=1;
+          await init();
+          // console.log(curPage.value)
+          loading.value=true;
+          await getResults();
+          await getGroupClassifier();
+          await new Promise(resolve => setTimeout(resolve, 300));
+          loading.value=false;
         }
-
-
+        async function changeCurAcademyType(){
+          // console.log("Type Changed")
+          // curAcademyType=active_sr_classifier
+          // console.log(curAcademyType.value)
+          aggregations.value={};
+          await init();
+          loading.value=true;
+          await getResults();
+          await getGroupClassifier();
+          // await new Promise(resolve => setTimeout(resolve, 300));
+          
+        }
+        async function getResults(){
+          const aObject = JSON.parse(JSON.stringify(aggregations.value))
+          const jsonString={};
+          for (const key in aObject) {
+            if (aObject.hasOwnProperty(key)) {
+              jsonString[key] = aObject[key].join(', ');
+            }
+          }
+          // console.log("searchPage"+curPage.value)
+          post(`/search/${curAcademyType.value}`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          .then(response=>{
+            // console.log(response)
+            papers_total.value=response.total
+            isLastPage.value=response.is_last;
+            // if(curPage.value===1 ||JSON.stringify(articles.value)=="{}"||JSON.stringify(patents.value)=="{}"||JSON.stringify(bulletins.value)=="{}"||JSON.stringify(reports.value)=="{}"||JSON.stringify(sciencedata.value)=="{}"||JSON.stringify(books.value)=="{}"){
+              if(curAcademyType.value==="articles"){  JSON.stringify(articles.value)=="{}"?articles.value=response:articles.value.content.push(...response.content);}
+              else if(curAcademyType.value==="patents"){ JSON.stringify(patents.value)=="{}"?patents.value=response:patents.value.content.push(...response.content);}
+              else if(curAcademyType.value==="bulletins"){  JSON.stringify(bulletins.value)=="{}"?bulletins.value=response:bulletins.value.content.push(...response.content); }
+              else if(curAcademyType.value==="reports"){  JSON.stringify(reports.value)=="{}"?reports.value=response:reports.value.content.push(...response.content); }
+              else if(curAcademyType.value==="sciencedata"){  JSON.stringify(sciencedata.value)=="{}"?sciencedata.value=response:sciencedata.value.content.push(...response.content);}
+              else if(curAcademyType.value==="books"){  JSON.stringify(books.value)=="{}"?books.value=response:books.value.content.push(...response.content);  }
+            // }
+            // else{
+            //   if(curAcademyType.value==="articles"){  articles.value.content.push(...response.content);}
+            //   else if(curAcademyType.value==="patents"){ patents.value.content.push(...response.content);}
+            //   else if(curAcademyType.value==="bulletins"){ bulletins.value.content.push(...response.content); }
+            //   else if(curAcademyType.value==="reports"){  reports.value.content.push(...response.content); }
+            //   else if(curAcademyType.value==="sciencedata"){  sciencedata.value.content.push(...response.content);}
+            //   else if(curAcademyType.value==="books"){  books.value.content.push(...response.content);  }
+            // }
+            loading.value=false;
+            
+          })
+        }
+        async function getGroupClassifier(){
+          const aObject = JSON.parse(JSON.stringify(aggregations.value))
+          const jsonString={};
+          // console.log(aggregations.value)
+          for (const key in aObject) {
+            if (aObject.hasOwnProperty(key)) {
+              jsonString[key] = aObject[key].join(', ');
+            }
+          }
+          // console.log(jsonString)
+          post(`/search/${curAcademyType.value}/aggregations`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          .then(response=>{
+            // console.log("getClassifier")
+              grouptype.value=response;
+              // console.log(grouptype.value)
+              loading.value=false;
+          })
+          .catch(error => {
+            console.error("Error fetching data:", error);
+          });
+        }
         return {
-            papers,academyTypes,grouptype,activeNames,checkList,active_sr_classifier,timeRange,RankingMethod,
-            TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange
-        }
+            articles,patents,bulletins,reports,sciencedata,books,papers_total,
+            academyTypes,grouptype,activeNames,checkList,timeRange,RankingMethod,
+            TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange,getResults,handleClassfierChange,
+            count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage,curPage,loading,init,papersLoad,
+            srPaperResultsRef ,handleScroll,articlesWithSkeleton,isLastPage
+          }
     },
    
   })
   </script>
   
   <style scoped>
-  
-  .top-doctype {
-    background-color: #047bca;
-    display: flex;
-    height: 60px;;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row;
-    color: #fff;
-    padding: 10px;
-    text-align: center;
-    
-  }
-  .doctype-menu{
-    margin-left: 30px;
-    margin-right:30px;
-    font-family: "Microsoft yahei";
-    white-space: nowrap;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 让每列宽度相等 */
-    grid-auto-flow: column;
-    grid-gap: 10px; /* 可选的列之间的间距 */
-    list-style: none; /* 移除列表默认样式 */
-    padding: 0;
-    text-align: center;
-  }
-  .doctype-menu li:first-child{
-    font-size:larger;
-    font-weight:1000;
-    font-family: "Microsoft yahei";
-    white-space: nowrap;
-
-  }
-  .doctype-menu li {
-
-  display: block;
-  color: #fff;
-  width: 70px;
-
-  padding: 20px ;
-  transition: background-color 0.3s; /* 添加渐变效果 */
-}
-
-.doctype-menu li:hover {
-  background-color: #fff; /* 鼠标悬停时的背景颜色 */
-  color:#047bca;
-}
-
 .sr-body{
     display:flex;
     justify-content: space-between;
@@ -258,7 +373,12 @@
 }
 .sr-left-classfier{
   padding:10px;
+  max-height: 100vh; 
+  overflow-y: auto;
 
+}
+.sr-left-classfier::-webkit-scrollbar {
+  display: none;
 }
 /* :deep(.el-collapse-item__header) {
     background-color:var(--light-green);
@@ -271,19 +391,42 @@
   color: #fff; /* 设置文本颜色为白色 */
 
   border-radius: 5px; /* 设置边框圆角 */
+  
+
 
 }
+/* .sr-collapse-item.title{
+  position: sticky;
+} */
+
 .sr-check-group{
     display: flex;
     flex-direction: column;
+    max-height:300px; 
+    overflow-y: auto;
+    
 }
+.sr-check-group::-webkit-scrollbar {
+  display: none;
+}
+.sr-check-item{
+  margin:10px;
 
+}
 .sr-main{
     width:80%;
     padding:0 20px;
+   
+}
+
+.sr-paper-results{
+
+ max-height: 100vh; 
+  overflow-y: auto;
 }
 .sr-statistic{
   flex:1;
+  
      /* height: 34px;
 padding: 2px 20px;
 line-height: 34px; */
@@ -294,6 +437,10 @@ border: 1px solid #eee;
 border-bottom-color: #d9e0e9;
     text-align: center;; */
     text-align: start;
+}
+.sr-num{
+  font-weight:700;
+
 }
 .sr-toolbar{
   display:flex;
@@ -307,7 +454,7 @@ clear: both;
 border: 1px solid #eee;
 border-bottom-color: #d9e0e9;
 text-align: end;
-font-size:17px;
+font-size:15px;
 
 }
 :deep(.el-collapse-item__content ){
