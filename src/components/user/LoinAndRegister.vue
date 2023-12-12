@@ -173,7 +173,11 @@ export default {
         loginClick(){
             this.$refs.loginRef.validate((valid) => {
                 if(valid){
-
+                    console.log("login");
+                    var promise=Login(this.login.email, this.login.password);
+                    promise.then((result)=>{
+                        console.log(result);
+                    })
                 }
             })
         },
@@ -181,9 +185,9 @@ export default {
             this.$refs.registerRef.validate((valid) => {
                 if(valid){
                     console.log(1);
-                    var promise=Register(this.register.username, this.register.password, this.register.email, this.register.vercode);
+                    var promise=Register(this.register.username, this.register.email, this.register.password, this.register.vercode);
                     promise.then((result)=>{
-                        
+                        console.log(result);
                     })
                 }
             })
