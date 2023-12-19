@@ -4,10 +4,10 @@
         <el-card type="primary" class="card" shadow="hover"> 
             <div class="result">
                 <div class="info">
-                <div class="title">{{ paper.title }}</div>
-                <div class="authors">
+                <div class="title" v-if="paper.title">{{ paper.title }}</div>
+                <div class="authors" v-if="paper.author">
                   <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
-                  {{ paper.author.join(', ') }}</div>
+                  {{ paper.author.join(' ') }} </div>
                 <div class="date">
                   <span class="alias-info">日期: </span>
                   {{ paper.date }}

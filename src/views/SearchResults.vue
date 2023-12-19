@@ -11,12 +11,12 @@
                 <!-- 左侧分类筛选 -->
                
                 <el-collapse class="sr-left-classfier" v-model="activeNames" >
-                  <el-skeleton :loading="loading" animated style="text-align: start;">
+                  <el-skeleton :loading="sr_loading" animated style="text-align: start;">
                     <el-collapse-item v-for="thing in grouptype" :key="thing.tag" 
                     :title="thing.content.alias" :name="thing.tag" class="sr-collapse-item">
                    
                         <el-checkbox-group v-model="aggregations[thing.tag]" class="sr-check-group" @change="handleClassfierChange" >
-                            <el-checkbox class="sr-check-item" v-for="option in thing.content.aggregations" :key="option.value" :label="option.key">
+                            <el-checkbox class="sr-check-item" v-for="option in thing.content.aggregations" :key="option.value" :label="option.origin_key">
                             </el-checkbox>
                         </el-checkbox-group>    
                     </el-collapse-item>
@@ -138,10 +138,10 @@
       onMounted(async ()=>{
       try{
           loading.value=true;
+          sr_loading.value=true;
           await getResults();
           await getGroupClassifier();
           await new Promise(resolve => setTimeout(resolve, 2000));
-
           const srPaperResultsElement = srPaperResultsRef.value;
           // console.log("addScrollListener")
           // console.log(srPaperResultsElement)
@@ -170,13 +170,13 @@
         const sizePerPage=ref(6);
         var curPage=ref(1);
         var loading=ref(false);
+        var sr_loading=ref(false);
       //——————————————————————————————————————...——————————————————————————————————————  
       var isLastPage=ref(false)
       const articlesWithSkeleton = computed(() => {
             const loadedContent = articles.value.content || [];
             const skeletonCount = loading.value ? sizePerPage.value : 0;
             const skeletonArray = new Array(skeletonCount).fill({ isContent: false });
-
             // 将已加载的内容与骨架屏合并，并添加 isContent 属性标记
             return loadedContent.map(content => ({ ...content, isContent: true })).concat(skeletonArray);
         });
@@ -250,8 +250,6 @@
         const activeNames = ref(['1'])
         const checkList=ref({})
         
-      
-       
         function handleTimeRangeChange(){
           console.log(timeRange)
         }
@@ -259,16 +257,17 @@
           console.log(RankingMethod)
         }
        async function handleClassfierChange(){
-        // console.log("ClassiferChanged")
-          // console.log(aggregations.value);
+        console.log("ClassiferChanged")
+          console.log(aggregations.value);
           // curPage.value=1;
           await init();
           // console.log(curPage.value)
           loading.value=true;
+          sr_loading.value=true;
           await getResults();
           await getGroupClassifier();
           await new Promise(resolve => setTimeout(resolve, 300));
-          loading.value=false;
+          // loading.value=false;
         }
         async function changeCurAcademyType(){
           // console.log("Type Changed")
@@ -277,6 +276,7 @@
           aggregations.value={};
           await init();
           loading.value=true;
+          sr_loading.value=true;
           await getResults();
           await getGroupClassifier();
           // await new Promise(resolve => setTimeout(resolve, 300));
@@ -328,10 +328,11 @@
           // console.log(jsonString)
           post(`/search/${curAcademyType.value}/aggregations`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
           .then(response=>{
-            // console.log("getClassifier")
+            console.log("getClassifier")
               grouptype.value=response;
-              // console.log(grouptype.value)
-              loading.value=false;
+              // aggregations.value.push()
+              console.log(grouptype.value)
+              sr_loading.value=false;
           })
           .catch(error => {
             console.error("Error fetching data:", error);
@@ -341,8 +342,8 @@
             articles,patents,bulletins,reports,sciencedata,books,papers_total,
             academyTypes,grouptype,activeNames,checkList,timeRange,RankingMethod,
             TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange,getResults,handleClassfierChange,
-            count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage,curPage,loading,init,papersLoad,
-            srPaperResultsRef ,handleScroll,articlesWithSkeleton,isLastPage
+            count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage,curPage,loading,sr_loading,
+            init,papersLoad,srPaperResultsRef ,handleScroll,articlesWithSkeleton,isLastPage
           }
     },
    
