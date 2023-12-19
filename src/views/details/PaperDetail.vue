@@ -163,7 +163,6 @@ import axios from 'axios';
     setup() {
       // 通过 useRoute 对象获取路由参数
       var workId = useRoute().query.workId;
-      const paperList = ref({});
       const detailInfo = ref({
         title: '',
         authors: [{}],
@@ -194,23 +193,7 @@ import axios from 'axios';
         
       })
 
-      // function getPaperList() {
-      //   if(workId == null){
-      //     workId = 'c6f51ede40a548e08e9cc5c5f57fba31';
-      //   } else {
-      //     console.log(workId)
-      //   }
-      //     PaperApi.GetReferenceById(workId)
-      //     .then( (response) => {
-      //       if(response.code == 200) {
-      //         paperList.value = response.data;
-      //         console.log(paperList.value)
-      //         console.log(response)
-      //       } else {
-      //         console.log(response.code)
-      //       }
-      //     })
-      // }
+
       function getDetailInfo() {
         if(workId == null){
           workId = 'c6f51ede40a548e08e9cc5c5f57fba31';
@@ -266,7 +249,6 @@ import axios from 'axios';
      
 
       return {
-        // paperList,
         detailInfo,
         comments,
         postComment,

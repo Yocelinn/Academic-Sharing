@@ -111,6 +111,11 @@ const routes = [
       return import(/* webpackChunkName: "about" */ '../views/PersonalDoorPage.vue')
     }
   },
+  {
+    path: '/program/detail',  // 项目详情页
+    name: 'ProgramDetail',
+    component: () => import('../views/details/ProgramDetail.vue')
+  },
 ]
 
 const router = createRouter({
