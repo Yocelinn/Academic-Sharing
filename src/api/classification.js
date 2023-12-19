@@ -12,3 +12,14 @@ export function search(url, page, size, order_field, order_direction, user_id, q
     data.aggregations=aggregations;
     return post("/search/"+url, data);
 }
+
+export function searchForAggregations(url, page, size, order_field, order_direction, user_id, aggregations){
+    let data={};
+    data.page=page;
+    data.size=size;
+    data.order_field=order_field;
+    data.order_direction=order_direction;
+    data.user_id=user_id;
+    data.aggregations=aggregations;
+    return post("/search/"+url+"/aggregations",data)
+}

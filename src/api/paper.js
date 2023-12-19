@@ -2,17 +2,25 @@ import { post, get } from "./api";
 
 
 export function GetCommentByWorkId(workId){
-    return get('/comment/getByWorkId/?workId='+workId);
+    let param={};
+    param.workId=workId;
+    return get('/comment/getByWorkId', param);
 }
 
 export function DisplayWorkHomePage(workId){
-    return get('/works/displayWorkHomePage/?workID'+workId)
+    let param={};
+    param.workId=workId;
+    return get('/works/displayWorkHomePage', param)
 }
 
 export function GetAuthorIdByWorkId(workId){
-    return get('/author/getAuthorIdByWorkId/?workId='+workId)
+    let param={};
+    param.workId=workId;
+    return get('/author/getAuthorIdByWorkId', param)
 }
 
 export function GetReferenceById(workId){
-    return get('/works/getReferenceById/?workId='+workId)
+    let param={};
+    param.workId=workId;
+    return get('/works/getReferenceById', param)
 }

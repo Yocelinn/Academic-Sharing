@@ -10,14 +10,14 @@
               <el-col :span="16" style="padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
                 <el-card style="height:640px" class="historycard">
                   <el-table :data="history" style="width: 100%">
-                    <el-table-column prop="date" label="浏览时间" width="150" />
-                    <el-table-column prop="name" label="学术成果名称" width="180" />
-                    <el-table-column prop="id" label="ID" width="120" />
+                    <el-table-column prop="time" label="浏览时间" width="150" />
+                    <el-table-column prop="content" label="学术成果名称" width="180" />
+                    <el-table-column prop="searchID" label="ID" width="120" />
                     <el-table-column prop="zone" label="领域" width="120" />
                     <el-table-column prop="writer" label="作者" width="145" />
                     <el-table-column fixed="right" label="操作" width="120">
                       <template #default>
-                        <el-button link type="primary" size="small" @click="handleClick"
+                        <el-button link type="primary" size="small" @click="historydelete(scope.row)"
                           >删除</el-button
                         >
                         <el-button link type="primary" size="small">收藏</el-button>
@@ -46,44 +46,39 @@
   <script>
   import Personaside from '@/components/Personaside.vue';
   import * as echarts from 'echarts';
-  import { onMounted } from 'vue';
+  import { onMounted,ref} from 'vue';
+  import {post,get} from "../api/api.js"
   export default {
     components: {
       Personaside,
+    },
+    methods:{
+      historydelete(row){
+      get('/record/search/?id=1').then((response)=>{
+      console.log(row.searchID);
+      console.log(response.data.message);
+    }
+    )
+    },
     },
     setup(){
       const username='Z-ARC'
       const identity='普通用户'
       const name='测试'
       const phone='1234578910'
-      const email='123456789@qq.com'
       const zone='计算机'
+      const email='123456789@qq.com'
       const userid='1'
       const interest='数据库 架构 数据库系统'
-      const history = [
-        {
-          "date":"2023-09-02T12:47:13.219Z",
-          "name":"地底人会梦见螺旋星系吗",
-          "id": 1,
-          "zone": "科学",
-          "writer": "我也不知道",
-        },
-        {
-          "date":"2023-09-02T12:47:13.219Z",
-          "name":"调休打败了中秋国庆",
-          "id": 2,
-          "zone": "历史",
-          "writer": "我也不知道",
-        },
-        {
-          "date":"2023-09-02T12:47:13.219Z",
-          "name":"我为什么会做这样的梦",
-          "id": 3,
-          "zone": "伦理",
-          "writer": "我也不知道",
-        },
-      ]
+      const history = ref([])
+      const gethistorylist = () =>{
+        get('/record/search/?id=1').then((response)=>{
+          console.log(response.data);
+          history.value = response.data;
+        })
+      }
       onMounted(()=>{
+        gethistorylist()
         const echart1 = echarts.init(document.getElementById('graph'))
         const echarts1option = {
         title: {

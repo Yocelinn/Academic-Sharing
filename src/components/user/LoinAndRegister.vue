@@ -22,8 +22,8 @@
         </div>
         <div class="register">
             <el-form v-if="this.switchForm" class="registerForm" ref="registerRef" :model="this.register" :rules="this.registerRules">
-                <el-form-item label="邮箱" prop="email" label-width="20%">
-                    <el-input type="text" v-model="this.register.email" maxlength="25"></el-input>
+                <el-form-item label="用户名" prop="username" label-width="20%">
+                    <el-input type="text" v-model="this.register.username" maxlength="25"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password" label-width="20%">
                     <el-input type="password" v-model="this.register.password" maxlength="25"></el-input>
@@ -35,8 +35,8 @@
                     <el-input type="text" v-model="this.register.email" maxlength="25"></el-input>
                 </el-form-item>
                 <el-form-item label="验证码" prop="vercode" label-width="20%">
-                    <el-input type="text" v-model="this.register.vercode" maxlength="6" @click="this.sendVerCode()" style="width: 65%;"></el-input>
-                    <el-button type="success">获取验证码</el-button>
+                    <el-input type="text" v-model="this.register.vercode" maxlength="6" style="width: 65%;"></el-input>
+                    <el-button type="success"  @click="this.sendVerCode()">获取验证码</el-button>
                 </el-form-item>
                 <el-button class="registerButton" type="success" @click="this.registerClick()">注册</el-button>
             </el-form>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { Login, Register } from '@/api/user';
+import { Login, Register, SendVerifyCode } from '@/api/loginAndRegister';
 
 export default {
     name: 'LoginAndRegister',
@@ -173,19 +173,34 @@ export default {
         loginClick(){
             this.$refs.loginRef.validate((valid) => {
                 if(valid){
-
+                    console.log("login");
+                    var promise=Login(this.login.email, this.login.password);
+                    promise.then((result)=>{
+                        console.log(result);
+                    })
                 }
             })
         },
         registerClick(){
             this.$refs.registerRef.validate((valid) => {
                 if(valid){
-
+                    console.log(1);
+                    var promise=Register(this.register.username, this.register.email, this.register.password, this.register.vercode);
+                    promise.then((result)=>{
+                        console.log(result);
+                    })
                 }
             })
         },
         sendVerCode(){
-
+            this.$refs.registerRef.validateField('email', (valid)=>{
+                if(valid){
+                    var promise=SendVerifyCode(this.register.email);
+                    promise.then((result)=>{
+                        console.log(result);
+                    })
+                }
+            })
         },
     },
     mounted(){
