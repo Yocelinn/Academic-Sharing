@@ -47,6 +47,7 @@
   import Personaside from '@/components/Personaside.vue';
   import * as echarts from 'echarts';
   import { onMounted } from 'vue';
+  import {post,get} from "../api/api.js"
   export default {
     components: {
       Personaside,

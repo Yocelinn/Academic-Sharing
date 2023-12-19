@@ -91,7 +91,26 @@ const routes = [
         component: () => import('../components/manage/Paper.vue')
       },
     ]
-  }
+  },
+  // {
+  //   path: '/net',  // 专家关系网络组件,只是一个组件
+  //   name: 'paperDetail',
+  //   component: () => import('../components/Net.vue')
+  // },
+  {
+    path: '/institution',
+    component: () => import("../views/InstitutionView.vue")
+  },
+  {
+    path: '/PersonalDoorPage',
+    name: 'PersonalDoorPage',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: function () {
+      return import(/* webpackChunkName: "about" */ '../views/PersonalDoorPage.vue')
+    }
+  },
 ]
 
 const router = createRouter({

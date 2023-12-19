@@ -1,7 +1,7 @@
 <template>
   <navigationBar page="1"></navigationBar>
   <div class="searchBlock">
-    <el-image class="searchBackgroundImage" :src="require('@/assets/home/searchBackgroundImage.jpg')" fit="fill" />
+    <el-image class="searchBackgroundImage" :src="require('@/assets/home/searchBackground.jpg')" fit="fill" />
   </div>
   <div class="numberBlock">
     <div class="numberLeft" style="left: 15%;">

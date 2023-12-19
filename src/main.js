@@ -3,11 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import * as echarts from 'echarts'
-// import 'element-plus/dist/index.css';
-import './assets/element.scss'
 import './assets/css/global.css'
 import ElementPlus from 'element-plus'
 import 'element-plus/theme-chalk/index.css'
+import './assets/element.scss'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 // 康家麒加的
