@@ -1,6 +1,6 @@
 <template>
     <div class="mainContainer">
-        <searchBox width="400px" :isClassVisible=true :searchQuery="searchText" @update:searchQuery="searchText = $event"
+        <searchBox width="400px" color="red" :isClassVisible=true :searchQuery="searchText" @update:searchQuery="searchText = $event"
             @search="handleSearch"></searchBox>
         <button @click="test">test</button>
     </div>

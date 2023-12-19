@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :style="{ width: width }">
+  <div class="container" :style="{ width: width ,backgroundColor : color}">
     <div class="searchDiv" :style="{ width: width }">
       <div class="selectContainer" v-if="radio != 10">
         <select class="select" v-model="titleList[radio]">
@@ -130,6 +130,10 @@
 <script>
 export default {
   props: {
+    color : {
+      type : String,
+      default : 'white',
+    },
     width: {
       type: String,
       default: '800px' // 默认值
@@ -141,7 +145,7 @@ export default {
     searchQuery: {
       type: String,
       default: ''
-    }
+    },
   },
   data() {
     return {
