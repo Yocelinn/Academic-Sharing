@@ -184,7 +184,7 @@ export default {
         registerClick(){
             this.$refs.registerRef.validate((valid) => {
                 if(valid){
-                    console.log(1);
+                    console.log("register");
                     var promise=Register(this.register.username, this.register.email, this.register.password, this.register.vercode);
                     promise.then((result)=>{
                         console.log(result);

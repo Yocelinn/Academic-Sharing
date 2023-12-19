@@ -3,7 +3,7 @@ import { post, get} from "./api";
 export function SendVerifyCode(email){
     let data={};
     data.email=email;
-    return post("/user/sendVerifyCode",data);
+    return post("/user/sendVerifyCode/?email="+email,data);
 }
 
 export function Register(nick_name, email, password, captcha){
