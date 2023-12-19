@@ -40,10 +40,27 @@
                         </el-form>
                         <template #footer>
                           <span class="dialog-footer">
+                            <el-button @click="rewirtepassword">修改密码</el-button>
                             <el-button @click="dialogFormVisible = false">取消</el-button>
                             <el-button type="primary" @click="submitmessage">
                               提交修改信息
                             </el-button>
+                          </span>
+                        </template>
+                      </el-dialog>
+                      <el-dialog v-model="dialogPassword" title="修改密码">
+                        <el-form :model="form">
+                          <el-form-item label="原密码" :label-width="formLabelWidth">
+                            <el-input v-model="oldpassword" autocomplete="off" />
+                          </el-form-item>
+                          <el-form-item label="新密码" :label-width="formLabelWidth">
+                            <el-input v-model="newpassword" autocomplete="off" />
+                          </el-form-item>
+                        </el-form>
+                        <template #footer>
+                          <span class="dialog-footer">
+                            <el-button @click="submitpassword">重置密码</el-button>
+                            <el-button @click="dialogPassword = false">取消</el-button>
                           </span>
                         </template>
                       </el-dialog>
@@ -107,17 +124,30 @@
         this.rewritephone = this.phone;
       },
       submitmessage(){
-        this.dialogFormVisible = false;
         var data={
           
         }
         post('/user/update',data).then((response)=>{
           this.dialogFormVisible = false;
         })
+      },
+      rewirtepassword(){
+        this.dialogFormVisible = false;
+        this.dialogPassword = true;
+      },
+      submitpassword(){
+        var data={
+          oldPw : this.oldpassword,
+          newPw : this.newpassword
+        }
+        post('/user/changepw',data).then((response)=>{
+          this.dialogPassword = false;
+        })
       }
     },
     setup(){
       const dialogFormVisible = ref(false)
+      const dialogPassword = ref(false)
       const username='沃兹基·弁德'
       const rewriteusername=ref('')
       const rewritephone=ref('')
@@ -136,6 +166,8 @@
       const indexed='1039'
       const index='1103'
       const patent='4'
+      const oldpassword=ref('')
+      const newpassword=ref('')
       onMounted(()=>{
       const getusermessage =() =>{
         get('/user/getinform/?id=1').then((response)=>{
@@ -180,6 +212,7 @@
       })
       return{
         dialogFormVisible,
+        dialogPassword,
         username,
         identity,
         name,
@@ -195,6 +228,8 @@
         rewriteusername,
         rewritephone,
         rewriteemail,
+        oldpassword,
+        newpassword,
         Reidentity
       }
     },

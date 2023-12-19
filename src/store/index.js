@@ -3,18 +3,22 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     isLogin: false,
-    authorization: "",
+    token: "",
+    searchType: "",
   },
   getters: {
   },
   mutations: {
-    Login(state, authorization){
-      state.authorization=authorization;
-      state.isLogin=true;
+    login(state, token){
+      state.token=token;
+      // state.isLogin=true;
     },
-    LogOut(state){
+    logout(state){
       state.authorization="",
       state.isLogin=false;
+    },
+    changeSearchType(state, searchType){
+      state.searchType=searchType;
     }
   },
   actions: {

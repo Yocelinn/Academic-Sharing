@@ -20,7 +20,7 @@ export default{
         return{
             showType: "barGraph",
             typeString:"扇形图展示",
-            hotAreaList:[{name: "1", count: "3000"},{name: "1", count: "3000"},{name: "1", count: "2500"},{name: "1", count: "3000"},
+            hotAreaList:[{name: "医学", count: "3000"},{name: "1", count: "3000"},{name: "1", count: "2500"},{name: "1", count: "3000"},
             {name: "1", count: "3000"},{name: "1", count: "3000"},{name: "1", count: "1000"},{name: "1", count: "3000"},
             {name: "1", count: "3000"},{name: "1", count: "3000"},],
             heightList:[0,0,0,0,0,0,0,0,0,0],
@@ -35,7 +35,7 @@ export default{
             } else{
                 this.showType="barGraph";
                 this.typeString="扇形图展示";
-                this.loadBar();
+                this.drawOfBar();
             }
         },
         getData(){
@@ -69,7 +69,6 @@ export default{
                 barList[i-1].style.width="5%";
                 barList[i-1].style.backgroundColor="#68b0ab";
                 var number=document.createElement("div");
-                number.classList.add("barNumber");
                 number.textContent=this.hotAreaList[i-1].count;
                 number.style.position="absolute";
                 number.style.top="-20px";
@@ -77,10 +76,23 @@ export default{
                 number.style.fontStyle="italic";
                 number.style.width="100%"
                 barList[i-1].appendChild(number);
+                var name=document.createElement("div");
+                name.textContent=this.hotAreaList[i-1].name;
+                name.style.position="absolute";
+                name.style.bottom="-20px";
+                name.style.fontSize="14px";
+                name.style.fontStyle="italic";
+                name.style.width="100%";
+                barList[i-1].appendChild(name);
             }
             for(var i=0;i<10;i++){
                 barGraph.appendChild(barList[i]);
-                this.barDraw(barList[i], this.heightList[i]);
+            }
+            this.drawOfBar();
+        },
+        drawOfBar(){
+            for(var i=1;i<=10;i++){
+                this.barDraw(document.getElementById("bar"+i), this.heightList[i-1]);
             }
         },
         loadPie(){

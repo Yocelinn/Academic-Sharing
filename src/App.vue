@@ -1,10 +1,31 @@
 <template>
+  <navigationBar :page="this.page"></navigationBar>
   <router-view/>
 </template>
 
 <script>
+import router from './router';
+import navigationBar from './components/home/navigationBar.vue';
+
+export default{
+  components: {
+    navigationBar,
+  },
+  data(){
+    return{
+      page: 1,
+    }
+  },
+  methods:{
+    
+  },
+  mounted(){
+
+  }
+}
 
 </script>
+
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
