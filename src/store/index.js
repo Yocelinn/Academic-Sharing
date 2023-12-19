@@ -4,6 +4,7 @@ export default createStore({
   state: {
     isLogin: false,
     token: "",
+    searchType: "",
   },
   getters: {
   },
@@ -15,6 +16,9 @@ export default createStore({
     logout(state){
       state.authorization="",
       state.isLogin=false;
+    },
+    changeSearchType(state, searchType){
+      state.searchType=searchType;
     }
   },
   actions: {
