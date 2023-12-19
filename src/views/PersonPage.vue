@@ -25,8 +25,29 @@
                       <div class="interest">
                         兴趣方向:<span class="passage">{{ interest }}</span>
                       </div>
-                      <div class="remake"><el-button type="success" :icon="Edit">修改信息</el-button></div>
-                        </div>
+                      <div class="remake"><el-button type="success" :icon="Edit" @click="rewritemessage">修改信息</el-button></div>
+                      <el-dialog v-model="dialogFormVisible" title="修改信息">
+                        <el-form :model="form">
+                          <el-form-item label="真实姓名" :label-width="formLabelWidth">
+                            <el-input v-model="username" autocomplete="off" />
+                          </el-form-item>
+                          <el-form-item label="联系电话" :label-width="formLabelWidth">
+                            <el-input v-model="phone" autocomplete="off" />
+                          </el-form-item>
+                          <el-form-item label="联系邮箱" :label-width="formLabelWidth">
+                            <el-input v-model="email" autocomplete="off" />
+                          </el-form-item>
+                        </el-form>
+                        <template #footer>
+                          <span class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取消</el-button>
+                            <el-button type="primary" @click="submitmessage">
+                              提交修改信息
+                            </el-button>
+                          </span>
+                        </template>
+                      </el-dialog>
+                      </div>
                       </div>
                 </el-card>
                 <el-card class="card2">
@@ -60,7 +81,8 @@
   <script>
   import Personaside from '@/components/Personaside.vue';
   import * as echarts from 'echarts';
-  import { onMounted ,ref} from 'vue';
+  import { reactive,onMounted ,ref} from 'vue';
+  import {post,get} from "../api/api.js"
   import {
     Check,
     Delete,
@@ -77,10 +99,29 @@
       IDidentity(){
         this.$store.dispatch('Reidentity');
         this.Reidentity()
+      },
+      rewritemessage(){
+        this.dialogFormVisible = true;
+        this.rewriteusername = this.username;
+        this.rewriteemail = this.email;
+        this.rewritephone = this.phone;
+      },
+      submitmessage(){
+        this.dialogFormVisible = false;
+        var data={
+          
+        }
+        post('/user/update',data).then((response)=>{
+          this.dialogFormVisible = false;
+        })
       }
     },
     setup(){
+      const dialogFormVisible = ref(false)
       const username='沃兹基·弁德'
+      const rewriteusername=ref('')
+      const rewritephone=ref('')
+      const rewriteemail=ref('')
       const identity=ref('某著名科学研究院')
       const Reidentity = () =>{
         identity.value = '学者'
@@ -96,6 +137,12 @@
       const index='1103'
       const patent='4'
       onMounted(()=>{
+      const getusermessage =() =>{
+        get('/user/getinform/?id=1').then((response)=>{
+            console.log(response.data)
+
+        })
+      }
       const echart1 = echarts.init(document.getElementById('echarts1'))
       const echarts1option = {
         title: {
@@ -132,6 +179,7 @@
       echart1.setOption(echarts1option)
       })
       return{
+        dialogFormVisible,
         username,
         identity,
         name,
@@ -144,6 +192,9 @@
         indexed,
         index,
         patent,
+        rewriteusername,
+        rewritephone,
+        rewriteemail,
         Reidentity
       }
     },

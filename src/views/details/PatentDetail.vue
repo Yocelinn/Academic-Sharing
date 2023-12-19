@@ -441,12 +441,12 @@ import { onMounted,ref } from 'vue';
     align-items: center;
     font-size: 15px;
   }
-  .el-backtop ::v-deep {
+  :deep(.el-backtop) {
     color: #69a57b;
   }
 
   /*一些全局信息*/
-  .el-icon ::v-deep {
+  :deep(.el-icon)  {
     margin-right: 3px;
   }
   </style>
