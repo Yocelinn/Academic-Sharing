@@ -3,16 +3,16 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     isLogin: false,
-    authorization: "",
+    token: "",
   },
   getters: {
   },
   mutations: {
-    Login(state, authorization){
-      state.authorization=authorization;
-      state.isLogin=true;
+    login(state, token){
+      console.log(state.token);
+      // state.isLogin=true;
     },
-    LogOut(state){
+    logout(state){
       state.authorization="",
       state.isLogin=false;
     }

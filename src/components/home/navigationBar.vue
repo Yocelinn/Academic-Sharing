@@ -6,7 +6,10 @@
         <div id="home" class="address" style="width: 5%;left: 20%;" @click="">首页</div>
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
         <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
-        <div id="" class="button" style="width: 10%;right: 5%;">
+        <div v-if="this.$store.state.isLogin">
+
+        </div>
+        <div v-else id="" class="button" style="width: 10%;right: 5%;">
             <LoinAndRegister width="80px" height="50px" font-size="16px"></LoinAndRegister>
         </div>
     </div>
@@ -14,6 +17,7 @@
 
 <script>
 import LoinAndRegister from '@/components/user/LoinAndRegister.vue';
+import store from '@/store';
 
 export default {
     props:{
