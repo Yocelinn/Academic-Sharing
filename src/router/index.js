@@ -49,7 +49,7 @@ const routes = [
     component: () => import('../views/Collect.vue')
   },
   {
-    path: '/searchResults',
+    path: '/searchResults/:query?/:strategy?',
     name: 'searchResults',
     component: () => import('../views/SearchResults.vue')
   },

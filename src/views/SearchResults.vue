@@ -8,8 +8,7 @@
                   <el-icon><Filter /></el-icon>
                   分类浏览
                 </div>
-                <!-- 左侧分类筛选 -->
-               
+                <!-- 左侧分类筛选 --> 
                 <el-collapse class="sr-left-classfier" v-model="activeNames" >
                   <el-skeleton :loading="sr_loading" animated style="text-align: start;">
                     <el-collapse-item v-for="thing in grouptype" :key="thing.tag" 
@@ -22,7 +21,6 @@
                     </el-collapse-item>
                   </el-skeleton>
                 </el-collapse>
-                
               </div>
             </div>
             <div class="sr-main">
@@ -34,10 +32,25 @@
                     @tab-change="changeCurAcademyType()"
                     stretch="true"
                   >
+
                     <div v-for="item in academyTypes" :key="item.id">
                       <el-tab-pane :label=item.type :name="item.key">
+                        <div class="selectedTag" v-if="selectedClassification.length!=0">
+                         <div class="TagTitle">筛选条件：</div> 
+                          <el-tag
+                            v-for="tag in selectedClassification" 
+                            :key="tag"
+                            class="SingleTag"
+                            closable
+                            :disable-transitions="false"
+                            @close="handleClose(tag)"
+                          >
+                            {{ tag.name }}
+                          </el-tag>
+                        </div>
                         <div class="sr-toolbar">
                           <!-- 统计数、排序等结果展示处理工具 -->
+                          
                           <el-skeleton :loading="loading" animated style="text-align: start;">
                           <div class="sr-statistic">
                               共<span class="sr-num">&ensp;{{ papers_total }}&ensp;</span>条结果
@@ -59,6 +72,7 @@
                               :value="item"
                             />
                           </el-select>
+                       
                       </div>
                     </el-tab-pane>
                     </div>
@@ -122,7 +136,9 @@
   import SciencedataResult from "@/components/SearchResults/ScienceResult.vue";
   import BookResult from "@/components/SearchResults/BookResult.vue"
   import { defineComponent,ref,h, onMounted,onUnmounted,computed } from "vue";
-  import {post,get} from "../api/api.js"
+  import {useRoute} from 'vue-router'
+  // import {post,get} from "../api/api.js"
+  import {search,searchForAggregations} from "../api/classification.js"
   export default defineComponent ({
     components: {
       ArticleResult,PatentResult,BulletinResult,ReportResult,SciencedataResult,BookResult
@@ -139,6 +155,9 @@
       try{
           loading.value=true;
           sr_loading.value=true;
+          // query=this.$route.query.query
+
+         
           await getResults();
           await getGroupClassifier();
           await new Promise(resolve => setTimeout(resolve, 2000));
@@ -207,6 +226,8 @@
           // console.log("page:"+curPage.value)
           loading.value=false;
         }
+        const query =useRoute().query.query;
+        const strategy = useRoute().query.strategy;
        const timeRange=ref("时间范围");
         const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'},{value:'10years',label:"近十年"}]
         const RankingMethod=ref("综合排序");
@@ -236,6 +257,7 @@
                         ])  
         
         var grouptype=ref({})
+        var selectedClassification=ref([{id:1,name:"haha"},{id:2,name:"1234"}])
         // var groupClassifier=ref([{id:1,"type": {}},
         //                           {id:2,"subject":{}},
         //                           {id:3,"year": {}},
@@ -249,7 +271,14 @@
         //                        )
         const activeNames = ref(['1'])
         const checkList=ref({})
-        
+      // 移除已选条件的标签，后续这个selectedClassification需要换为aggregations
+        function handleClose(tag){
+          var indexToRemove=selectedClassification.value.indexOf(tag)
+          if(indexToRemove!=-1){
+            selectedClassification.value.splice(indexToRemove,1)
+          } 
+         
+        }
         function handleTimeRangeChange(){
           console.log(timeRange)
         }
@@ -291,7 +320,8 @@
             }
           }
           // console.log("searchPage"+curPage.value)
-          post(`/search/${curAcademyType.value}`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          // post(`/search/${curAcademyType.value}`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          search(`${curAcademyType.value}`,{"query":query,"strategy":strategy,"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
           .then(response=>{
             // console.log(response)
             papers_total.value=response.total
@@ -326,11 +356,17 @@
             }
           }
           // console.log(jsonString)
-          post(`/search/${curAcademyType.value}/aggregations`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          // post(`/search/${curAcademyType.value}/aggregations`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          searchForAggregations(`${curAcademyType.value}`,{"query":query,"strategy":strategy,"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
           .then(response=>{
             console.log("getClassifier")
               grouptype.value=response;
               // aggregations.value.push()
+              // for (var key in response.aggregations) {
+              //   if (aggregations.hasOwnProperty(key)) {
+              //       aggregations.value.push(key);
+              //   }
+              // }
               console.log(grouptype.value)
               sr_loading.value=false;
           })
@@ -343,7 +379,8 @@
             academyTypes,grouptype,activeNames,checkList,timeRange,RankingMethod,
             TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange,getResults,handleClassfierChange,
             count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage,curPage,loading,sr_loading,
-            init,papersLoad,srPaperResultsRef ,handleScroll,articlesWithSkeleton,isLastPage
+            init,papersLoad,srPaperResultsRef ,handleScroll,articlesWithSkeleton,isLastPage,selectedClassification,handleClose,
+            query,strategy
           }
     },
    
@@ -405,7 +442,6 @@
     flex-direction: column;
     max-height:300px; 
     overflow-y: auto;
-    
 }
 .sr-check-group::-webkit-scrollbar {
   display: none;
@@ -420,6 +456,26 @@
    
 }
 
+.selectedTag{
+  display:flex;
+
+  align-items: center;
+  background-color:rgba(219, 225, 213, 0.3);
+  margin:10px;
+  border-radius: 5px;;
+}
+.TagTitle{
+  display:flex;
+  padding-left: 10px;;
+  color:rgb(93, 92, 92);
+  font-weight: 800;
+}
+.SingleTag{
+  margin:10px;
+  height:30px;
+  font-weight:900;
+  font-size:15px;
+}
 .sr-paper-results{
 
  max-height: 100vh; 
@@ -514,6 +570,9 @@ border:none;
 :deep(.el-input__inner){
   color:white;
   font-weight:900;
+}
+:deep(.el-tag ){
+  --el-tag-bg-color: rgba(104,176,171,0.2);
 }
   </style>
   
