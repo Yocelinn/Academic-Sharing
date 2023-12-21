@@ -112,7 +112,7 @@ export default {
     bottom: 0;
     left: 0;
     background: rgba(255, 255, 255, 0.3);
-    border-bottom: 5px solid #ff9c00;
+    /* border-bottom: 5px solid #ff9c00; */
 }
 
 </style>

@@ -1,5 +1,4 @@
 <template>
-  <navigationBar page="1"></navigationBar>
   <div class="searchBlock">
     <div class="searchBackgroundImage" fit="fill"></div>
     <searchBox style="position: absolute;width: 50%;left: 25%;top: 50%;"></searchBox>
