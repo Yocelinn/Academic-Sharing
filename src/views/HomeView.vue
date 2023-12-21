@@ -1,8 +1,7 @@
 <template>
-  <navigationBar page="1"></navigationBar>
   <div class="searchBlock">
-    <el-image class="searchBackgroundImage" :src="require('@/assets/home/searchBackground.jpg')" fit="fill" />
-    <searchBox style="position: absolute;left: 25%;top: 20%;" width=800 :isClassVisible=false></searchBox>
+    <div class="searchBackgroundImage" fit="fill"></div>
+    <searchBox style="position: absolute;width: 50%;left: 25%;top: 50%;"></searchBox>
   </div>
   <div class="numberBlock">
     <div class="numberLeft" style="left: 15%;">
@@ -63,6 +62,7 @@ export default {
   width: 100%;
   height: 100%;
   left: 0px;
+  background-image: url('@/assets/home/searchBackground.jpg');
 }
 .numberBlock{
   position: relative;

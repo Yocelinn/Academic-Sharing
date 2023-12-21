@@ -47,6 +47,7 @@
 
 <script>
 import { Login, Register, SendVerifyCode } from '@/api/loginAndRegister';
+import store from '@/store';
 
 export default {
     name: 'LoginAndRegister',
@@ -176,7 +177,7 @@ export default {
                     console.log("login");
                     var promise=Login(this.login.email, this.login.password);
                     promise.then((result)=>{
-                        console.log(result);
+                        store.commit("login",result.data.token);
                     })
                 }
             })
