@@ -13,12 +13,12 @@
                       <div class="passage1">
                       <p class="username">{{ username }}</p>
                       <p class="useridentity">{{ identity }}</p>
-                      <p class="userid"><span class="id1">{{ userid }}</span></p>
+                      <p class="userdescription">{{ persondescription }}</p>
                       </div>
                       <div class="passage2">
-                      <div class="realname">真实姓名:<span class="passage">{{ name }}</span></div>
-                      <div class="phone">联系电话:<span class="passage">{{ phone }}</span></div>
-                      <div class="address">联系邮箱:<span class="passage">{{ email }}</span></div>
+                      <div class="email">
+                        个人邮箱<span class="passage">{{ email }}</span>
+                      </div>
                       <div class="zone">
                         研究领域:<span class="passage">{{ zone }}</span>
                       </div>
@@ -28,14 +28,14 @@
                       <div class="remake"><el-button type="success" :icon="Edit" @click="rewritemessage">修改信息</el-button></div>
                       <el-dialog v-model="dialogFormVisible" title="修改信息">
                         <el-form :model="form">
-                          <el-form-item label="真实姓名" :label-width="formLabelWidth">
+                          <el-form-item label="用户名称" :label-width="formLabelWidth">
                             <el-input v-model="username" autocomplete="off" />
-                          </el-form-item>
-                          <el-form-item label="联系电话" :label-width="formLabelWidth">
-                            <el-input v-model="phone" autocomplete="off" />
                           </el-form-item>
                           <el-form-item label="联系邮箱" :label-width="formLabelWidth">
                             <el-input v-model="email" autocomplete="off" />
+                          </el-form-item>
+                          <el-form-item label="个人简介" :label-width="formLabelWidth">
+                            <el-input v-model="persondescription" autocomplete="off" />
                           </el-form-item>
                         </el-form>
                         <template #footer>
@@ -67,9 +67,6 @@
                       </div>
                       </div>
                 </el-card>
-                <el-card class="card2">
-
-                </el-card>
               </el-col>
               <el-col :span="8" style="padding-left: 40px;padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
                 <el-card style="height:360px">
@@ -100,6 +97,7 @@
   import * as echarts from 'echarts';
   import { reactive,onMounted ,ref} from 'vue';
   import {post,get} from "../api/api.js"
+  import { GetUserInformation,UpdateUserInformation,ChangePasswd} from "../api/loginAndRegister.js"
   import {
     Check,
     Delete,
@@ -122,6 +120,8 @@
         this.rewriteusername = this.username;
         this.rewriteemail = this.email;
         this.rewritephone = this.phone;
+        this.rewritedescription = this.persondescription;
+        UpdateUserInformation(this.rewriteusername,this.rewritedescription)
       },
       submitmessage(){
         var data={
@@ -152,7 +152,9 @@
       const rewriteusername=ref('')
       const rewritephone=ref('')
       const rewriteemail=ref('')
-      const identity=ref('某著名科学研究院')
+      const rewritedescription=ref('')
+      const persondescription = ref('只是一名路过的假面骑士罢了')
+      const identity=ref('普通用户')
       const Reidentity = () =>{
         identity.value = '学者'
       }
@@ -230,6 +232,8 @@
         rewriteemail,
         oldpassword,
         newpassword,
+        persondescription,
+        rewritedescription,
         Reidentity
       }
     },
@@ -264,9 +268,8 @@
     margin-left: 30px;
   }
 
-  .userid{
-    color: #999999;
-    margin-left: 10px;
+  .userdescription{
+    margin-left: 30px;
   }
   
   .header1{
@@ -354,9 +357,11 @@
   }
   
   .remake{
-    margin-top: 40px;
+    margin-top: 130px;
   }
-  
+  .email{
+    margin-top: 24px;
+  }
   .identitybutton{
     margin-left: 20px;
     margin-top: 35px;
