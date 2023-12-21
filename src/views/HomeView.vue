@@ -2,7 +2,7 @@
   <navigationBar page="1"></navigationBar>
   <div class="searchBlock">
     <el-image class="searchBackgroundImage" :src="require('@/assets/home/searchBackground.jpg')" fit="fill" />
-    <searchBox style="position: absolute;width: 50%;left: 25%;top: 50%;"></searchBox>
+    <searchBox style="position: absolute;left: 25%;top: 20%;" width=800 :isClassVisible=false></searchBox>
   </div>
   <div class="numberBlock">
     <div class="numberLeft" style="left: 15%;">
