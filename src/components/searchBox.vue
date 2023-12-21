@@ -1,43 +1,28 @@
 <template>
-  <div class="container">
-    <div class="searchDiv">
+  <div class="container" :style="{ width: width ,backgroundColor : color}">
+    <div class="searchDiv" :style="{ width: width }">
       <div class="selectContainer" v-if="radio != 10">
         <select class="select" v-model="titleList[radio]">
-          <option
-            v-for="(item, index) in options[radio]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-            :selected="index === 0"
-          >
+          <option v-for="(item, index) in options[radio]" :key="item.value" :label="item.label" :value="item.value"
+            :selected="index === 0">
             {{ item.label }}
           </option>
         </select>
       </div>
       <div class="inputContainer">
-        <el-input
-          v-model="input"
-          placeholder="中文文献、外文文献"
-          class="input"
-        />
+        <el-input placeholder="中文文献、外文文献" class="input" v-model="localQuery" @input="updateQuery" />
       </div>
-      <el-button type="primary" style="position: absolute;left: 700px;top: 15px;" @click="test"
-          >搜索</el-button
-        >
+      <el-button type="primary" style="position: relative;margin-left:5%;top: 15px;" @click="emitSearch">搜索</el-button>
     </div>
-    <div class="classDiv" >
-      <div class="top" style="padding-bottom: 0px">
+    <div class="classDiv" :style="{ width: width }" v-if="isClassVisible">
+      <div class="top" style="padding-bottom: 0px" v-if="isClassVisible">
         <el-radio-group v-model="radio">
-          <el-radio :label="0">学术期刊</el-radio>
-          <el-radio :label="1">学术论文</el-radio>
-          <el-radio :label="2">会议</el-radio>
-          <el-radio :label="3">报纸</el-radio>
-          <el-radio :label="4">年鉴</el-radio>
-          <el-radio :label="5">专利</el-radio>
-          <el-radio :label="6">标准</el-radio>
-          <el-radio :label="7">成果</el-radio>
-          <el-radio :label="8">图书</el-radio>
-          <el-radio :label="9">学术辑刊</el-radio>
+          <el-radio :label="0">论文</el-radio>
+          <el-radio :label="1">专利</el-radio>
+          <el-radio :label="2">快报</el-radio>
+          <el-radio :label="3">动态快讯</el-radio>
+          <el-radio :label="4">科学数据</el-radio>
+          <el-radio :label="5">图书</el-radio>
           <el-button type="info" style="height: 25px;" plain @click="cancelRadio">取消</el-button>
         </el-radio-group>
       </div>
@@ -52,48 +37,57 @@
   border-bottom-width: 2px;
   border-bottom-color: #b1b3b8;
 }
+
 .container {
   position: relative;
   display: flex;
-  flex-direction: column; /* 垂直方向排列 */
-  align-items: center; /* 垂直居中对齐 */
-  height: 200px;
+  flex-direction: column;
+  /* 垂直方向排列 */
+  align-items: center;
+  /* 垂直居中对齐 */
   width: 800px;
   left: 300px;
 }
+
 .classDiv {
   position: relative;
   display: flex;
-  flex-direction: column; /* 垂直方向排列 */
-  align-items: center; /* 垂直居中对齐 */
+  flex-direction: column;
+  /* 垂直方向排列 */
+  align-items: center;
+  /* 垂直居中对齐 */
   height: 100px;
   width: 100%;
   margin-top: 40px;
 }
+
 .input {
   position: relative;
   display: flex;
   flex: 1;
   width: 550px;
 }
+
 :deep(.el-input__wrapper) {
-  box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color))
-    inset;
+  box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
   cursor: default;
+
   .el-input__inner {
     cursor: default !important;
   }
 }
+
 .inputContainer {
   position: relative;
   display: flex;
   top: 10px;
   height: 40px;
-  width: 450px;
+  width: 60%;
   float: left;
   margin-left: 40px;
   overflow: hidden;
 }
+
 .selectContainer {
   float: left;
   position: relative;
@@ -101,7 +95,7 @@
   left: 15px;
   top: 10px;
   height: 40px;
-  width: 100px;
+  width: 8%;
   border-style: solid;
   border-left: 0;
   border-top: 0;
@@ -109,19 +103,22 @@
   border-right-width: 2px;
   border-right-color: #b1b3b8;
 }
+
 .searchDiv {
-  flex-direction: column; /* 垂直方向排列 */
-  align-items: center; /* 垂直居中对齐 */
+  flex-direction: column;
+  /* 垂直方向排列 */
+  align-items: center;
+  /* 垂直居中对齐 */
   height: 60px;
   width: 850px;
   border-radius: 5px;
-  box-shadow: 2px 2px 5px #409eff;
+  box-shadow: 2px 2px 5px #42b983;
 }
 
 .select {
   outline: none;
   height: 30px;
-  width: 100px;
+  width: 100%;
   border: 0;
   position: relative;
   display: flex;
@@ -132,8 +129,27 @@
 
 <script>
 export default {
+  props: {
+    color : {
+      type : String,
+      default : 'white',
+    },
+    width: {
+      type: String,
+      default: '800px' // 默认值
+    },
+    isClassVisible: {
+      type: Boolean,
+      default: true // 默认值
+    },
+    searchQuery: {
+      type: String,
+      default: ''
+    },
+  },
   data() {
     return {
+      localQuery: this.searchQuery,
       options: [
         [
           {
@@ -799,7 +815,7 @@ export default {
       radio: 10,
       selectValue: "Option1",
       titleList: [],
-      input : '',
+      input: '',
     };
   },
   mounted() {
@@ -812,10 +828,30 @@ export default {
       this.radio = 10;
     },
     test() {
-      console.log(this.selectValue);
-      console.log(this.titleList);
-      console.log(this.radio);
+      console.log(isClassVisible);
+
     },
+    updateQuery(value) {
+      // 发射一个自定义事件来通知父组件更新数据
+      this.$emit('update:searchQuery', value);
+    },
+    emitSearch() {
+      let map = new Map();
+      map.set(0, "articles");
+      map.set(1, "patents");
+      map.set(2, "bulletins");
+      map.set(3, "reports");
+      map.set(4, "sciencedata");
+      map.set(5, "books");
+      var a = map.get(this.radio);
+        this.$emit('search', { query: this.localQuery, option: this.titleList[this.radio],class : a });
+    }
   },
+  watch: {
+    // 确保响应父组件传递的 prop 更改
+    searchQuery(newVal) {
+      this.localQuery = newVal;
+    }
+  }
 };
 </script>

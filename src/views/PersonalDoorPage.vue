@@ -1,97 +1,105 @@
 <template>
-    <FindDoor v-model="isDialoVisibal" :item="nowPerson">
+    <el-alert title="error" type="error" description="该学者不存在" show-icon v-if="authorIsExit == false" />
+    <div v-loading="isLoading" style="margin-top: 100px;">
 
-    </FindDoor>
-    <div class="allContainer">
-        <div class="mainContainer">
-            <div class="main">
-                <div style="top:30px;width: 100%;display: flex;position: relative;align-items: flex-start;">
-                    <div class="header">
-                        <div class="headerText">
-                            <div class="nameContainer">
-                                康家麒
+    </div>
+    <div v-if="!isLoading">
+        <FindDoor v-model="isDialoVisibal" :item="nowPerson">
+
+        </FindDoor>
+        <div class="allContainer">
+            <div class="mainContainer">
+                <div class="main">
+                    <div style="top:30px;width: 100%;display: flex;position: relative;align-items: flex-start;">
+                        <div class="header">
+                            <div class="headerText">
+                                <div class="nameContainer">
+                                    {{ authorName }}
+                                </div>
+                                <div class="factoryConainer" style="color: #529b2e;cursor: pointer;" id="factory"
+                                    @mousemove="mouseOverToChangeColor('factory')"
+                                    @mouseleave="mouseLeaveToChangeColor('factory')">
+                                    {{ authorData.organization }}
+                                </div>
+                                <span class="factoryConainer" style="margin-top: 10px;">
+                                    简介 ： {{ authorData.introduction }}
+                                </span>
+                                <span class="factoryConainer" style="margin-top: 10px;font-weight: 700;">
+                                    成果数量:{{ authorData.achievementsNum }} &nbsp &nbsp &nbsp &nbsp 被引次数:{{
+                                        authorData.citationsNum }}
+                                </span>
                             </div>
-                            <div class="factoryConainer" style="color: #529b2e;cursor: pointer;" id="factory"
-                                @mousemove="mouseOverToChangeColor('factory')"
-                                @mouseleave="mouseLeaveToChangeColor('factory')">
-                                北京航空航天大学
+                            <div class="sameNamePersonBlock">
+                                <div class="sameName">
+                                    <div>
+                                        <span>
+                                            同名作者
+                                        </span>
+                                        <el-button type="primary" style="margin-left: 30px;height: 30px;"
+                                            @click="findauthor">
+                                            认领门户
+                                        </el-button>
+                                    </div>
+                                    <div v-for="(item, index) in sameNamePerson" :key="index"
+                                        style="font-size: 14px;margin-top: 10px;">
+                                        <span style="font-weight: 400;cursor: pointer;color: #529b2e;"
+                                            :id="'sameName' + index" @mouseover="mouseOverToChangeColor('sameName' + index)"
+                                            @mouseleave="mouseLeaveToChangeColor('sameName' + index)">
+                                            {{ item.name }}
+                                        </span>
+                                        <span style="margin-left: 20px;font-weight: 600;cursor: pointer;color: #529b2e;"
+                                            :id="'sameNameFactory' + index"
+                                            @mouseover="mouseOverToChangeColor('sameNameFactory' + index)"
+                                            @mouseleave="mouseLeaveToChangeColor('sameNameFactory' + index)">
+                                            {{ item.factory }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            <span class="factoryConainer" style="margin-top: 10px;">
-                                软件工程
-                            </span>
-                            <span class="factoryConainer" style="margin-top: 10px;font-weight: 700;">
-                                总发文量:0 &nbsp &nbsp &nbsp &nbsp 总下载量:0
-                            </span>
                         </div>
-                        <div class="sameNamePersonBlock">
-                            <div class="sameName">
-                                <div>
+                    </div>
+                    <div class="fiedContainer">
+                        <div class="fieldInnerContainer">
+                            <span
+                                style="display: flex;position: relative;font-size: 20px;width: 100%;border-bottom:2px solid #c8c9cc ;height: 40px;">
+                                作者关注领域
+                            </span>
+                            <div class="detailFieldContainer">
+                                <span v-for="(item, index) in detailField" :key="index" class="eachField"
+                                    :id="'eachField' + index" @mouseover="mouseOverToChangeColor('eachField' + index)"
+                                    @mouseleave="mouseLeaveToChangeColor('eachField' + index)">
+                                    {{ item }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fiedContainer" style="margin-top: 30px;">
+                        <div class="fieldInnerContainer">
+                            <span
+                                style="display: flex;position: relative;font-size: 20px;width: 100%;border-bottom:2px solid #c8c9cc ;height: 40px;">
+                                作者成果
+                            </span>
+                            <div class="detailFieldContainer" style="flex-direction: column;">
+                                <div v-for="(item, index) in messageList" :key="index" class="messageListItemContainer">
                                     <span>
-                                        同名作者
+                                        [{{ index + 1 }}]
                                     </span>
-                                    <el-button type="primary" style="margin-left: 30px;height: 30px;" @click="findauthor">
-                                        认领门户
-                                    </el-button>
-                                </div>
-                                <div v-for="(item, index) in sameNamePerson" :key="index"
-                                    style="font-size: 14px;margin-top: 10px;">
-                                    <span style="font-weight: 400;cursor: pointer;color: #529b2e;" :id="'sameName' + index"
-                                        @mouseover="mouseOverToChangeColor('sameName' + index)"
-                                        @mouseleave="mouseLeaveToChangeColor('sameName' + index)">
-                                        {{ item.name }}
+                                    <span class="eachMessage" :id="'eachMessage' + index"
+                                        @mousemove="mouseOverToChangeColor('eachMessage' + index)"
+                                        @mouseleave="mouseLeaveToChangeColor('eachMessage' + index)"
+                                        style="color: #529b2e;cursor: pointer;">
+                                        {{ item.title }}.
                                     </span>
-                                    <span style="margin-left: 20px;font-weight: 600;cursor: pointer;color: #529b2e;"
-                                        :id="'sameNameFactory' + index"
-                                        @mouseover="mouseOverToChangeColor('sameNameFactory' + index)"
-                                        @mouseleave="mouseLeaveToChangeColor('sameNameFactory' + index)">
-                                        {{ item.factory }}
+                                    <!-- <div>
+                                        <span v-for="(e, i) in item.authorList" :key="i"
+                                            style="color: #73767a;font-weight: 500;">
+                                            {{ e }};
+                                        </span>
+                                    </div> -->
+                                    <span style="color: #73767a;font-weight: 500;">
+                                        {{ item.date }}
                                     </span>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="fiedContainer">
-                    <div class="fieldInnerContainer">
-                        <span
-                            style="display: flex;position: relative;font-size: 20px;width: 100%;border-bottom:2px solid #c8c9cc ;height: 40px;">
-                            作者关注领域
-                        </span>
-                        <div class="detailFieldContainer">
-                            <span v-for="(item, index) in detailField" :key="index" class="eachField"
-                                :id="'eachField' + index" @mouseover="mouseOverToChangeColor('eachField' + index)"
-                                @mouseleave="mouseLeaveToChangeColor('eachField' + index)">
-                                {{ item }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="fiedContainer" style="margin-top: 30px;">
-                    <div class="fieldInnerContainer">
-                        <span
-                            style="display: flex;position: relative;font-size: 20px;width: 100%;border-bottom:2px solid #c8c9cc ;height: 40px;">
-                            作者文献
-                        </span>
-                        <div class="detailFieldContainer" style="flex-direction: column;">
-                            <div v-for="(item, index) in messageList" :key="index" class="messageListItemContainer">
-                                <span>
-                                    [{{ index + 1 }}]
-                                </span>
-                                <span class="eachMessage" :id="'eachMessage' + index"
-                                    @mousemove="mouseOverToChangeColor('eachMessage' + index)"
-                                    @mouseleave="mouseLeaveToChangeColor('eachMessage' + index)"
-                                    style="color: #529b2e;cursor: pointer;">
-                                    {{ item.name }}.
-                                </span>
-                                <div>
-                                    <span v-for="(e, i) in item.authorList" :key="i"
-                                        style="color: #73767a;font-weight: 500;">
-                                        {{ e }};
-                                    </span>
-                                </div>
-                                <span style="color: #73767a;font-weight: 500;">
-                                    {{ item.year }}
-                                </span>
                             </div>
                         </div>
                     </div>
@@ -184,7 +192,7 @@
     justify-content: center;
     min-height: 670px;
     width: 95%;
-    box-shadow: 2px 2px 5px #409eff;
+    box-shadow: 2px 2px 5px #42b983;
 }
 
 .main {
@@ -222,12 +230,18 @@
 </style>
 <script>
 import FindDoor from '@/components/FindDoor.vue';
+import { getAuthorInfo } from "../api/portal.js"
 export default {
     components: {
-    FindDoor
-  },
+        FindDoor
+    },
     data() {
         return {
+            authorIsExit: true,
+            authorName: "",
+            isLoading: true,
+            authorData: "",
+            uid: "",
             isDialoVisibal: false,
             nowPerson: {
                 "name": "康家麒",
@@ -259,61 +273,8 @@ export default {
                     factory: '北京航空航天大学'
                 },
             ],
-            detailField: [
-                'test', 'test', 'test', 'test',
-                'test', 'test', 'test', 'test',
-                'test', 'test', 'test', 'test', 'test',
-                'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test',
-                'test', 'test', 'test', 'test',
-                'test', 'test', 'test', 'test', 'test',
-                'test', 'test', 'test', 'test',
-                'test', 'test', 'test', 'test',
-                'test', 'test', 'test', 'test',
-                'test', 'test', 'test', 'test', 'test',
-                'test', 'test', 'test', 'test'
-            ],
-            messageList: [
-                {
-                    name: "TestMessage",
-                    authorList: [
-                        "testauthor",
-                        "testauthor",
-                        "testauthor",
-                        "testauthor",
-                    ],
-                    year: 2020,
-                },
-                {
-                    name: "TestMessage",
-                    authorList: [
-                        "testauthor",
-                        "testauthor",
-                        "testauthor",
-                        "testauthor",
-                    ],
-                    year: 2020,
-                },
-                {
-                    name: "TestMessage",
-                    authorList: [
-                        "testauthor",
-                        "testauthor",
-                        "testauthor",
-                        "testauthor",
-                    ],
-                    year: 2020,
-                },
-                {
-                    name: "TestMessage",
-                    authorList: [
-                        "testauthor",
-                        "testauthor",
-                        "testauthor",
-                        "testauthor",
-                    ],
-                    year: 2020,
-                },
-            ]
+            detailField: [],
+            messageList: []
         }
     },
     methods: {
@@ -326,9 +287,31 @@ export default {
             var ele = document.querySelector("#" + id)
             ele.style.color = "#529b2e"
         },
-        findauthor(){
-            this.isDialoVisibal = true;
+        findauthor() {
+            this.$router.push('/findDoor');
         }
+    },
+    mounted() {
+        this.uid = this.$route.params.uid;
+        console.log(this.uid);
+        var promise = getAuthorInfo(this.uid);
+        promise.then((result) => {
+            if (result.code == 1008) {
+                this.authorIsExit = false;
+                return;
+            }
+            else {
+                console.log(result);
+                this.isLoading = false;
+                this.authorData = result.data;
+                this.detailField = this.authorData.interests
+                console.log(this.authorData)
+                this.authorName = result.data.name
+                this.messageList.push(this.authorData.myWorkDis)
+            }
+
+
+        })
     },
 
 }
