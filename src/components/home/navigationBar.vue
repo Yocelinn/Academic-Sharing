@@ -6,22 +6,18 @@
         <div id="home" class="address" style="width: 5%;left: 20%;" @click="">首页</div>
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
         <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
-        <div class="searchBlock">
-            <searchBox width=100></searchBox>
+        
+        <!-- <searchBox width=400 color="black" style="left: 50%;position: absolute;display: flex;height: 50px;width : 400px;z-index: 9999;mar" :isClassVisible=false></searchBox> -->
+        <div v-if="this.$store.state.isLogin">
         </div>
-        <div v-if="this.$store.state.isLogin" class="button" style="width: 15%;right: 2%;">
-            <Loggedin></Loggedin>
-        </div>
-        <div v-else id="" class="button" style="width: 10%;right: 10%;">
-            <LoinAndRegister width="75px" height="38px" font-size="16px"></LoinAndRegister>
+        <div v-else id="" class="button" style="width: 10%;right: 5%;">
+            <LoinAndRegister width="80px" height="50px" font-size="16px"></LoinAndRegister>
         </div>
     </div>
 </template>
 
 <script>
 import LoinAndRegister from '@/components/user/LoinAndRegister.vue';
-import Loggedin from '../user/Loggedin.vue';
-import searchBox from '../searchBox.vue';
 import store from '@/store';
 
 export default {
@@ -33,8 +29,6 @@ export default {
     },
     components:{
         LoinAndRegister,
-        Loggedin,
-        searchBox,
     },
     data(){
         return{
@@ -65,7 +59,7 @@ export default {
     position: relative;
     width: 100%;
     min-width: 1200px;
-    height: 50px;
+    height: 70px;
     background-color: #688f4e;
 }
 .logo{
@@ -120,13 +114,6 @@ export default {
     left: 0;
     background: rgba(255, 255, 255, 0.3);
     /* border-bottom: 5px solid #ff9c00; */
-}
-.searchBlock{
-    position: absolute;
-    width: 40%;
-    height: 100%;
-    left: 40%;
-    top: 0%;
 }
 
 </style>

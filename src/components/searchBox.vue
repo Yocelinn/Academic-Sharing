@@ -1,6 +1,6 @@
 <template>
   <seniorSearchBox v-model="isDialoVisibal" :classindex=radio1></seniorSearchBox>
-  <div :class="{ 'mainContainer': isLargeModel, 'mainContainerSmallModel': !isLargeModel }"  :style="{ width: `${width}%`, backgroundColor: color }">
+  <div :class="{ 'mainContainer': isLargeModel, 'mainContainerSmallModel': !isLargeModel }"  :style="{ width: `${width}%`}">
     <div class="container" >
       <div :class="{ 'searchDiv': isLargeModel, 'searchDivSmallModel': !isLargeModel }" :style="{ backgroundColor: color }">
         <div :class="{ 'selectContainer': isLargeModel, 'selectContainerSmallModel': !isLargeModel }" v-if="radio != 10">
@@ -136,6 +136,15 @@
 }
 
 :deep(.el-input__wrapper) {
+  box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+  cursor: default;
+
+  .el-input__inner {
+    cursor: default !important;
+  }
+}
+
+:deep(.el-input__wrapper.is-focus) {
   box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
   cursor: default;
 
@@ -290,157 +299,169 @@ export default {
       options: [
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "关键词",
+            value: "keyword",
             label: "关键词",
           },
           {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "机构",
+            value: "institution",
             label: "机构",
           },
           {
-            value: "出版物",
+            value: "source",
             label: "出版物",
           },
           {
-            value: "摘要",
+            value: "abstract",
             label: "摘要",
           },
           {
-            value: "DOI",
+            value: "doi",
             label: "DOI",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "专利名",
+            value: "title",
             label: "专利名",
           },
           {
-            value: "发明人",
+            value: "inventor",
             label: "发明人",
           },
           {
-            value: "申请人",
+            value: "applicant",
             label: "申请人",
           },
           {
-            value: "申请号",
+            value: "apply_number",
             label: "申请号",
           },
           {
-            value: "公开号",
+            value: "issue_number",
             label: "公开号",
           },
           {
-            value: "IPC",
+            value: "ipc",
             label: "IPC",
           },
           {
-            value: "CPC",
+            value: "cpc",
             label: "CPC",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "服务领域",
+            value: "subject",
             label: "服务领域",
           },
           {
-            value: "主办单位",
+            value: "institution",
             label: "主办单位",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "领域",
+            value: "subject",
             label: "领域",
           },
           {
-            value: "编译者",
+            value: "author",
             label: "编译者",
           },
           {
-            value: "快报产品",
+            value: "source",
             label: "快报产品",
           },
           {
-            value: "来源",
+            value: "platform",
             label: "来源",
           },
           {
-            value: "摘要",
+            value: "abstract",
             label: "摘要",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "关键词",
+            value: "keyword",
             label: "关键词",
+          },
+          {
+            value: "provider",
+            label: "发布机构",
+          },
+          {
+            value: "abstract",
+            label: "摘要",
+          },
+          {
+            value: "cstr",
+            label: "CSTR",
           },
         ],
         [
+        {
+            value: "",
+            label: "主题",
+          },
           {
-            value: "书名",
+            value: "title",
             label: "书名",
           },
           {
-            value: "ISBN",
+            value: "isbn",
             label: "ISBN",
           },
           {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "出版社",
+            value: "publisher",
             label: "出版社",
           },
         ],
