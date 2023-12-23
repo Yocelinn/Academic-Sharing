@@ -5,6 +5,7 @@ export default createStore({
     isLogin: false,
     token: "",
     searchType: "",
+    currentPage: "",
   },
   getters: {
   },
@@ -14,12 +15,15 @@ export default createStore({
       // state.isLogin=true;
     },
     logout(state){
-      state.authorization="",
+      state.token="",
       state.isLogin=false;
     },
     changeSearchType(state, searchType){
       state.searchType=searchType;
-    }
+    },
+    changeCurrentPage(state, currentPage){
+      state.currentPage=currentPage;
+    },
   },
   actions: {
   },
