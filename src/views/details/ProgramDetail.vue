@@ -232,7 +232,7 @@ export default {
     padding: 10px 0;
     cursor: pointer;
     font-size: 15px;
-    color: #89998f;
+    color: #89998f; 
   }
 
   /* 作品信息布局*/
@@ -248,7 +248,7 @@ export default {
   .paper-title {
     border-bottom: solid 2px rgb(196, 190, 190);
     padding-bottom: 10px;
-    background-color: rgba(56, 168, 64, 0.7);
+    /* background-color: rgba(56, 168, 64, 0.7); */
     text-align: left;
     padding: 10px;
   }
