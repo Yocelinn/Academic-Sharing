@@ -161,7 +161,6 @@
                   // }
                   color: function () {
                     var colors = ['#c8d5b9', '#8fc0a9', "#68b0ab", "#4a7c59", "#2B463C"];
-                    // var colors = ['#fda67e', '#81cacc', '#cca8ba', "#88cc81", "#82a0c5", '#fddb7e', '#735ba1', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
                     return colors[parseInt(Math.random() * 5)];
                   }
                 },
