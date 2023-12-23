@@ -4,7 +4,7 @@
         <el-card type="primary" class="card" shadow="hover"> 
             <div class="result">
                 <div class="info">
-                <div class="title">{{ paper.title }}</div>
+                <div class="title"><span v-html="paper.title"> </span></div>
                 <div class="authors" v-if="paper.author">
                     <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
                     {{ paper.author.join(', ') }}
@@ -28,7 +28,7 @@
                 </div>
                 <div class="abstract-container" :id="`abstract-container_${paper.id}`">
                    <div class="abstract">
-                    <span class="alias-info">摘要: </span>{{  paper.abstracts}} 
+                    <span class="alias-info">摘要: </span><span v-html="paper.abstracts"></span>  
                     </div>
                    
                 </div>
