@@ -28,11 +28,11 @@
                     </div> 
                   </div>
                   </div>
-                <el-skeleton :loading="loading" animated :rows="4">
-                  <div class="institution" >
+                
+                  <div class="institution" v-if="detailInfo.keywords != ''">
                     <div v-for="(institu, index) in detailInfo.institutions" :key="index">{{ index+1+"." +  institu }}</div>
                   </div>
-                  <div class="detail">
+                  <div class="detail" v-if="detailInfo.keywords != ''">
                       <div class="content-container">
                         <div class="little-title">关键词：</div>
                         <div class="content" v-if="detailInfo.keywords != ''"> 
@@ -54,7 +54,8 @@
                       </div>
                   
                   </div>
-                  
+
+                <el-skeleton v-else :loading="loading" animated :rows="4"> 
                 </el-skeleton>
             </el-card>
             
@@ -64,18 +65,20 @@
             <div>
                 <h2 class="recommend-title" >相关文献推荐</h2> 
             </div>
-            <el-skeleton :loading="loading" animated :rows="1" alignment="flex-start">
-              <ol class="paper-list">
-                <li class="list-item" v-for="(item, index) in detailInfo.recommendations" :key="index">
-                  <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div>
-                  <!--因为v-html，有的文章标题是有格式的
-                    <div class="recommend-papar-name" @click="gotoPaper(item.workId)"> {{ item.workName }} </div> -->
-                  <!-- <div class="detail-list" >
-                    <div class="detail-item" v-for="(person, index) in item.authors" :key="index"> {{ person }}. </div>
-                  </div> -->
-                  <div class="detail-list"> {{ item.info }}</div>
-                </li>
-              </ol>
+          
+            <ol class="paper-list" v-if="detailInfo.keywords != ''">
+              <li class="list-item" v-for="(item, index) in detailInfo.recommendations" :key="index">
+                <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div>
+                <!--因为v-html，有的文章标题是有格式的
+                  <div class="recommend-papar-name" @click="gotoPaper(item.workId)"> {{ item.workName }} </div> -->
+                <!-- <div class="detail-list" >
+                  <div class="detail-item" v-for="(person, index) in item.authors" :key="index"> {{ person }}. </div>
+                </div> -->
+                <div class="detail-list"> {{ item.info }}</div>
+              </li>
+            </ol>
+
+            <el-skeleton v-else :loading="loading" animated :rows="1" alignment="flex-start">
             </el-skeleton>
             <el-divider><el-icon><star-filled /></el-icon></el-divider>
           </div>
