@@ -4,7 +4,7 @@
         <nav class="vertical-nav">
             <ul><div class="nav-label"><el-icon><Position /></el-icon>导航信息</div>
             <li><div class="section-text" :class="{ 'active': selectedSection === 'section1' }" @click="scrollToSection('#section1')">基金信息</div></li>
-            <li><div class="section-text" :class="{ 'active': selectedSection === 'section2' }" @click="scrollToSection('#section2')">基金文献</div></li>
+            <li><div class="section-text" :class="{ 'active': selectedSection === 'section2' }" @click="scrollToSection('#section2')">基金文献推荐</div></li>
             
             </ul>
         </nav>
@@ -13,24 +13,29 @@
             <section id="section1">
                 <el-card shadow="never" class="detail-card">
                     <div class="title">
-                        <h1 class="paper-title" v-html="detailInfo.title"></h1>
+                        <h1 class="paper-title" v-html="detailInfo.name"></h1>
 
                     </div>
                     
                     <div class="detail">
-                        <div class="content-container">
+                        <!-- <div class="content-container">
                             <div class="little-title">译名：</div>
                             <div class="content">{{ detailInfo.translatedName }}</div>
-                        </div>
+                        </div> -->
                         
-                        <div class="content-container">
+                        <div class="content-container" v-if="detailInfo.country != ''">
+                            <div class="little-title">国别：</div>
+                            <div class="content">{{ detailInfo.country }}</div>
+                        </div>
+
+                        <div class="content-container" v-if="detailInfo.description != ''">
                             <div class="little-title">简介：</div>
-                            <div class="content">{{ detailInfo.introduct }}</div>
+                            <div class="content">{{ detailInfo.description }}</div>
                         </div>
                     
-                        <div class="content-container">
+                        <div class="content-container" v-if="detailInfo.homepage != ''">
                             <div class="little-title">官方网站：</div>
-                            <div class="content">{{ detailInfo.official }}</div>
+                            <div class="content">{{ detailInfo.homepage }}</div>
                         </div>
                     </div>
                 </el-card>
@@ -41,8 +46,8 @@
                     <h2 class="recommend-title" >基金文献</h2> 
                 </div>
                 <ol class="paper-list">
-                <li class="list-item" v-for="(item, index) in detailInfo.papers" :key="index">
-                    <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div>
+                <li class="list-item" v-for="(item, index) in detailInfo.relateWorks" :key="index">
+                    <div class="recommend-papar-name" @click="gotoPaper(item.workID)" v-html=" item.name "></div>
                     <!--因为v-html，有的文章标题是有格式的
                     <div class="recommend-papar-name" @click="gotoPaper(item.workId)"> {{ item.workName }} </div> -->
                     <!-- <div class="detail-list" >
@@ -50,7 +55,7 @@
                     </div> -->
 
                     <!-- <div class="detail-list"> {{ item.info }}</div> -->
-                    <div class="detail-list"> {{ item }}</div>
+                    <!-- <div class="detail-list"> {{ item }}</div> -->
 
                 </li>
                 </ol>
@@ -64,21 +69,22 @@
 <script>
 import { onMounted,ref,watch } from 'vue';
 import { useRoute } from 'vue-router';
-import * as PaperApi from '../../api/paper';
+import * as ProgramApi from '../../api/program';
 import moment from 'moment'; 
-import axios from 'axios';
 
 export default {
     setup() {
         // 通过 useRoute 对象获取路由参数
-      var workId = useRoute().query.workId;
+      var funderId = useRoute().query.funderId;
       const detailInfo = ref({
-        title: '',
-        workId: '',
-        official: '',
+        name: '',
+        funderId: '',
+        country: '',
+        homepage: '',
         translatedName: '',
-        introduct: '',
-        papers: [''],
+        description: '',
+        // papers: [''],  //这个是当时用来测试静态样例的
+        relateWorks: [{}]
       });
       
       
@@ -87,36 +93,36 @@ export default {
         
       })
 
-    //   function getDetailInfo() {
-    //     if(workId == null){
-    //       workId = 'c6f51ede40a548e08e9cc5c5f57fba31';
-    //     }
-    //     PaperApi.DisplayWorkHomePage(workId)
-    //     .then((response) => {
-    //       // console.log(response)
-    //       if(response.code == 200) {
-    //         detailInfo.value = response.data;
-    //         console.log(detailInfo.value)
-    //       } else {
-    //         console.log(response.code)
-    //       }
-    //     })
-
-    //   }
-    function getDetailInfo() {
-        let group = {
-            title: '国家自然科学基金',
-            // workId: 'the National Natural Science Foundation of China',
-            official: 'http://www.nsfc.gov.cn/',
-            translatedName: 'the National Natural Science Foundation of China',
-            introduct: '	国家自然科学基金面向全国，是国家创新体系的重要组成部分，主要资助自然科学基础研究和部分应用研究，重点支持具有良好研究条件、研究实力的高等院校中和科研机构中的研究人员，由国家自然科学基金委员会负责实施与管理。 自然科学基金经费主要来源于中央财政科学事业费预算拨款，同时依法接受国内外社会团体、机构和个人的捐赠。 目前自然科学基金的资助结构大体上可以分为"研究项目"和"人才培养体系"两大资助板块（简称"项目板块"和"人才板块"）。 "项目板块" 主要包括：面上项目、重点项目、重大项目、重大研究计划、专项基金项目和国际合作与交流项目等。"人才板块"主要包括：国家杰出青年科学基金、海外青年学者合作研究基金、香港澳门青年学者合作研究基金、创新研究群体科学基金、基础科学人才培养基金、国际合作的两个基地等。自然科学基金会根据需要可以对项目类型进行调整\n \
-            国家自然科学基金面向全国，是国家创新体系的重要组成部分，主要资助自然科学基础研究和部分应用研究，重点支持具有良好研究条件、研究实力的高等院校中和科研机构中的研究人员，由国家自然科学基金委员会负责实施与管理。 自然科学基金经费主要来源于中央财政科学事业费预算拨款，同时依法接受国内外社会团体、机构和个人的捐赠。 目前自然科学基金的资助结构大体上可以分为"研究项目"和"人才培养体系"两大资助板块（简称"项目板块"和"人才板块"）。 "项目板块" 主要包括：面上项目、重点项目、重大项目、重大研究计划、专项基金项目和国际合作与交流项目等。"人才板块"主要包括：国家杰出青年科学基金、海外青年学者合作研究基金、香港澳门青年学者合作研究基金、创新研究群体科学基金、基础科学人才培养基金、国际合作的两个基地等。自然科学基金会根据需要可以对项目类型进行调整',
-            papers: ['[1] 中介效应分析:方法和模型发展. 温忠麟;叶宝娟.心理科学进展,2014(05)', '[2] 中国地方官员的晋升锦标赛模式研究. 周黎安.经济研究,2007(07)', '[3] 共同方法偏差的统计检验与控制方法. 周浩,龙立荣.心理科学进展,2004(06)',
-                    '[4] 无线传感器网络. 任丰原,黄海宁,林闯.软件学报,2003(07)', '[5] 区块链技术发展现状与展望. 袁勇;王飞跃.自动化学报,2016(04)', '[6] 大数据管理:概念、技术与挑战. 孟小峰;慈祥.计算机研究与发展,2013(01)','[7] 我国上市公司财务困境的预测模型研究. 吴世农,卢贤义.经济研究,2001(06)',
-                    '[8] 地理探测器:原理与展望. 王劲峰;徐成东.地理学报,2017(01)','[9] 深部开采岩体力学研究. 何满潮,谢和平,彭苏萍,姜耀东.岩石力学与工程学报,2005(16)'],
+      function getDetailInfo() {
+        if(funderId == null){
+          funderId = 'https://openalex.org/F4320332161';
         }
-        detailInfo.value = group
-    }
+        ProgramApi.GetFunderByFunderId(funderId)
+        .then((response) => {
+          // console.log(response)
+          if(response.code == 200) {
+            detailInfo.value = response.data;
+            console.log(detailInfo.value)
+          } else {
+            console.log(response.code)
+          }
+        })
+
+      }
+    // function getDetailInfo() {
+    //     let group = {
+    //         title: '国家自然科学基金',
+    //         // workId: 'the National Natural Science Foundation of China',
+    //         official: 'http://www.nsfc.gov.cn/',
+    //         translatedName: 'the National Natural Science Foundation of China',
+    //         introduct: '	国家自然科学基金面向全国，是国家创新体系的重要组成部分，主要资助自然科学基础研究和部分应用研究，重点支持具有良好研究条件、研究实力的高等院校中和科研机构中的研究人员，由国家自然科学基金委员会负责实施与管理。 自然科学基金经费主要来源于中央财政科学事业费预算拨款，同时依法接受国内外社会团体、机构和个人的捐赠。 目前自然科学基金的资助结构大体上可以分为"研究项目"和"人才培养体系"两大资助板块（简称"项目板块"和"人才板块"）。 "项目板块" 主要包括：面上项目、重点项目、重大项目、重大研究计划、专项基金项目和国际合作与交流项目等。"人才板块"主要包括：国家杰出青年科学基金、海外青年学者合作研究基金、香港澳门青年学者合作研究基金、创新研究群体科学基金、基础科学人才培养基金、国际合作的两个基地等。自然科学基金会根据需要可以对项目类型进行调整\n \
+    //         国家自然科学基金面向全国，是国家创新体系的重要组成部分，主要资助自然科学基础研究和部分应用研究，重点支持具有良好研究条件、研究实力的高等院校中和科研机构中的研究人员，由国家自然科学基金委员会负责实施与管理。 自然科学基金经费主要来源于中央财政科学事业费预算拨款，同时依法接受国内外社会团体、机构和个人的捐赠。 目前自然科学基金的资助结构大体上可以分为"研究项目"和"人才培养体系"两大资助板块（简称"项目板块"和"人才板块"）。 "项目板块" 主要包括：面上项目、重点项目、重大项目、重大研究计划、专项基金项目和国际合作与交流项目等。"人才板块"主要包括：国家杰出青年科学基金、海外青年学者合作研究基金、香港澳门青年学者合作研究基金、创新研究群体科学基金、基础科学人才培养基金、国际合作的两个基地等。自然科学基金会根据需要可以对项目类型进行调整',
+    //         papers: ['[1] 中介效应分析:方法和模型发展. 温忠麟;叶宝娟.心理科学进展,2014(05)', '[2] 中国地方官员的晋升锦标赛模式研究. 周黎安.经济研究,2007(07)', '[3] 共同方法偏差的统计检验与控制方法. 周浩,龙立荣.心理科学进展,2004(06)',
+    //                 '[4] 无线传感器网络. 任丰原,黄海宁,林闯.软件学报,2003(07)', '[5] 区块链技术发展现状与展望. 袁勇;王飞跃.自动化学报,2016(04)', '[6] 大数据管理:概念、技术与挑战. 孟小峰;慈祥.计算机研究与发展,2013(01)','[7] 我国上市公司财务困境的预测模型研究. 吴世农,卢贤义.经济研究,2001(06)',
+    //                 '[8] 地理探测器:原理与展望. 王劲峰;徐成东.地理学报,2017(01)','[9] 深部开采岩体力学研究. 何满潮,谢和平,彭苏萍,姜耀东.岩石力学与工程学报,2005(16)'],
+    //     }
+    //     detailInfo.value = group
+    // }
 
       return {
         detailInfo,
@@ -215,6 +221,8 @@ export default {
   /*setion的布局*/
   .main-content {
     flex: 1;
+    background-color: #effcf2;
+
   }
   section {
     margin-bottom: 30px; /* 调整各个 section 之间的间距 */
@@ -240,7 +248,7 @@ export default {
   .paper-title {
     border-bottom: solid 2px rgb(196, 190, 190);
     padding-bottom: 10px;
-    color: #55ab8b;
+    background-color: rgba(56, 168, 64, 0.7);
     text-align: left;
     padding: 10px;
   }
@@ -332,7 +340,8 @@ export default {
     border-bottom: solid 2px #d1d1d1; 
     padding: 5px 10px;
     text-align: left;
-    background-color: #5dd39a;
+    /* background-color: #5dd39a; */
+    background-color: #54ac69;
     border-radius: 5px;
     color:rgb(251, 251, 251);
     font-weight: 500;
@@ -363,36 +372,5 @@ export default {
     margin-right: 5px;
   }
   
-  /* 更多信息布局*/
-  .other-info-card {
-    height: 600px;
-    width: 300px;
-    margin: 20px;
-    background-color: #ebf6f1;
-  }
-  .info-box {
-    border-bottom: #55ab8b 1px solid;
-    padding: 10px;
-  }
-  .info-title {
-    display: flex;
-    font-weight: 500;
-    margin: 5px 0 20px 0 ;
-    align-items: center;
-  }
-  .button-container {
-    display: flex;
-    align-items: center;
-    font-size: 15px;
-  }
-  a {
-    text-decoration: none;
-  }
-  :deep(.el-backtop) {
-    color: #69a57b;
-  }
-  :deep(.el-icon) {
-    margin-right: 3px;
-  }
   </style>
   
