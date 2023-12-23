@@ -53,9 +53,25 @@ export default{
         logOff(){
             var promise=Logoff();
             promise.then((result) => {
-                console.log(result);
+                if(result.code==200){
+                    ElNotification({
+                        message: "注销成功，期待您的再次到来",
+                        type: 'success',
+                        showClose: true,
+                        position: 'top-right',
+                        duration: 2000,
+                    })
+                    store.commit("logout");
+                } else{
+                    ElNotification({
+                        message: result.info,
+                        type: 'warning',
+                        showClose: true,
+                        position: 'top-right',
+                        duration: 2000,
+                    })
+                }
             })
-            store.commit("logout");
         }
     },
     mounted(){
