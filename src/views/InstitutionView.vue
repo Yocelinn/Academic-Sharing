@@ -1,88 +1,101 @@
 <template>
-  <main>
-    <h1>{{instName}}</h1>
-    <el-divider />
-    
-    <el-row :gutter="24">
-      <el-col :span="7"></el-col>
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item><a href="#author">机构主要作者</a></el-breadcrumb-item>
-        <el-breadcrumb-item><a href="#journal">主办刊物</a></el-breadcrumb-item>
-        <el-breadcrumb-item><a href="#project">重点学科</a></el-breadcrumb-item>
-        <el-breadcrumb-item><a href="#article">机构文献</a></el-breadcrumb-item>
-        <el-breadcrumb-item><a href="#inst">下属及相关机构</a></el-breadcrumb-item>
-        <el-breadcrumb-item></el-breadcrumb-item>
-      </el-breadcrumb>
-		</el-row>
-    <el-divider />
+  <div class="outer">
+    <el-container>
+      <el-aside>
+        <el-affix :offset="100">
+          <el-card class="box-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Peking_University_Logo.png"
+            class="img">
+            <el-divider />
+            <el-link href="#author">机构主要作者</el-link>
+            <el-divider />
+            <el-link href="#journal">主办刊物</el-link>
+            <el-divider />
+            <el-link href="#project">重点学科</el-link>
+            <el-divider />
+            <el-link href="#article">机构文献</el-link>
+            <el-divider />
+            <el-link href="#inst">下属及相关机构</el-link>
+            <el-divider />
+          </el-card>
+        </el-affix>
+      </el-aside>
+      <el-main>
+        <div class="top-margin"></div>
+        <h1>{{instName}}</h1>
+        <el-divider />
 
-    <div id="author">
-      <h2>机构主要作者</h2>
-      <el-divider />
-      <div class="authorList">
-        <ul>
-          <li v-for="item in mainAuthor" :key="item" style="text-align: left;">
-            <a href="/">{{item.name}}</a>
-            <b>{{`(${item.num})`}}</b>
-            <span class="affi">{{`${item.title};`}}</span>
-            <span class="orgn">{{item.fileds.join(';')+";"}}</span>
-          </li>
-        </ul>
-        <ul class="other"  style="text-align: left;">
-          <li v-for="item in otherAuthor" :key="item">
-            <a href="/">{{item.name}}</a>
-            <b>{{`(${item.num})`}}</b>
-          </li>
-        </ul>
-      </div>
-    </div>
+        <div id="author">
+          <h2>机构主要作者</h2>
+          <el-divider />
+          <div class="authorList">
+            <ul>
+              <li v-for="item in mainAuthor" :key="item" style="text-align: left;">
+                <a href="/">{{item.name}}</a>
+                <b>{{`(${item.num})`}}</b>
+                <span class="affi">{{`${item.title};`}}</span>
+                <span class="orgn">{{item.fileds.join(';')+";"}}</span>
+              </li>
+            </ul>
+            <ul class="other"  style="text-align: left;">
+              <li v-for="item in otherAuthor" :key="item">
+                <a href="/">{{item.name}}</a>
+                <b>{{`(${item.num})`}}</b>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-    <div id="journal">
-      <h2>主办刊物</h2>
-      <el-divider />
-      <p>未找到相关结果</p>
-    </div>
-    
+        <div id="journal">
+          <h2>主办刊物</h2>
+          <el-divider />
+          <p>未找到相关结果</p>
+        </div>
+        
 
-    <div id="project">
-      <h2>重点学科</h2>
-      <el-divider />
-      <el-row class="project">
-        <el-col :span="6" v-for="item in project" :key="item">{{`${item.name}(${item.num})`}}</el-col>
-      </el-row>
-    </div>
+        <div id="project">
+          <h2>重点学科</h2>
+          <el-divider />
+          <el-row class="project">
+            <el-col :span="6" v-for="item in project" :key="item">{{`${item.name}(${item.num})`}}</el-col>
+          </el-row>
+        </div>
 
-    <div id="article">
-      <h2>机构文献</h2>
-      <el-divider />
-      <h5>最高被引</h5>
-      <el-table :data="popularPaper" style="width: 100%; margin-bottom: 20px">
-        <el-table-column type="index" width="50" />
-        <el-table-column prop="title" width="180" />
-        <el-table-column prop="authors" width="180" />
-        <el-table-column prop="journal"/>
-        <el-table-column prop="time" />
-        <el-table-column prop="num" />
-      </el-table>
-      <h5>最高下载</h5>
-      <el-table :data="popularPaper" style="width: 100%; margin-bottom: 20px">
-        <el-table-column type="index" width="50" />
-        <el-table-column prop="title" width="180" />
-        <el-table-column prop="authors" width="180" />
-        <el-table-column prop="journal"/>
-        <el-table-column prop="time" />
-        <el-table-column prop="num" />
-      </el-table>
-    </div>
+        <div id="article">
+          <h2>机构文献</h2>
+          <el-divider />
+          <h5>最高被引</h5>
+          <el-table :data="popularPaper" style="width: 100%; margin-bottom: 20px" :show-header="false">
+            <el-table-column type="index" width="50" />
+            <el-table-column prop="title" width="180" />
+            <el-table-column prop="authors" width="180" />
+            <el-table-column prop="journal"/>
+            <el-table-column prop="time" />
+            <el-table-column prop="num" />
+          </el-table>
+          <h5>最高下载</h5>
+          <el-table :data="popularPaper" style="width: 100%; margin-bottom: 20px" :show-header="false">
+            <el-table-column type="index" width="50" />
+            <el-table-column prop="title" width="180" />
+            <el-table-column prop="authors" width="180" />
+            <el-table-column prop="journal"/>
+            <el-table-column prop="time" />
+            <el-table-column prop="num" />
+          </el-table>
+        </div>
 
-    <div id="inst">
-      <h2>下属及相关机构</h2>
-      <el-divider />
-      <p>未找到相关结果</p>
-    </div>
+        <div id="inst">
+          <h2>下属及相关机构</h2>
+          <el-divider />
+          <p>未找到相关结果</p>
+        </div>
 
-    <el-backtop :right="100" :bottom="100" />
-  </main>
+        <div class="bottom-margin"></div>
+        <el-backtop :right="100" :bottom="100" />
+      </el-main>
+    </el-container>
+    <el-footer></el-footer>
+  </div>
 </template>
 
 <script>
@@ -195,16 +208,25 @@ export default {
 </script>
 
 <style>
-  main{
+  .outer {
+    width: 100%;
+    background-image: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
+  }
+  .el-aside{
+    width: 25%;
+  }
+  .el-main{
     width: 60%;
-    margin: 0 auto;
+    margin: 25px 50px 20px 0;
     text-align: left;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
   }
   h1,h2{
-    text-align: center;
+    text-align: left;
   }
   h1,h2, h5{
-    background-color: white;
     width: 100%;
     margin: 0 auto;
   }
@@ -212,6 +234,7 @@ export default {
     text-align: left
   }
   ul{
+    padding-left: 10px;
     list-style: none;
   }
   li{
@@ -229,5 +252,38 @@ export default {
     line-height: 30px;
     padding-bottom: 20px;
   }
+  .top-margin{
+    height: 10px;
+  }
+  .bottom-margin{
+    height: 50px;
+  }
+  .el-footer{
+    background-color: #2b463c;
+  }
+
+  .el-table, .el-table__expanded-cell{
+    background: transparent;
+  }
+  
+  .el-table th,
+  .el-table tr,
+  .el-table td {
+    background: transparent;
+  }
+
+  .box-card{
+    height: 500px;
+    width: 280px;
+    margin: 10px 0px 20px 50px;
+  }
+
+  .img {
+    width: 200px;
+    object-fit: cover;
+  }
+
+
+  
 
 </style>
