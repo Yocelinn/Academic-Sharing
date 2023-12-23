@@ -308,7 +308,7 @@ export default {
                 this.detailField = this.authorData.interests
                 console.log(this.authorData)
                 this.authorName = result.data.name
-                this.messageList.push(this.authorData.myWorkDis)
+                this.messageList = this.authorData.myWorkDisArrayList
             }
 
 

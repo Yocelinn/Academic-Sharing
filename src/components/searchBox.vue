@@ -1,6 +1,6 @@
 <template>
-  <seniorSearchBox v-model="isDialoVisibal" :classindex = radio1 ></seniorSearchBox>
-  <div class="mainContainer" :style="{ width: computedWidth}">
+  <seniorSearchBox v-model="isDialoVisibal" :classindex=radio1></seniorSearchBox>
+  <div class="mainContainer" :style="{ width: computedWidth }">
     <div class="container" :style="{ width: `${width}px`, backgroundColor: color }">
       <div class="searchDiv" :style="{ width: `${width}px`, backgroundColor: color }">
         <div class="selectContainer" v-if="radio != 10">
@@ -18,7 +18,7 @@
       </div>
       <div class="classDiv" :style="{ width: `${width}px` }" v-if="isClassVisible">
         <div class="top" style="padding-bottom: 0px" v-if="isClassVisible">
-          <el-radio-group v-model="radio" style="color: #409EFF;" text-color="red" fill='red' size="large">
+          <el-radio-group v-model="radio1" style="color: #409EFF;" text-color="red" fill='red' size="large">
             <el-radio :label="0" class="item" fill="red">论文</el-radio>
             <el-radio :label="1" class="item">专利</el-radio>
             <el-radio :label="2" class="item">快报</el-radio>
@@ -30,8 +30,9 @@
         </div>
       </div>
     </div>
-    <span style="position: relative;display: flex;top: 17px;left: 8px;color: white;cursor: pointer;" id="seniorSearchBox" @mouseover="mouseOverToChangeSeniorColor('seniorSearchBox')"
-    @mouseout="mouseOutToChangeSeniorColor('seniorSearchBox')" @click="isDialoVisibal = true">
+    <span style="position: relative;display: flex;top: 17px;left: 8px;color: white;cursor: pointer;" id="seniorSearchBox"
+      @mouseover="mouseOverToChangeSeniorColor('seniorSearchBox')"
+      @mouseout="mouseOutToChangeSeniorColor('seniorSearchBox')" @click="isDialoVisibal = true">
       高级搜索
     </span>
   </div>
@@ -169,11 +170,14 @@
 
 <script>
 import seniorSearchBox from '@/components/seniorSearchPage.vue'
-import {claimPortal} from "../api/portal.js"
+import { claimPortal } from "../api/portal.js"
+import Vue from 'vue';
+import App from '../App.vue';
+import store from '../store/index'; // 引入 store
 export default {
   components: {
     seniorSearchBox,
-    },
+  },
   props: {
     color: {
       type: String,
@@ -191,20 +195,17 @@ export default {
       type: String,
       default: ''
     },
-    classindex : {
-      type : Number,
-      default : 0,
+    classindex: {
+      type: Number,
+      default: 0,
     },
-    radio1 : {
-      type : Number,
-      default : 0,
-    }
   },
   data() {
     return {
-      radio : this.radio1,
+      radio1: 0,
+      radio: 0,
       localQuery: this.searchQuery,
-      isDialoVisibal : false,
+      isDialoVisibal: false,
       options: [
         [
           {
@@ -372,13 +373,19 @@ export default {
     for (var i = 0; i < this.options.length; i++) {
       this.titleList.push(this.options[i][0].value);
     }
+    if (this.$store.state.searchType === "")
+      this.radio1 = 0
+    else
+      this.radio1 = this.$store.state.searchType;
+    console.log(this.radio1)
+    console.log(this.titleList)
   },
   methods: {
-    mouseOverToChangeSeniorColor(id){
+    mouseOverToChangeSeniorColor(id) {
       var ele = document.querySelector("#" + id);
       ele.style.color = "#d1edc4"
     },
-    mouseOutToChangeSeniorColor(id){
+    mouseOutToChangeSeniorColor(id) {
       var ele = document.querySelector("#" + id);
       ele.style.color = "white"
     },
@@ -401,23 +408,25 @@ export default {
       map.set(3, "reports");
       map.set(4, "sciencedata");
       map.set(5, "books");
-      var a = map.get(this.radio);
-      this.$emit('search', { query: this.localQuery, option: this.titleList[this.radio], class: a });
-      console.log(this.radio1);
-      console.log(this.radio)
+      var a = map.get(this.radio1);
+      this.$emit('search', { query: this.localQuery, option: this.titleList[this.radio1], class: a });
+      console.log(this.titleList[this.radio1])
     }
   },
   watch: {
     // 确保响应父组件传递的 prop 更改
     searchQuery(newVal) {
       this.localQuery = newVal;
+    },
+    '$store.state.searchType'(newValue, oldValue) {
+      this.radio1 = newValue
     }
   },
   computedWidth() {
     var temp = this.width + 50;
     return `${temp}px`;
   },
-  radio1(newVal){
+  radio1(newVal) {
     this.radio = newVal
   }
 };

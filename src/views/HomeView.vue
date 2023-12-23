@@ -1,7 +1,7 @@
 <template>
   <div class="searchBlock">
     <div class="searchBackgroundImage" fit="fill"></div>
-    <searchBox style="position: absolute;width: 50%;left: 25%;top: 50%;"></searchBox>
+    <!-- <searchBox style="position: absolute;width: 50%;left: 25%;top: 50%;"></searchBox> -->
   </div>
   <div class="numberBlock">
     <div class="numberLeft" style="left: 15%;">
