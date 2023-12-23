@@ -7,7 +7,7 @@
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
         <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
         <div class="searchBlock">
-            <searchBox width=100 color="white" :isClassVisible=false :isLargeModel = false></searchBox>
+            <searchBox width=100 color="white" :isClassVisible=false style="margin-top: 100px;margin-left: 100px;" :isLargeModel = false></searchBox>
         </div>
         <div v-if="this.$store.state.userInfo.isLogin" class="button" style="width: 15%;right: 2%;">
             <Loggedin></Loggedin>
