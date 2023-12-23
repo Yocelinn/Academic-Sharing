@@ -11,7 +11,7 @@
                 <el-card style="height:640px" class="collectcard">
                   <el-table :data="history" style="width: 100%">
                     <el-table-column prop="date" label="收藏时间" width="150" />
-                    <el-table-column prop="name" label="学术成果名称" width="180" />
+                    <el-table-column prop="name" label="学术专利名称" width="230" />
                     <el-table-column prop="id" label="ID" width="120" />
                     <el-table-column prop="zone" label="领域" width="120" />
                     <el-table-column prop="writer" label="作者" width="145" />
