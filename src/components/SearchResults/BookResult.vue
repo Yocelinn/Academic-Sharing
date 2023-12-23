@@ -4,21 +4,25 @@
         <el-card type="primary" class="card" shadow="hover"> 
             <div class="result">
                 <div class="info">
-                <div class="title">{{ paper.title }}</div>
+                <div class="title">
+                  <div v-html="paper.title">
+                  </div>
+                </div>
                 <div class="authors" v-if="paper.author">
                   <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
                   <!-- <span class="alias-info">发明人</span> -->
                   {{ paper.author.join(', ') }}</div>
                 <div class="date">
                   <span class="alias-info" v-if="paper.year">出版时间: </span> {{ paper.year }}
-                  <span class="alias-info" v-if="paper.publisher">&nbsp; 出版社: </span> {{ paper.publisher }}
-                  <span class="alias-info" v-if="paper.isbn"> &nbsp;ISBN: </span> {{ paper.isbn }}
+                  <span class="alias-info" v-if="paper.publisher">&nbsp; 出版社: </span> <span v-html="paper.publisher"></span>
+                  <span class="alias-info" v-if="paper.isbn"> &nbsp;ISBN: </span><div v-html=" paper.isbn" ></div>
                 </div>
                
                 <div class="abstract-container" :id="`abstract-container_${paper.id}`">
                    <div class="abstract">
                     <span class="alias-info" v-if="paper.abstracts">概要: </span>
-                    {{  paper.abstracts}} 
+                    <!-- {{  }}  -->
+                    <span v-html="paper.abstracts"></span>
                     </div>
                    
                 </div>

@@ -139,10 +139,17 @@
               </div>
             </div>
             <div class="eachContainer" v-if="radioValue == '2'" style="overflow: visible;">
-              <div style="height: 110px;width: 89%;position: absolute;margin-top: -262px;background-color: white;display: flex; flex-wrap: wrap;border-style: solid;border-width: 1px;border-color: #dedfe0;box-shadow: 1px,1px,1px,#dedfe0;" v-if="isKeyboardShown"  @click.stop="isKeyboardShown = true">
-                <span v-for="(item,index) in signalList" :key="index" class="signalEachItemSpan" :id="`signalEachItemSpan-${index}`" @mouseover="mouseOverToChangeEachItemColor(`signalEachItemSpan-${index}`)" @mouseout="mouseOutToChangeEachItemColor(`signalEachItemSpan-${index}`)" @click="addToken(item.token)">{{ item.token }}</span>
+              <div
+                style="height: 110px;width: 89%;position: absolute;margin-top: -262px;background-color: white;display: flex; flex-wrap: wrap;border-style: solid;border-width: 1px;border-color: #dedfe0;box-shadow: 1px,1px,1px,#dedfe0;"
+                v-if="isKeyboardShown" @click.stop="isKeyboardShown = true">
+                <span v-for="(item, index) in signalList" :key="index" class="signalEachItemSpan"
+                  :id="`signalEachItemSpan-${index}`"
+                  @mouseover="mouseOverToChangeEachItemColor(`signalEachItemSpan-${index}`)"
+                  @mouseout="mouseOutToChangeEachItemColor(`signalEachItemSpan-${index}`)"
+                  @click="addToken(item.token)">{{ item.token }}</span>
               </div>
-              <div style="position: relative;height: 170px;width:90%;box-shadow: 4px 4px 10px #c8c9cc ;margin-top: 20px;" @click.stop="isKeyboardShown = true">
+              <div style="position: relative;height: 170px;width:90%;box-shadow: 4px 4px 10px #c8c9cc ;margin-top: 20px;"
+                @click.stop="isKeyboardShown = true">
                 <el-input v-model="professionInput" placeholder="请输入专业检索式" :rows="7" type="textarea"
                   style="height: 90%;width: 99%;box-shadow: box-shadow: 2 2 2 5px var(--el-input-border-color, var(--el-border-color)) inset;;margin-top:7px" />
               </div>
@@ -199,8 +206,11 @@
                   </span>
                   <span style="margin-left: 20px">
                     <div class="block">
-                      <el-date-picker v-model="dateValue" type="datetimerange" :shortcuts="shortcuts" range-separator="To"
-                        start-placeholder="Start date" end-placeholder="End date" />
+                      <el-date-picker v-model="dateValue1" type="year" :shortcuts="shortcuts" range-separator="To"
+                        start-placeholder="Start date" end-placeholder="End date" format="YYYY" value-format="YYYY"/>
+                        <span style="font-size: 20px;margin-right: 10px;">to</span>
+                      <el-date-picker v-model="dateValue2" type="year" :shortcuts="shortcuts" range-separator="To"
+                        start-placeholder="Start date" end-placeholder="End date" format="YYYY" value-format="YYYY"/>
                     </div>
                   </span>
                   <!-- <el-select v-model="updateTime" class="m-2" placeholder="更新时间" size="default" style="
@@ -260,8 +270,7 @@
               </div>
               <div class="bottomThing">
                 <el-button @click="reset">重置条件</el-button>
-                <el-button type="primary" style="margin-left: 100px"
-                  @click="console.log(select); console.log(isFass)">检索</el-button>
+                <el-button type="primary" style="margin-left: 100px" @click="seniorSearch">检索</el-button>
               </div>
             </div>
           </div>
@@ -293,8 +302,8 @@ export default {
   },
   data() {
     return {
-      signalList : require("../components/signal.JSON"),
-      isKeyboardShown : false,
+      signalList: require("../components/signal.JSON"),
+      isKeyboardShown: false,
       isUsageShown: false,
       professionInput: "",
       localIsVisibal: this.isVisibal,
@@ -304,8 +313,9 @@ export default {
       isFass: ["模糊", "模糊", "模糊"],
       FassList: ["模糊", "精确"],
       input: ["", "", "", "", ""],
-      dateValue: "",
-      value: ["标题", "标题", "标题", "标题", "标题"],
+      dateValue1: "",
+      dateValue2: "",
+      value: ["title", "title", "title", "title", "title"],
       documentClassIsPre: false,
       radioValue: ref("1"),
       falseortrues: ["AND", "OR", "NOT"],
@@ -424,14 +434,55 @@ export default {
     };
   },
   methods: {
-    addToken(token){
+    seniorSearch() {
+      var query = ""
+      var type = ""
+      var content = ""
+      if (this.radioValue == '2') {
+        content = this.professionInput;
+        type = "professional"
+      }
+      else {
+        type = "advanced"
+        var tempIsFass = []
+        var tempInput = []
+        var tempValue = []
+        var tempSelect = []
+        for (var i = 0; i < 3; i++) {
+          tempInput[i] = this.input[i]
+          tempValue[i] = this.value[i]
+        }
+        for(var i = 0;i < 2;i++){
+          tempSelect[i] = this.select[i]
+        }
+        for (var i = 0; i < this.isFass.length; i++)
+          if (this.isFass[i] == "模糊")
+            tempIsFass[i] = "~"
+          else
+            tempIsFass[i] = ""
+        content += tempValue[0] + "=" + tempInput[0] + tempIsFass[0]
+        content +=  " " + tempSelect[0] + " "
+        content += tempValue[1] + "=" + tempInput[1] + tempIsFass[1]
+        content +=  " " + tempSelect[1] + " "
+        content += tempValue[2] + "=" + tempInput[2] + tempIsFass[2]
+        if(this.dateValue1 !== "")
+        {
+          content += " AND year=" + this.dateValue1 + "," + this.dateValue2
+        }
+        this.$router.push({
+        path: '/searchResults/' + type + "/" + content
+      });
+
+      }
+    },
+    addToken(token) {
       this.professionInput = this.professionInput + token + " "
     },
-    mouseOverToChangeEachItemColor(id){
+    mouseOverToChangeEachItemColor(id) {
       var ele = document.querySelector("#" + id);
       ele.style.backgroundColor = "#f4f4f5"
     },
-    mouseOutToChangeEachItemColor(id){
+    mouseOutToChangeEachItemColor(id) {
       var ele = document.querySelector("#" + id);
       ele.style.backgroundColor = "white"
     },
@@ -442,7 +493,8 @@ export default {
       this.updateTime = "";
       this.select = this.select.map(() => "AND");
       this.input = this.input.map(() => "");
-      this.dateValue = "";
+      this.dateValue1 = "";
+      this.dateValue2 = "";
       var temp
       if (this.classindex == 1)
         temp = ["专利名", "专利名", "专利名", "专利名", "专利名"];
@@ -488,7 +540,7 @@ export default {
 };
 </script>
 <style scoped>
-.signalEachItemSpan{
+.signalEachItemSpan {
   position: relative;
   display: flex;
   height: 50px;
@@ -497,6 +549,7 @@ export default {
   padding: 0px;
   cursor: pointer;
 }
+
 .dataContainer {
   height: 45px;
   width: 100%;

@@ -1,24 +1,25 @@
 <template>
-  <seniorSearchBox v-model="isDialoVisibal" :classindex = radio1 ></seniorSearchBox>
-  <div class="mainContainer" :style="{ width: computedWidth}">
-    <div class="container" :style="{ width: `${width}px`, backgroundColor: color }">
-      <div class="searchDiv" :style="{ width: `${width}px`, backgroundColor: color }">
-        <div class="selectContainer" v-if="radio != 10">
-          <select class="select" v-model="titleList[radio1]">
+  <seniorSearchBox v-model="isDialoVisibal" :classindex=radio1></seniorSearchBox>
+  <div class="mainContainerSmallModel" :style = "{width: `${width}%`}">
+    <div class="container" >
+      <div :class="{ 'searchDiv': isLargeModel, 'searchDivSmallModel': !isLargeModel }" :style="{ backgroundColor: color }">
+        <div :class="{ 'selectContainer': isLargeModel, 'selectContainerSmallModel': !isLargeModel }" v-if="radio != 10">
+          <select class="select"  :class="{ 'select': isLargeModel, 'selectSmallModel': !isLargeModel }" v-model="titleList[radio1]">
             <option v-for="(item, index) in options[radio1]" :key="item.value" :label="item.label" :value="item.value"
               :selected="index === 0">
               {{ item.label }}
             </option>
           </select>
         </div>
-        <div class="inputContainer">
+        <div  :class="{ 'inputContainer': isLargeModel, 'inputContainerSmallModel': !isLargeModel }">
           <el-input placeholder="中文文献、外文文献" class="input" v-model="localQuery" @input="updateQuery" />
         </div>
-        <el-button type="primary" style="position: relative;margin-left:5%;top: 15px;" @click="emitSearch">搜索</el-button>
+        <el-button type="primary" style="position: relative;margin-left:0%;top: 5px;width : 15%;max-width: 60px;" @click="emitSearch" v-if="!isLargeModel" size="small">搜索</el-button>
+        <el-button type="primary" style="position: relative;margin-left:0%;top: 15px;width : 15%;max-width: 60px;" @click="emitSearch" v-if="isLargeModel">搜索</el-button>
       </div>
-      <div class="classDiv" :style="{ width: `${width}px` }" v-if="isClassVisible">
+      <div :class="{ 'classDiv': isLargeModel, 'classDivSmallModel': !isLargeModel }" :style="{ width: `${width}%` }" v-if="isClassVisible">
         <div class="top" style="padding-bottom: 0px" v-if="isClassVisible">
-          <el-radio-group v-model="radio" style="color: #409EFF;" text-color="red" fill='red' size="large">
+          <el-radio-group v-model="radio1" style="color: #409EFF;" text-color="red" fill='red' size="large">
             <el-radio :label="0" class="item" fill="red">论文</el-radio>
             <el-radio :label="1" class="item">专利</el-radio>
             <el-radio :label="2" class="item">快报</el-radio>
@@ -30,8 +31,14 @@
         </div>
       </div>
     </div>
-    <span style="position: relative;display: flex;top: 17px;left: 8px;color: white;cursor: pointer;" id="seniorSearchBox" @mouseover="mouseOverToChangeSeniorColor('seniorSearchBox')"
-    @mouseout="mouseOutToChangeSeniorColor('seniorSearchBox')" @click="isDialoVisibal = true">
+    <span style="position: relative;display: flex;top: 17px;left: 0px;color: white;cursor: pointer;" id="seniorSearchBox"
+      @mouseover="mouseOverToChangeSeniorColor('seniorSearchBox')"
+      @mouseout="mouseOutToChangeSeniorColor('seniorSearchBox')" @click="isDialoVisibal = true" v-if="isLargeModel">
+      高级搜索
+    </span>
+    <span style="position: relative;display: flex;top: 8px;left: 0px;color: white;cursor: pointer;" id="seniorSearchBox"
+      @mouseover="mouseOverToChangeSeniorColor('seniorSearchBox')"
+      @mouseout="mouseOutToChangeSeniorColor('seniorSearchBox')" @click="isDialoVisibal = true" v-if="!isLargeModel">
       高级搜索
     </span>
   </div>
@@ -40,6 +47,14 @@
 .mainContainer {
   position: relative;
   display: flex;
+  height: 80px;
+  width: 100%;
+}
+.mainContainerSmallModel {
+  position: relative;
+  display: flex;
+  height: 50px;
+  width: 100%;
 }
 
 /* 选中后的字体颜色 */
@@ -83,9 +98,10 @@
   flex-direction: column;
   /* 垂直方向排列 */
   align-items: center;
-  width: 1000px;
   /* 垂直居中对齐 */
   border-radius: 2%;
+  width: 85%;
+  overflow: hidden;
 }
 
 .classDiv {
@@ -99,15 +115,36 @@
   width: 100%;
   margin-top: 20px;
 }
+.classDivSmallModel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* 垂直方向排列 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  height: 30px;
+  width: 100%;
+  margin-top: 10px;
+}
+
 
 .input {
   position: relative;
   display: flex;
   flex: 1;
-  width: 550px;
+  width: 50%;
 }
 
 :deep(.el-input__wrapper) {
+  box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+  cursor: default;
+
+  .el-input__inner {
+    cursor: default !important;
+  }
+}
+
+:deep(.el-input__wrapper.is-focus) {
   box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
   cursor: default;
 
@@ -121,6 +158,17 @@
   display: flex;
   top: 10px;
   height: 40px;
+  width: 60%;
+  float: left;
+  margin-left: 40px;
+  overflow: hidden;
+}
+
+.inputContainerSmallModel {
+  position: relative;
+  display: flex;
+  top: 5px;
+  height: 25px;
   width: 60%;
   float: left;
   margin-left: 40px;
@@ -143,13 +191,42 @@
   border-right-color: #b1b3b8;
 }
 
+.selectContainerSmallModel {
+  float: left;
+  position: relative;
+  display: flex;
+  left: 15px;
+  top: 5px;
+  height: 25px;
+  width: 8%;
+  border-style: solid;
+  border-left: 0;
+  border-top: 0;
+  border-bottom: 0;
+  border-right-width: 2px;
+  border-right-color: #b1b3b8;
+}
+
+
 .searchDiv {
   flex-direction: column;
   /* 垂直方向排列 */
   align-items: center;
   /* 垂直居中对齐 */
   height: 60px;
-  width: 850px;
+  width: 95%;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px #42b983;
+  background-color: white;
+}
+
+.searchDivSmallModel {
+  flex-direction: column;
+  /* 垂直方向排列 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  height: 40px;
+  width: 97%;
   border-radius: 5px;
   box-shadow: 2px 2px 5px #42b983;
   background-color: white;
@@ -165,23 +242,40 @@
   appearance: none;
   padding-top: 10px;
 }
+.selectSmallModel {
+  outline: none;
+  height: 20px;
+  width: 100%;
+  border: 0;
+  position: relative;
+  display: flex;
+  appearance: none;
+  padding-top: 5px;
+}
 </style>
 
 <script>
 import seniorSearchBox from '@/components/seniorSearchPage.vue'
-import {claimPortal} from "../api/portal.js"
+import { claimPortal } from "../api/portal.js"
+import Vue from 'vue';
+import App from '../App.vue';
+import store from '../store/index'; // 引入 store
 export default {
   components: {
     seniorSearchBox,
-    },
+  },
   props: {
     color: {
       type: String,
       default: 'white',
     },
+    isLargeModel: {
+      type: Boolean,
+      default: false,
+    },
     width: {
       type: Number,
-      default: 800 // 默认值
+      default: 80 // 默认值
     },
     isClassVisible: {
       type: Boolean,
@@ -191,174 +285,183 @@ export default {
       type: String,
       default: ''
     },
-    classindex : {
-      type : Number,
-      default : 0,
+    classindex: {
+      type: Number,
+      default: 0,
     },
-    radio1 : {
-      type : Number,
-      default : 0,
-    }
   },
   data() {
     return {
-      radio : this.radio1,
+      radio1: 0,
+      radio: 0,
       localQuery: this.searchQuery,
-      isDialoVisibal : false,
+      isDialoVisibal: false,
       options: [
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "关键词",
+            value: "keyword",
             label: "关键词",
           },
           {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "机构",
+            value: "institution",
             label: "机构",
           },
           {
-            value: "出版物",
+            value: "source",
             label: "出版物",
           },
           {
-            value: "摘要",
+            value: "abstract",
             label: "摘要",
           },
           {
-            value: "DOI",
+            value: "doi",
             label: "DOI",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "专利名",
+            value: "title",
             label: "专利名",
           },
           {
-            value: "发明人",
+            value: "inventor",
             label: "发明人",
           },
           {
-            value: "申请人",
+            value: "applicant",
             label: "申请人",
           },
           {
-            value: "申请号",
+            value: "apply_number",
             label: "申请号",
           },
           {
-            value: "公开号",
+            value: "issue_number",
             label: "公开号",
           },
           {
-            value: "IPC",
+            value: "ipc",
             label: "IPC",
           },
           {
-            value: "CPC",
+            value: "cpc",
             label: "CPC",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "服务领域",
+            value: "subject",
             label: "服务领域",
           },
           {
-            value: "主办单位",
+            value: "institution",
             label: "主办单位",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "领域",
+            value: "subject",
             label: "领域",
           },
           {
-            value: "编译者",
+            value: "author",
             label: "编译者",
           },
           {
-            value: "快报产品",
+            value: "source",
             label: "快报产品",
           },
           {
-            value: "来源",
+            value: "platform",
             label: "来源",
           },
           {
-            value: "摘要",
+            value: "abstract",
             label: "摘要",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "关键词",
+            value: "keyword",
             label: "关键词",
+          },
+          {
+            value: "provider",
+            label: "发布机构",
+          },
+          {
+            value: "abstract",
+            label: "摘要",
+          },
+          {
+            value: "cstr",
+            label: "CSTR",
           },
         ],
         [
+        {
+            value: "",
+            label: "主题",
+          },
           {
-            value: "书名",
+            value: "title",
             label: "书名",
           },
           {
-            value: "ISBN",
+            value: "isbn",
             label: "ISBN",
           },
           {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "出版社",
+            value: "publisher",
             label: "出版社",
           },
         ],
@@ -372,13 +475,19 @@ export default {
     for (var i = 0; i < this.options.length; i++) {
       this.titleList.push(this.options[i][0].value);
     }
+    if (this.$store.state.searchType === "")
+      this.radio1 = 0
+    else
+      this.radio1 = this.$store.state.searchType;
+    console.log(this.radio1)
+    console.log(this.titleList)
   },
   methods: {
-    mouseOverToChangeSeniorColor(id){
+    mouseOverToChangeSeniorColor(id) {
       var ele = document.querySelector("#" + id);
       ele.style.color = "#d1edc4"
     },
-    mouseOutToChangeSeniorColor(id){
+    mouseOutToChangeSeniorColor(id) {
       var ele = document.querySelector("#" + id);
       ele.style.color = "white"
     },
@@ -401,23 +510,25 @@ export default {
       map.set(3, "reports");
       map.set(4, "sciencedata");
       map.set(5, "books");
-      var a = map.get(this.radio);
-      this.$emit('search', { query: this.localQuery, option: this.titleList[this.radio], class: a });
-      console.log(this.radio1);
-      console.log(this.radio)
+      var a = map.get(this.radio1);
+      this.$emit('search', { query: this.localQuery, option: this.titleList[this.radio1], class: a });
+      console.log(this.titleList[this.radio1])
     }
   },
   watch: {
     // 确保响应父组件传递的 prop 更改
     searchQuery(newVal) {
       this.localQuery = newVal;
+    },
+    '$store.state.searchType'(newValue, oldValue) {
+      this.radio1 = newValue
     }
   },
   computedWidth() {
-    var temp = this.width + 50;
-    return `${temp}px`;
+    var temp = this.width;
+    return `${temp}%`;
   },
-  radio1(newVal){
+  radio1(newVal) {
     this.radio = newVal
   }
 };
