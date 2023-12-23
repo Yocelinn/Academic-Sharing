@@ -95,6 +95,7 @@ import * as echarts from 'echarts';
 import { reactive,onMounted ,ref} from 'vue';
 import {post,get} from "../api/api.js"
 import { GetUserInformation,UpdateUserInformation,ChangePasswd} from "../api/loginAndRegister.js"
+import store from '@/store';
 import {
   Check,
   Delete,
@@ -103,6 +104,7 @@ import {
   Search,
   Star,
 } from '@element-plus/icons-vue'
+import { ElNotification } from 'element-plus';
 export default {
   components: {
     Personaside,
@@ -118,7 +120,18 @@ export default {
       this.rewritedescription = this.persondescription;
     },
     submitmessage(){
-      UpdateUserInformation(this.rewriteusername,this.rewritedescription)
+      var promise=UpdateUserInformation(this.rewriteusername,this.rewritedescription)
+      promise.then((response)=>{
+        if(response.code==200){
+          ElNotification({
+            title:'修改成功',
+            message:'个人信息已更新',
+            type:'success',
+          })
+        this.username=response.data.nick_name;
+        this.persondescription=response.data.person_description;
+        }
+      })
       this.dialogFormVisible = false;
     },
     rewirtepassword(){
@@ -126,14 +139,31 @@ export default {
       this.dialogPassword = true;
     },
     submitpassword(){
-      ChangePasswd(this.oldpassword,this.newpassword);
+      var promise=ChangePasswd(this.oldpassword,this.newpassword);
+      promise.then((response=>{
+        if(response.code==200){
+          ElNotification({
+            title:'修改密码成功',
+            message:'请重新登录',
+            type:'success',
+          })
+        }else if(response.code==1003){
+            ElNotification({
+              title:'修改密码失败',
+              message:'原密码错误',
+              type:'fail',
+            })
+          }
+      }))
+      this.oldpassword=''
+      this.newpassword=''
       this.dialogPassword = false;
     }
   },
   setup(){
     const dialogFormVisible = ref(false)
     const dialogPassword = ref(false)
-    const username='沃兹基·弁德'
+    const username=ref('')
     const rewriteusername=ref('')
     const rewritephone=ref('')
     const rewriteemail=ref('')
@@ -146,7 +176,7 @@ export default {
     let name=ref('测试')
     const userid='北京 中国'
     const phone='1234578910'
-    const email='123456789@qq.com'
+    const email=ref('')
     const zone='计算机'
     const interest='数据库 架构 数据库系统'
     const textdata='149'
@@ -158,7 +188,11 @@ export default {
     onMounted(()=>{
       var promise=GetUserInformation();
       promise.then((response)=>{
+        console.log(store.state.token);
         console.log(response);
+        username.value = response.data.nick_name;
+        email.value = response.data.email;
+        persondescription.value = response.data.person_description;
       })
     const echart1 = echarts.init(document.getElementById('echarts1'))
     const echarts1option = {
@@ -307,6 +341,7 @@ export default {
 }
 
 .card1 {
+  margin-top: 40px;
   width: 960px;
   border-radius:5px;
   box-shadow: color='688f4e';

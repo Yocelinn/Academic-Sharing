@@ -10,12 +10,11 @@
               <el-col :span="16" style="padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
                 <el-card style="height:640px" class="historycard">
                   <el-table :data="history" style="width: 100%">
-                    <el-table-column prop="time" label="浏览时间" width="150" />
-                    <el-table-column prop="content" label="学术成果名称" width="180" />
+                    <el-table-column prop="time" label="浏览时间" width="175" />
+                    <el-table-column prop="content" label="学术成果名称" width="200" />
                     <el-table-column prop="searchID" label="ID" width="120" />
-                    <el-table-column prop="zone" label="领域" width="120" />
-                    <el-table-column prop="writer" label="作者" width="145" />
-                    <el-table-column fixed="right" label="操作" width="120">
+                    <el-table-column prop="zone" label="领域" width="250" />
+                    <el-table-column fixed="right" label="操作" width="140">
                       <template #default>
                         <el-button link type="primary" size="small" @click="historydelete(scope.row)"
                           >删除</el-button
@@ -130,6 +129,7 @@
     align-items: c
   }
   .historycard{
+    margin-top: 40px;
     border-top-color: #688f4e;
     border-top-width: 10px ;
   }
