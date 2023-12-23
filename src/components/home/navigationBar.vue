@@ -7,9 +7,9 @@
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
         <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
         <div class="searchBlock">
-            <searchBox width=100></searchBox>
+            <searchBox width=100 color="white" :isClassVisible=false :isLargeModel = false></searchBox>
         </div>
-        <div v-if="this.$store.state.isLogin" class="button" style="width: 15%;right: 2%;">
+        <div v-if="this.$store.state.userInfo.isLogin" class="button" style="width: 15%;right: 2%;">
             <Loggedin></Loggedin>
         </div>
         <div v-else id="" class="button" style="width: 10%;right: 10%;">
