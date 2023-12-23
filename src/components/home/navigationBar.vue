@@ -20,8 +20,6 @@
 
 <script>
 import LoinAndRegister from '@/components/user/LoinAndRegister.vue';
-import Loggedin from '../user/Loggedin.vue';
-import searchBox from '../searchBox.vue';
 import store from '@/store';
 
 export default {
@@ -33,8 +31,6 @@ export default {
     },
     components:{
         LoinAndRegister,
-        Loggedin,
-        searchBox,
     },
     data(){
         return{
@@ -65,7 +61,7 @@ export default {
     position: relative;
     width: 100%;
     min-width: 1200px;
-    height: 50px;
+    height: 70px;
     background-color: #688f4e;
 }
 .logo{
@@ -120,13 +116,6 @@ export default {
     left: 0;
     background: rgba(255, 255, 255, 0.3);
     /* border-bottom: 5px solid #ff9c00; */
-}
-.searchBlock{
-    position: absolute;
-    width: 40%;
-    height: 100%;
-    left: 40%;
-    top: 0%;
 }
 
 </style>
