@@ -112,7 +112,7 @@ const routes = [
     }
   },
   {
-    path: '/program/detail',  // 项目详情页
+    path: '/program/detail/:funderId?',  // 项目详情页
     name: 'ProgramDetail',
     component: () => import('../views/details/ProgramDetail.vue')
   },
