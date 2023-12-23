@@ -124,7 +124,7 @@ export default {
 .searchBlock{
     position: absolute;
     height: 100%;
-    width: 40%;
+    width: 32%;
     left: 40%;
     top: 0%;
 }
