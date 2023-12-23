@@ -7,7 +7,7 @@
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
         <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
         <div class="searchBlock">
-            <searchBox width=100 color="white" :isClassVisible=false style="margin-top: 100px;margin-left: 100px;" :isLargeModel = false></searchBox>
+            <searchBox width=100 color="white" :isClassVisible=false  :isLargeModel = false></searchBox>
         </div>
         <div v-if="this.$store.state.userInfo.isLogin" class="button" style="width: 15%;right: 2%;">
             <Loggedin></Loggedin>
@@ -20,6 +20,8 @@
 
 <script>
 import LoinAndRegister from '@/components/user/LoinAndRegister.vue';
+import Loggedin from '../user/Loggedin.vue';
+import searchBox from '../searchBox.vue';
 import store from '@/store';
 
 export default {
@@ -31,6 +33,8 @@ export default {
     },
     components:{
         LoinAndRegister,
+        Loggedin,
+        searchBox,
     },
     data(){
         return{
@@ -61,7 +65,7 @@ export default {
     position: relative;
     width: 100%;
     min-width: 1200px;
-    height: 70px;
+    height: 50px;
     background-color: #688f4e;
 }
 .logo{
@@ -116,6 +120,13 @@ export default {
     left: 0;
     background: rgba(255, 255, 255, 0.3);
     /* border-bottom: 5px solid #ff9c00; */
+}
+.searchBlock{
+    position: absolute;
+    height: 100%;
+    width: 40%;
+    left: 40%;
+    top: 0%;
 }
 
 </style>

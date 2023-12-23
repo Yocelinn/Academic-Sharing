@@ -8,7 +8,13 @@
                 <template #dropdown>
                     <el-dropdown-menu>
                         <el-dropdown-item @click="this.logOutClick()">退出登录</el-dropdown-item>
-                        <el-dropdown-item @click="">注销账户</el-dropdown-item>
+                        <el-dropdown-item >
+                            <el-popconfirm title="确定注销该账户吗?" @confirm="this.logOff()">
+                                <template #reference>
+                                    注销账户
+                                </template>
+                            </el-popconfirm>
+                        </el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -16,11 +22,13 @@
         <div class="first">你好，</div>
         <div class="nickName">{{ this.$store.state.userInfo.showName }}</div>
     </div>
+    
 </template>
 
 <script>
 import store from '@/store';
-import { ref, watch } from 'vue';
+import { ElNotification } from 'element-plus';
+import { Logoff } from '@/api/loginAndRegister';
 
 export default{
     props: {
@@ -33,14 +41,25 @@ export default{
     },
     methods:{
         logOutClick(){
+            ElNotification({
+                message: "再见，尊敬的"+store.state.userInfo.nickName,
+                type: 'success',
+                showClose: true,
+                position: 'top-right',
+                duration: 2000,
+            })
             store.commit("logout");
         },
+        logOff(){
+            var promise=Logoff();
+            promise.then((result) => {
+                console.log(result);
+            })
+            store.commit("logout");
+        }
     },
     mounted(){
-        var nickNameWatcher=ref(store.state.nickName);
-        watch(nickNameWatcher, (newValue, oldValue) => {
-            console.log(newValue.size());
-        })
+
     },
 }
 
