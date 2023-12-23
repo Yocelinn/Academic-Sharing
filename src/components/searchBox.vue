@@ -1,23 +1,28 @@
 <template>
   <seniorSearchBox v-model="isDialoVisibal" :classindex=radio1></seniorSearchBox>
-  <div :class="{ 'mainContainer': isLargeModel, 'mainContainerSmallModel': !isLargeModel }"  :style="{ width: `${width}%`, backgroundColor: color }">
-    <div class="container" >
-      <div :class="{ 'searchDiv': isLargeModel, 'searchDivSmallModel': !isLargeModel }" :style="{ backgroundColor: color }">
+  <div :class="{ 'mainContainer': isLargeModel, 'mainContainerSmallModel': !isLargeModel }" :style="{ width: `${width}%` }">
+    <div class="container">
+      <div :class="{ 'searchDiv': isLargeModel, 'searchDivSmallModel': !isLargeModel }"
+        :style="{ backgroundColor: color }">
         <div :class="{ 'selectContainer': isLargeModel, 'selectContainerSmallModel': !isLargeModel }" v-if="radio != 10">
-          <select class="select"  :class="{ 'select': isLargeModel, 'selectSmallModel': !isLargeModel }" v-model="titleList[radio1]">
+          <select class="select" :class="{ 'select': isLargeModel, 'selectSmallModel': !isLargeModel }"
+            v-model="titleList[radio1]">
             <option v-for="(item, index) in options[radio1]" :key="item.value" :label="item.label" :value="item.value"
               :selected="index === 0">
               {{ item.label }}
             </option>
           </select>
         </div>
-        <div  :class="{ 'inputContainer': isLargeModel, 'inputContainerSmallModel': !isLargeModel }">
+        <div :class="{ 'inputContainer': isLargeModel, 'inputContainerSmallModel': !isLargeModel }">
           <el-input placeholder="中文文献、外文文献" class="input" v-model="localQuery" @input="updateQuery" />
         </div>
-        <el-button type="primary" style="position: relative;margin-left:0%;top: 5px;width : 15%;max-width: 60px;" @click="emitSearch" v-if="!isLargeModel" size="small">搜索</el-button>
-        <el-button type="primary" style="position: relative;margin-left:0%;top: 15px;width : 15%;max-width: 60px;" @click="emitSearch" v-if="isLargeModel">搜索</el-button>
+        <el-button type="primary" style="position: relative;margin-right:20px;top: 5px;width : 15%;max-width: 60px;float: right;"
+          @click="emitSearch" v-if="!isLargeModel" size="small">搜索</el-button>
+        <el-button type="primary" style="position: relative;right: 20px;top: 15px;width : 15%;max-width: 60px;float: right;"
+          @click="emitSearch" v-if="isLargeModel">搜索</el-button>
       </div>
-      <div :class="{ 'classDiv': isLargeModel, 'classDivSmallModel': !isLargeModel }" :style="{ width: `${width}%` }" v-if="isClassVisible">
+      <div :class="{ 'classDiv': isLargeModel, 'classDivSmallModel': !isLargeModel }" :style="{ width: `${width}%` }"
+        v-if="isClassVisible">
         <div class="top" style="padding-bottom: 0px" v-if="isClassVisible">
           <el-radio-group v-model="radio1" style="color: #409EFF;" text-color="red" fill='red' size="large">
             <el-radio :label="0" class="item" fill="red">论文</el-radio>
@@ -45,16 +50,17 @@
 </template>
 <style scoped>
 .mainContainer {
-  position: absolute;
+  position: relative;
   display: flex;
-  min-width: 900px;
-  height: 80px;
+  height: 200px;
+  width: 100%;
 }
+
 .mainContainerSmallModel {
-  position: absolute;
+  position: relative;
   display: flex;
-  min-width: 900px;
   height: 50px;
+  width: 100%;
 }
 
 /* 选中后的字体颜色 */
@@ -115,6 +121,7 @@
   width: 100%;
   margin-top: 20px;
 }
+
 .classDivSmallModel {
   position: relative;
   display: flex;
@@ -136,6 +143,15 @@
 }
 
 :deep(.el-input__wrapper) {
+  box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+  cursor: default;
+
+  .el-input__inner {
+    cursor: default !important;
+  }
+}
+
+:deep(.el-input__wrapper.is-focus) {
   box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
   cursor: default;
 
@@ -233,6 +249,7 @@
   appearance: none;
   padding-top: 10px;
 }
+
 .selectSmallModel {
   outline: none;
   height: 20px;
@@ -266,7 +283,7 @@ export default {
     },
     width: {
       type: Number,
-      default: 800 // 默认值
+      default: 80 // 默认值
     },
     isClassVisible: {
       type: Boolean,
@@ -283,6 +300,7 @@ export default {
   },
   data() {
     return {
+      dialogTableVisible : true,
       radio1: 0,
       radio: 0,
       localQuery: this.searchQuery,
@@ -290,157 +308,169 @@ export default {
       options: [
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "关键词",
+            value: "keyword",
             label: "关键词",
           },
           {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "机构",
+            value: "institution",
             label: "机构",
           },
           {
-            value: "出版物",
+            value: "source",
             label: "出版物",
           },
           {
-            value: "摘要",
+            value: "abstract",
             label: "摘要",
           },
           {
-            value: "DOI",
+            value: "doi",
             label: "DOI",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "专利名",
+            value: "title",
             label: "专利名",
           },
           {
-            value: "发明人",
+            value: "inventor",
             label: "发明人",
           },
           {
-            value: "申请人",
+            value: "applicant",
             label: "申请人",
           },
           {
-            value: "申请号",
+            value: "apply_number",
             label: "申请号",
           },
           {
-            value: "公开号",
+            value: "issue_number",
             label: "公开号",
           },
           {
-            value: "IPC",
+            value: "ipc",
             label: "IPC",
           },
           {
-            value: "CPC",
+            value: "cpc",
             label: "CPC",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "服务领域",
+            value: "subject",
             label: "服务领域",
           },
           {
-            value: "主办单位",
+            value: "institution",
             label: "主办单位",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "领域",
+            value: "subject",
             label: "领域",
           },
           {
-            value: "编译者",
+            value: "author",
             label: "编译者",
           },
           {
-            value: "快报产品",
+            value: "source",
             label: "快报产品",
           },
           {
-            value: "来源",
+            value: "platform",
             label: "来源",
           },
           {
-            value: "摘要",
+            value: "abstract",
             label: "摘要",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "标题",
+            value: "title",
             label: "标题",
           },
           {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "关键词",
+            value: "keyword",
             label: "关键词",
+          },
+          {
+            value: "provider",
+            label: "发布机构",
+          },
+          {
+            value: "abstract",
+            label: "摘要",
+          },
+          {
+            value: "cstr",
+            label: "CSTR",
           },
         ],
         [
           {
-            value: "书名",
+            value: "",
+            label: "主题",
+          },
+          {
+            value: "title",
             label: "书名",
           },
           {
-            value: "ISBN",
+            value: "isbn",
             label: "ISBN",
           },
           {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "出版社",
+            value: "publisher",
             label: "出版社",
           },
         ],
@@ -456,8 +486,18 @@ export default {
     }
     if (this.$store.state.searchType === "")
       this.radio1 = 0
-    else
-      this.radio1 = this.$store.state.searchType;
+    else {
+      if (newValue === "articles")
+        this.radio1 = 0;
+      else if (newValue === "patents")
+        this.radio1 = 1;
+      else if (newValue === "reports")
+        this.radio1 = 3;
+      else if (newValue === "sciencedata")
+        this.radio1 = 4;
+      else if (newValue === "books")
+        this.radio1 = 5;
+    }
     console.log(this.radio1)
     console.log(this.titleList)
   },
@@ -482,6 +522,10 @@ export default {
       this.$emit('update:searchQuery', value);
     },
     emitSearch() {
+      if(this.localQuery === "")
+      {
+        return;
+      }
       let map = new Map();
       map.set(0, "articles");
       map.set(1, "patents");
@@ -491,7 +535,27 @@ export default {
       map.set(5, "books");
       var a = map.get(this.radio1);
       this.$emit('search', { query: this.localQuery, option: this.titleList[this.radio1], class: a });
+      var query = this.localQuery;
+      console.log(query)
       console.log(this.titleList[this.radio1])
+      var content = this.titleList[this.radio1];
+      //path: '/searchResults/:query?/:type?/:content?',
+      if (content === "") {
+        this.$router.push({
+          path: '/searchResults/' + query
+        }).then(() => {
+          window.location.reload();
+        });;
+      }
+      else {
+        var type = "symple"
+        this.$router.push({
+          path: '/searchResults/' + query + "/" + type + "/" + content
+        }).then(() => {
+          window.location.reload();
+        });;
+      }
+
     }
   },
   watch: {
@@ -500,7 +564,16 @@ export default {
       this.localQuery = newVal;
     },
     '$store.state.searchType'(newValue, oldValue) {
-      this.radio1 = newValue
+      if (newValue === "articles")
+        this.radio1 = 0;
+      else if (newValue === "patents")
+        this.radio1 = 1;
+      else if (newValue === "reports")
+        this.radio1 = 3;
+      else if (newValue === "sciencedata")
+        this.radio1 = 4;
+      else if (newValue === "books")
+        this.radio1 = 5;
     }
   },
   computedWidth() {

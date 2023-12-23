@@ -22,11 +22,11 @@ export default{
   mounted(){
     let userInfo = JSON.parse(localStorage.getItem("savedVuex"));
     if(userInfo===null){
-      store.state.isLogin=false;
-      store.state.token='';
+      store.state.userInfo.isLogin=false;
+      store.state.userInfo.token='';
+      store.state.userInfo.nickName='';
     } else{
-      store.state.isLogin = userInfo.isLogin;
-      store.state.token = userInfo.token;
+      store.state.userInfo=userInfo;
     }
   }
 }

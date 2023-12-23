@@ -107,6 +107,11 @@ const routes = [
     }
   },
   {
+    path: '/program/detail/:funderId?',  // 项目详情页
+    name: 'ProgramDetail',
+    component: () => import('../views/details/ProgramDetail.vue')
+  },
+  {
     path: '/collectPaper',
     name: 'collectPaper',
     component: () => import('../views/CollectPaper.vue')

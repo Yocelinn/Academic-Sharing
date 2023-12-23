@@ -1,8 +1,9 @@
 <template>
   <div class="searchBlock">
-    <div class="searchBackgroundImage" fit="fill">
-      <searchBox width=60 style="position: absolute;width: 50%;left: 25%;top: 50%;"></searchBox>
-    </div>
+    <div class="searchBackgroundImage" fit="fill"></div>
+    <div class="search">
+        <searchBox width=100 color="white" :isClassVisible=false  :isLargeModel = true></searchBox>
+      </div>
   </div>
   <div class="numberBlock">
     <div class="numberLeft" style="left: 15%;">
@@ -14,11 +15,13 @@
       <div class="number">学位论文</div>
     </div>
   </div>
-  <div class="hotAreasBlock">
-    <hotArea></hotArea>
-  </div>
-  <div class="hotPaperBlock">
-    <hotPaper></hotPaper>
+  <div style="position: relative;width: 100%;min-width: 1200px;">
+    <div class="hotAreasBlock">
+      <hotArea></hotArea>
+    </div>
+    <div class="hotPaperBlock">
+      <hotPaper></hotPaper>
+    </div>
   </div>
   <div class="informationBlock">
     <information></information>
@@ -65,6 +68,12 @@ export default {
   left: 0px;
   background-image: url('@/assets/home/searchBackground.jpg');
 }
+.search{
+  position: absolute;
+  width: 70%;
+  left: 20%;
+  top: 70%
+}
 .numberBlock{
   position: relative;
   background-color: #688f4e;
@@ -104,17 +113,19 @@ export default {
   height: 40%;
   font-size: large;
 }
-.hotAreasBlock{
-  position: relative;
-  width: 100%;
-  min-width: 1200px;
-  height: 450px;
-}
 .hotPaperBlock{
   position: relative;
-  width: 100%;
-  min-width: 1200px;
+  width: 40%;
+  min-width: 480px;
   height: 500px;
+}
+.hotAreasBlock{
+  position: absolute;
+  width: 60%;
+  min-width: 720px;
+  height: 500px;
+  right: 0%;
+  background-color: #faf3dd;
 }
 .informationBlock{
   position: relative;

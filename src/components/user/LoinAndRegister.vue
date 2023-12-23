@@ -192,7 +192,7 @@ export default {
                     var promise=Login(this.login.email, this.login.password);
                     promise.then((result)=>{
                         if(result.code==200){
-                            store.commit("login",result.data.token);
+                            store.commit("login", {"token" : result.data.token, "nickName" : result.data.nickName });
                             ElNotification({
                                 message: "欢迎回来",
                                 type: 'success',

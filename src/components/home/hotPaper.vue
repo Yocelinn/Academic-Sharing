@@ -12,18 +12,9 @@
                 </div>
             </div>
         </div>
-        <div class="month">
-            <div class="border"> </div>
+        <div class="institution">
             <div class="title">
-                热度月榜
-            </div>
-            <div class="body">
-                
-            </div>
-        </div>
-        <div class="journals">
-            <div class="title">
-                热门期刊
+                知名机构
             </div>
         </div>
     </div>
@@ -53,29 +44,22 @@ export default{
 <style scoped>
 .back{
     position: relative;
-    left: 15%;
-    width: 70%;
+    left: 5%;
+    width: 90%;
     height: 100%;
 }
 .total{
     position: relative;
-    width: 35%;
+    width: 53%;
     left: 0%;
     height: 100%;
-}
-.month{
-    position: absolute;
-    width: 35%;
-    height: 100%;
-    left: 35%;
     top: 0%;
-    
 }
-.journals{
+.institution{
     position: absolute;
-    width: 30%;
+    width: 43%;
     height: 100%;
-    left: 70%;
+    left: 55%;
     top: 0%;
     
 }
@@ -84,13 +68,13 @@ export default{
     width: 100%;
     height: 80%;
     top: 10%;
-    right: 5%;
+    right: 0%;
     border-right: 1px solid #68b0ab;
 }
 .title{
     position: relative;
     text-align: left;
-    width: 70%;
+    width: 80%;
     height: 6%;
     left: 5%;
     top: 4%;
@@ -108,7 +92,9 @@ export default{
     position: relative;
     top: 4%;
     width: 100%;
-    height: 10%;
+    height: 5%;
+    line-height: 10%;
+    border-bottom: 1px dashed silver;
 }
 .itemName{
     position: relative;
@@ -116,6 +102,7 @@ export default{
     left: 0%;
     width: 60%;
     height: 100%;
+    line-height: 100%;
     text-align: left;
 }
 .hotIndex{
@@ -124,6 +111,7 @@ export default{
     right: 0%;
     width: 40%;
     height: 100%;
+    line-height: 100%;
     text-align: right;
 }
 
