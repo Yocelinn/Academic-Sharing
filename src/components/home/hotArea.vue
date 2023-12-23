@@ -130,7 +130,7 @@ export default{
     top: -15px;
     left: 45%;
     z-index: 1;
-    font-size: 22px;
+    font-size: 20px;
     color: white;
 }
 .hot-title::before,.hot-title::after{
@@ -158,9 +158,9 @@ export default{
     color: #faf3dd;
     width: 10%;
     height: 30px;
-    font-size: 18px;
+    font-size: 14px;
     top: 10px;
-    right: 17%;
+    right: 10%;
     z-index: 1;
     border: 0ch;
     border-radius: 1ch;
@@ -170,9 +170,8 @@ export default{
 }
 .barGraph{
     position: relative;
-    background-color: #faf3dd;
-    left: 15%;
-    width: 70%;
+    left: 2%;
+    width: 96%;
     height: 100%;
 }
 #bar{

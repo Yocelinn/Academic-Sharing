@@ -21,12 +21,18 @@
             <span>历史记录</span>
           </el-menu-item>
         </router-link>
-        <router-link to="/collect">
-          <el-menu-item index="6">
-            <el-icon><PictureRounded /></el-icon>
+          <el-sub-menu index="1">
+          <template #title>
+            <el-icon><document /></el-icon>
             <span>收藏成果</span>
-          </el-menu-item>
-        </router-link>
+          </template>
+              <router-link to="/collectPaper">
+            <el-menu-item index="1-1">学术论文</el-menu-item>
+              </router-link>
+              <router-link to="/collectPatent">
+            <el-menu-item index="1-2">学术专利</el-menu-item>
+              </router-link>
+        </el-sub-menu>
       </el-menu>
     </el-row>
   </template>

@@ -255,7 +255,7 @@
         strategy.value.type=useRoute().query.type;
 
         strategy.value.content=useRoute().query.content;
-       
+       console.log(strategy.value)
         // const strategy = useRoute().query.strategy;
         const timeRange=ref("时间范围");
         const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'},{value:'10years',label:"近十年"}]
@@ -310,7 +310,6 @@
             aggregations.value[thing.tag].splice(indexToRemove,1)
           } 
           handleClassfierChange();
-         
         }
         function handleTimeRangeChange(){
           console.log(timeRange)

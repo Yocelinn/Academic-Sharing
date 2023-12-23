@@ -24,7 +24,7 @@ export function Login(email, password){
 
 export function Logoff(){
     let data={};
-    return post("/user/collectThesis",data);
+    return post("/user/logoff",data);
 }
 
 export function GetUserInformation(){

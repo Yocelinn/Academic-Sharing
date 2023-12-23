@@ -1,133 +1,133 @@
 [
     [
         {
-            "value": "标题",
+            "value": "title",
             "label": "标题"
         },
         {
-            "value": "关键词",
+            "value": "keyword",
             "label": "关键词"
         },
         {
-            "value": "作者",
+            "value": "author",
             "label": "作者"
         },
         {
-            "value": "机构",
+            "value": "institution",
             "label": "机构"
         },
         {
-            "value": "摘要",
+            "value": "abstract",
             "label": "摘要"
         },
         {
-            "value": "期刊",
+            "value": "source",
             "label": "期刊"
         }
     ],
     [
         {
-            "value": "专利名",
+            "value": "title",
             "label": "专利名"
         },
         {
-            "value": "发明人",
+            "value": "inventor",
             "label": "发明人"
         },
         {
-            "value": "专利权人",
+            "value": "applicant",
             "label": "专利权人"
         },
         {
-            "value": "申请号",
+            "value": "apply_number",
             "label": "申请号"
         },
         {
-            "value": "IPC分类号",
+            "value": "ipc",
             "label": "IPC分类号"
         },
         {
-            "value": "CPC分类号",
+            "value": "cpc",
             "label": "CPC分类号"
         }
     ],
     [
         {
-            "value": "标题",
+            "value": "title",
             "label": "标题"
         },
         {
-            "value": "服务领域",
+            "value": "subject",
             "label": "服务领域"
         },
         {
-            "value": "主办单位",
+            "value": "institution",
             "label": "主办单位"
         }
     ],
     [
         {
-            "value": "标题",
+            "value": "title",
             "label": "标题"
         },
         {
-            "value": "服务领域",
+            "value": "subject",
             "label": "服务领域"
         },
         {
-            "value": "情报产品",
+            "value": "source",
             "label": "情报产品"
         },
         {
-            "value": "编译者",
+            "value": "author",
             "label": "编译者"
         },
         {
-            "value": "摘要",
+            "value": "abstract",
             "label": "摘要"
         }
     ],
     [
         {
-            "value": "标题",
+            "value": "title",
             "label": "标题"
         },
         {
-            "value": "关键词",
+            "value": "keyword",
             "label": "关键词"
         },
         {
-            "value": "提交者",
+            "value": "provider",
             "label": "提交者"
         },
         {
-            "value": "作者",
+            "value": "author",
             "label": "作者"
         },
         {
-            "value": "摘要",
+            "value": "abstract",
             "label": "摘要"
         },
         {
-            "value": "CSTR",
+            "value": "cstr",
             "label": "CSTR"
         }
     ],
     [
         {
-            "value": "书名",
+            "value": "title",
             "label": "书名"
         },
         {
-            "value": "ISBN",
+            "value": "isbn",
             "label": "ISBN"
         },
         {
-            "value": "出版社",
+            "value": "publisher",
             "label": "出版社"
         },
         {
-            "value": "作者",
+            "value": "author",
             "label": "作者"
         }
     ]

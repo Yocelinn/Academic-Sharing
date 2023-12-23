@@ -356,7 +356,7 @@ import { onMounted,ref } from 'vue';
     border-bottom: solid 2px #d1d1d1; 
     padding: 5px 10px;
     text-align: left;
-    background-color: #5dd39a;
+    background-color: rgba(56, 168, 64, 0.7);
     border-radius: 5px;
     color:rgb(251, 251, 251);
     font-weight: 500;
@@ -395,7 +395,7 @@ import { onMounted,ref } from 'vue';
      /* padding-bottom: 10px; */ 
     padding: 5px 10px;
     text-align: left;
-    background-color: #5dd39a;
+    background-color: rgba(56, 168, 64, 0.7);
     border-radius: 5px;
     color:white;
     font-weight: 500;

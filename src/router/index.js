@@ -44,12 +44,7 @@ const routes = [
     component: () => import('../views/History.vue')
   },
   {
-    path: '/collect',
-    name: 'collect',
-    component: () => import('../views/Collect.vue')
-  },
-  {
-    path: '/searchResults/:query?/:type?/:content?',
+    path: '/searchResults',
     name: 'searchResults',
     component: () => import('../views/SearchResults.vue'),
     // props: (route) => ({ query: route.query.query }),
@@ -103,7 +98,7 @@ const routes = [
     component: () => import("../views/InstitutionView.vue")
   },
   {
-    path: '/PersonalDoorPage',
+    path: '/PersonalDoorPage/:uid',
     name: 'PersonalDoorPage',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -113,7 +108,7 @@ const routes = [
     }
   },
   {
-    path: '/program/detail',  // 项目详情页
+    path: '/program/detail/:funderId?',  // 项目详情页
     name: 'ProgramDetail',
     component: () => import('../views/details/ProgramDetail.vue')
   },
@@ -121,7 +116,16 @@ const routes = [
     path:'/allInstitution',//全部机构展示页
     name:'allInstitution',
     component: () => import('../views/AllInstitutionDisplay.vue')
-  }
+  },
+   { path: '/collectPaper',
+    name: 'collectPaper',
+    component: () => import('../views/CollectPaper.vue')
+  },
+  {
+    path: '/collectPatent',
+    name: 'collectPatent',
+    component: () => import('../views/CollectPatent.vue')
+  },
 ]
 
 const router = createRouter({
