@@ -1,6 +1,6 @@
 <template>
   <seniorSearchBox v-model="isDialoVisibal" :classindex=radio1></seniorSearchBox>
-  <div :class="{ 'mainContainer': isLargeModel, 'mainContainerSmallModel': !isLargeModel }"  :style="{ width: `${width}%`}">
+  <div class="mainContainerSmallModel" :style = "{width: `${width}%`}">
     <div class="container" >
       <div :class="{ 'searchDiv': isLargeModel, 'searchDivSmallModel': !isLargeModel }" :style="{ backgroundColor: color }">
         <div :class="{ 'selectContainer': isLargeModel, 'selectContainerSmallModel': !isLargeModel }" v-if="radio != 10">
@@ -45,16 +45,18 @@
 </template>
 <style scoped>
 .mainContainer {
-  position: absolute;
+  position: relative;
   display: flex;
-  min-width: 900px;
   height: 80px;
+  background-color: red;
+  width: 100%;
 }
 .mainContainerSmallModel {
-  position: absolute;
+  position: relative;
   display: flex;
-  min-width: 900px;
   height: 50px;
+  background-color: red;
+  width: 100%;
 }
 
 /* 选中后的字体颜色 */
@@ -275,7 +277,7 @@ export default {
     },
     width: {
       type: Number,
-      default: 800 // 默认值
+      default: 80 // 默认值
     },
     isClassVisible: {
       type: Boolean,

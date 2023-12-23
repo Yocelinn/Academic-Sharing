@@ -1,8 +1,8 @@
 <template>
-    <div class="mainContainer">
+    <div class="mainContainer" style="width: 1000px;background-color: green;">
         <!-- <el-button style="margin-top: 100px;" @click="isDialoVisibal = true">test</el-button>
         <seniorSearchBox v-model="isDialoVisibal"></seniorSearchBox> -->
-        <searchBox width=50 color="white" :isClassVisible=false  :isLargeModel = false></searchBox>
+        <searchBox width=40 color="white" :isClassVisible=false  :isLargeModel = false></searchBox>
         <el-button @click="test1">test</el-button>
         <!-- <button @click="test">test</button> -->
     </div>
