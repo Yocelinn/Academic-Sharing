@@ -1,8 +1,8 @@
 <template>
   <seniorSearchBox v-model="isDialoVisibal" :classindex = radio1 ></seniorSearchBox>
   <div class="mainContainer" :style="{ width: computedWidth}">
-    <div class="container" :style="{ width: `${width}px`, backgroundColor: color }">
-      <div class="searchDiv" :style="{ width: `${width}px`, backgroundColor: color }">
+    <div class="container" :style="{ width: `${width}%`, backgroundColor: color }">
+      <div class="searchDiv" :style="{ width: `${width}%`, backgroundColor: color }">
         <div class="selectContainer" v-if="radio != 10">
           <select class="select" v-model="titleList[radio1]">
             <option v-for="(item, index) in options[radio1]" :key="item.value" :label="item.label" :value="item.value"

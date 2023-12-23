@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import router from './router';
+import store from './store';
 import navigationBar from './components/home/navigationBar.vue';
 
 export default{
@@ -20,7 +20,14 @@ export default{
     
   },
   mounted(){
-
+    let userInfo = JSON.parse(localStorage.getItem("savedVuex"));
+    if(userInfo===null){
+      store.state.isLogin=false;
+      store.state.token='';
+    } else{
+      store.state.isLogin = userInfo.isLogin;
+      store.state.token = userInfo.token;
+    }
   }
 }
 
