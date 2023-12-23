@@ -1,9 +1,9 @@
 import { post, get} from "./api";
 
 export function SendVerifyCode(email){
-    let data={};
-    data.email=email;
-    return post("/user/sendVerifyCode/?email="+email,data);
+    let param={};
+    param.email=email;
+    return get("/user/sendVerifyCode",param);
 }
 
 export function Register(nick_name, email, password, captcha){

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import store from '@/store';
-import { ElMessage } from 'element-plus';
+import { ElNotification } from 'element-plus';
 
 
 export function post(url, data){
@@ -8,10 +8,12 @@ export function post(url, data){
         axios.post('http://114.115.179.52:8089/api'+url,data,{headers:{'Authorization': store.state.token}}).then(response=>{
             resolve(response.data)
         }).catch((error)=>{
-                ElMessage({
+                ElNotification({
                     message: "网络连接失败",
-                    grouping: true,
                     type: 'error',
+                    showClose: true,
+                    position: 'top-right',
+                    duration: 2000,
                 });
             });
     });
@@ -21,10 +23,12 @@ export function get(url, param){
         axios.get('http://114.115.179.52:8089/api'+url,{params:param,headers:{"Authorization": store.state.token}}).then(response=>{
             resolve(response.data)
         }).catch((error)=>{
-                ElMessage({
+                ElNotification({
                     message: "网络连接失败",
-                    grouping: true,
                     type: 'error',
+                    showClose: true,
+                    position: 'top-right',
+                    duration: 2000,
                 });
             });
     });
