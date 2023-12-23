@@ -61,7 +61,7 @@
                               共<span class="sr-num">&ensp;{{ papers_total }}&ensp;</span>条结果
                           </div>
                         </el-skeleton>
-                          <el-select v-model="timeRange" placeholder="时间范围" @change="handleTimeRangeChange">
+                          <!-- <el-select v-model="timeRange" placeholder="时间范围" @change="handleTimeRangeChange">
                             <el-option
                               v-for="item in TimeRangeOptions"
                               :key="item.value"
@@ -76,7 +76,7 @@
                               :label="item.label"
                               :value="item"
                             />
-                          </el-select>
+                          </el-select> -->
                        
                       </div>
                     </el-tab-pane>
@@ -142,6 +142,7 @@
   import BookResult from "@/components/SearchResults/BookResult.vue"
   import { defineComponent,ref,h, onMounted,onUnmounted,computed } from "vue";
   import {useRoute} from 'vue-router'
+  import { mapMutations } from "vuex";
   // import {post,get} from "../api/api.js"
   import {search,searchForAggregations} from "../api/classification.js"
   export default defineComponent ({
@@ -182,7 +183,7 @@
       });
       onUnmounted(() => {
         const srPaperResultsElement = srPaperResultsRef.value;
-        console.log("removeScrollListener")
+        // console.log("removeScrollListener")
         if (srPaperResultsElement) {
           srPaperResultsElement.removeEventListener('scroll', handleScroll);
         }
@@ -197,6 +198,7 @@
         var sr_loading=ref(false);
       //——————————————————————————————————————...——————————————————————————————————————  
       var isLastPage=ref(false)
+      // const { changeSearchType } = mapMutations(['changeSearchType']);
       const articlesWithSkeleton = computed(() => {
             const loadedContent = articles.value.content || [];
             const skeletonCount = loading.value ? sizePerPage.value : 0;
@@ -282,8 +284,8 @@
       // 移除已选条件的标签，后续这个selectedClassification需要换为aggregations
         function handleClose(thing,tag){
           // var indexToRemove=selectedClassification.value.indexOf(tag)
-          console.log(thing.tag)
-          console.log(aggregations.value[thing.tag].indexOf(tag))
+          // console.log(thing.tag)
+          // console.log(aggregations.value[thing.tag].indexOf(tag))
           var indexToRemove=aggregations.value[thing.tag].indexOf(tag);
           if(indexToRemove!=-1){
             aggregations.value[thing.tag].splice(indexToRemove,1)
@@ -298,8 +300,8 @@
           console.log(RankingMethod)
         }
        async function handleClassfierChange(){
-        console.log("ClassiferChanged")
-          console.log(aggregations.value);
+        // console.log("ClassiferChanged")
+          // console.log(aggregations.value);
           // curPage.value=1;
           await init();
           // console.log(curPage.value)
@@ -318,8 +320,10 @@
           await init();
           loading.value=true;
           sr_loading.value=true;
+          // changeSearchType(curAcademyType.value)
           await getResults();
           await getGroupClassifier();
+          this.$store.commit('changeSearchType',curAcademyType.value);
           // await new Promise(resolve => setTimeout(resolve, 300));
           
         }
@@ -331,7 +335,7 @@
               jsonString[key] = aObject[key].join(', ');
             }
           }
-          console.log(jsonString)
+          // console.log(jsonString)
           // console.log("searchPage"+curPage.value)
           // post(`/search/${curAcademyType.value}`,{"query":query,"strategy":strategy,"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
           // search(`${curAcademyType.value}`,{"query":query,"strategy":strategy,"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
@@ -339,8 +343,8 @@
           .then(response=>{
             // console.log(response)
             papers_total.value=response.total
-            console.log(response)
-            console.log("total_papers:"+response.total)
+            // console.log(response)
+            // console.log("total_papers:"+response.total)
             isLastPage.value=response.is_last;
             // if(curPage.value===1 ||JSON.stringify(articles.value)=="{}"||JSON.stringify(patents.value)=="{}"||JSON.stringify(bulletins.value)=="{}"||JSON.stringify(reports.value)=="{}"||JSON.stringify(sciencedata.value)=="{}"||JSON.stringify(books.value)=="{}"){
               if(curAcademyType.value==="articles"){  JSON.stringify(articles.value)=="{}"?articles.value=response:articles.value.content.push(...response.content);}
@@ -371,29 +375,29 @@
               jsonString[key] = aObject[key].join(', ');
             }
           }
-          console.log("string:")
-          console.log(jsonString)
+          // console.log("string:")
+          // console.log(jsonString)
           // post(`/search/${curAcademyType.value}/aggregations`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
           // searchForAggregations(curAcademyType.value,{"page":curPage.value,"size":sizePerPage.value,"order_field":"date","aggregations":jsonString})
           searchForAggregations(curAcademyType.value,curPage.value,sizePerPage.value,"date","desc", query,strategy.value,jsonString)
           .then(response=>{
-            console.log("getClassifier")
+            // console.log("getClassifier")
               grouptype.value=response;
               const tagNames = response.map(item => item.tag);
-              console.log(tagNames)
+              // console.log(tagNames)
               
                 
                 tagNames.forEach(name => {
                   if(aggregations.value[name]==undefined){
-                    console.log("aggregation is null"+aggregations.value)
+                    // console.log("aggregation is null"+aggregations.value)
                     aggregations.value[name] =[];
                   }
                   
                 });
               
 
-              console.log(aggregations.value)
-              console.log(grouptype.value)
+              // console.log(aggregations.value)
+              // console.log(grouptype.value)
               sr_loading.value=false;
           })
           .catch(error => {

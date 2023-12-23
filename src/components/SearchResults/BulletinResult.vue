@@ -5,6 +5,10 @@
             <div class="result">
                 <div class="info">
                 <div class="title">{{ paper.title }}</div>
+                <div class="authors" v-if="paper.sponsor">
+                  <span class="alias-info">主办单位: </span>
+                  {{ paper.sponsor.join(', ') }}
+                </div>
                 <div class="authors">
                   <span class="alias-info">领域: </span>
                   {{ paper.subject.join(', ')}}
