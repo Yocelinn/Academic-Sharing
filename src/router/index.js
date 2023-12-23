@@ -44,11 +44,6 @@ const routes = [
     component: () => import('../views/History.vue')
   },
   {
-    path: '/collect',
-    name: 'collect',
-    component: () => import('../views/Collect.vue')
-  },
-  {
     path: '/searchResults',
     name: 'searchResults',
     component: () => import('../views/SearchResults.vue')
@@ -102,7 +97,7 @@ const routes = [
     component: () => import("../views/InstitutionView.vue")
   },
   {
-    path: '/PersonalDoorPage',
+    path: '/PersonalDoorPage/:uid',
     name: 'PersonalDoorPage',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -110,6 +105,21 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '../views/PersonalDoorPage.vue')
     }
+  },
+  {
+    path: '/program/detail/:funderId?',  // 项目详情页
+    name: 'ProgramDetail',
+    component: () => import('../views/details/ProgramDetail.vue')
+  },
+  {
+    path: '/collectPaper',
+    name: 'collectPaper',
+    component: () => import('../views/CollectPaper.vue')
+  },
+  {
+    path: '/collectPatent',
+    name: 'collectPatent',
+    component: () => import('../views/CollectPatent.vue')
   },
 ]
 

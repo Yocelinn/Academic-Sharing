@@ -231,6 +231,7 @@
 <script>
 import FindDoor from '@/components/FindDoor.vue';
 import { getAuthorInfo } from "../api/portal.js"
+
 export default {
     components: {
         FindDoor
@@ -307,7 +308,7 @@ export default {
                 this.detailField = this.authorData.interests
                 console.log(this.authorData)
                 this.authorName = result.data.name
-                this.messageList.push(this.authorData.myWorkDis)
+                this.messageList = this.authorData.myWorkDisArrayList
             }
 
 

@@ -1,41 +1,101 @@
 <template>
-  <div class="container" :style="{ width: width ,backgroundColor : color}">
-    <div class="searchDiv" :style="{ width: width }">
-      <div class="selectContainer" v-if="radio != 10">
-        <select class="select" v-model="titleList[radio]">
-          <option v-for="(item, index) in options[radio]" :key="item.value" :label="item.label" :value="item.value"
-            :selected="index === 0">
-            {{ item.label }}
-          </option>
-        </select>
+  <seniorSearchBox v-model="isDialoVisibal" :classindex=radio1></seniorSearchBox>
+  <div :class="{ 'mainContainer': isLargeModel, 'mainContainerSmallModel': !isLargeModel }" :style="{ width: `${width}%` }">
+    <div class="container">
+      <div :class="{ 'searchDiv': isLargeModel, 'searchDivSmallModel': !isLargeModel }"
+        :style="{ backgroundColor: color }">
+        <div :class="{ 'selectContainer': isLargeModel, 'selectContainerSmallModel': !isLargeModel }" v-if="radio != 10">
+          <select class="select" :class="{ 'select': isLargeModel, 'selectSmallModel': !isLargeModel }"
+            v-model="titleList[radio1]">
+            <option v-for="(item, index) in options[radio1]" :key="item.value" :label="item.label" :value="item.value"
+              :selected="index === 0">
+              {{ item.label }}
+            </option>
+          </select>
+        </div>
+        <div :class="{ 'inputContainer': isLargeModel, 'inputContainerSmallModel': !isLargeModel }">
+          <el-input placeholder="中文文献、外文文献" class="input" v-model="localQuery" @input="updateQuery" />
+        </div>
+        <el-button type="primary" style="position: relative;margin-right:20px;top: 5px;width : 15%;max-width: 60px;float: right;"
+          @click="emitSearch" v-if="!isLargeModel" size="small">搜索</el-button>
+        <el-button type="primary" style="position: relative;right: 20px;top: 15px;width : 15%;max-width: 60px;float: right;"
+          @click="emitSearch" v-if="isLargeModel">搜索</el-button>
       </div>
-      <div class="inputContainer">
-        <el-input placeholder="中文文献、外文文献" class="input" v-model="localQuery" @input="updateQuery" />
+      <div :class="{ 'classDiv': isLargeModel, 'classDivSmallModel': !isLargeModel }" :style="{ width: `${width}%` }"
+        v-if="isClassVisible">
+        <div class="top" style="padding-bottom: 0px" v-if="isClassVisible">
+          <el-radio-group v-model="radio1" style="color: #409EFF;" text-color="red" fill='red' size="large">
+            <el-radio :label="0" class="item" fill="red">论文</el-radio>
+            <el-radio :label="1" class="item">专利</el-radio>
+            <el-radio :label="2" class="item">快报</el-radio>
+            <el-radio :label="3" class="item">动态快讯</el-radio>
+            <el-radio :label="4" class="item">科学数据</el-radio>
+            <el-radio :label="5" class="item">图书</el-radio>
+            <el-button type="info" style="height: 25px;" plain @click="cancelRadio">取消</el-button>
+          </el-radio-group>
+        </div>
       </div>
-      <el-button type="primary" style="position: relative;margin-left:5%;top: 15px;" @click="emitSearch">搜索</el-button>
     </div>
-    <div class="classDiv" :style="{ width: width }" v-if="isClassVisible">
-      <div class="top" style="padding-bottom: 0px" v-if="isClassVisible">
-        <el-radio-group v-model="radio">
-          <el-radio :label="0">论文</el-radio>
-          <el-radio :label="1">专利</el-radio>
-          <el-radio :label="2">快报</el-radio>
-          <el-radio :label="3">动态快讯</el-radio>
-          <el-radio :label="4">科学数据</el-radio>
-          <el-radio :label="5">图书</el-radio>
-          <el-button type="info" style="height: 25px;" plain @click="cancelRadio">取消</el-button>
-        </el-radio-group>
-      </div>
-    </div>
+    <span style="position: relative;display: flex;top: 17px;left: 0px;color: white;cursor: pointer;" id="seniorSearchBox"
+      @mouseover="mouseOverToChangeSeniorColor('seniorSearchBox')"
+      @mouseout="mouseOutToChangeSeniorColor('seniorSearchBox')" @click="isDialoVisibal = true" v-if="isLargeModel">
+      高级搜索
+    </span>
+    <span style="position: relative;display: flex;top: 8px;left: 0px;color: white;cursor: pointer;" id="seniorSearchBox"
+      @mouseover="mouseOverToChangeSeniorColor('seniorSearchBox')"
+      @mouseout="mouseOutToChangeSeniorColor('seniorSearchBox')" @click="isDialoVisibal = true" v-if="!isLargeModel">
+      高级搜索
+    </span>
   </div>
 </template>
 <style scoped>
+.mainContainer {
+  position: relative;
+  display: flex;
+  height: 200px;
+  width: 100%;
+}
+
+.mainContainerSmallModel {
+  position: relative;
+  display: flex;
+  height: 50px;
+  width: 100%;
+}
+
+/* 选中后的字体颜色 */
+:deep(.el-radio__input.is-checked .el-radio__inner) {
+  border-color: #ff9213;
+  background-color: #ff9213;
+}
+
+:deep(.el-radio__inner:hover) {
+  border-color: #ff9213;
+}
+
+:deep(.el-radio__input.is-checked+.el-radio__label) {
+  color: #fd7624 !important;
+}
+
+:deep(.el-radio__input+.el-radio__label) {
+  color: #909399 !important;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+:deep(.el-radio__input.is-checked .el-radio__inner) {
+  background: #fd7624 !important;
+  border-color: #fd7624 !important;
+}
+
+.item {
+  color: #eebe77;
+  font-size: 100px;
+}
+
 .top {
   width: 100%;
   height: 30px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #b1b3b8;
 }
 
 .container {
@@ -45,8 +105,9 @@
   /* 垂直方向排列 */
   align-items: center;
   /* 垂直居中对齐 */
-  width: 800px;
-  left: 300px;
+  border-radius: 2%;
+  width: 85%;
+  overflow: hidden;
 }
 
 .classDiv {
@@ -56,19 +117,41 @@
   /* 垂直方向排列 */
   align-items: center;
   /* 垂直居中对齐 */
-  height: 100px;
+  height: 50px;
   width: 100%;
-  margin-top: 40px;
+  margin-top: 20px;
 }
+
+.classDivSmallModel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* 垂直方向排列 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  height: 30px;
+  width: 100%;
+  margin-top: 10px;
+}
+
 
 .input {
   position: relative;
   display: flex;
   flex: 1;
-  width: 550px;
+  width: 50%;
 }
 
 :deep(.el-input__wrapper) {
+  box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+  cursor: default;
+
+  .el-input__inner {
+    cursor: default !important;
+  }
+}
+
+:deep(.el-input__wrapper.is-focus) {
   box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
   cursor: default;
 
@@ -82,6 +165,17 @@
   display: flex;
   top: 10px;
   height: 40px;
+  width: 60%;
+  float: left;
+  margin-left: 40px;
+  overflow: hidden;
+}
+
+.inputContainerSmallModel {
+  position: relative;
+  display: flex;
+  top: 5px;
+  height: 25px;
   width: 60%;
   float: left;
   margin-left: 40px;
@@ -104,15 +198,45 @@
   border-right-color: #b1b3b8;
 }
 
+.selectContainerSmallModel {
+  float: left;
+  position: relative;
+  display: flex;
+  left: 15px;
+  top: 5px;
+  height: 25px;
+  width: 8%;
+  border-style: solid;
+  border-left: 0;
+  border-top: 0;
+  border-bottom: 0;
+  border-right-width: 2px;
+  border-right-color: #b1b3b8;
+}
+
+
 .searchDiv {
   flex-direction: column;
   /* 垂直方向排列 */
   align-items: center;
   /* 垂直居中对齐 */
   height: 60px;
-  width: 850px;
+  width: 95%;
   border-radius: 5px;
   box-shadow: 2px 2px 5px #42b983;
+  background-color: white;
+}
+
+.searchDivSmallModel {
+  flex-direction: column;
+  /* 垂直方向排列 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  height: 40px;
+  width: 97%;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px #42b983;
+  background-color: white;
 }
 
 .select {
@@ -125,18 +249,41 @@
   appearance: none;
   padding-top: 10px;
 }
+
+.selectSmallModel {
+  outline: none;
+  height: 20px;
+  width: 100%;
+  border: 0;
+  position: relative;
+  display: flex;
+  appearance: none;
+  padding-top: 5px;
+}
 </style>
 
 <script>
+import seniorSearchBox from '@/components/seniorSearchPage.vue'
+import { claimPortal } from "../api/portal.js"
+import Vue from 'vue';
+import App from '../App.vue';
+import store from '../store/index'; // 引入 store
 export default {
+  components: {
+    seniorSearchBox,
+  },
   props: {
-    color : {
-      type : String,
-      default : 'white',
+    color: {
+      type: String,
+      default: 'white',
+    },
+    isLargeModel: {
+      type: Boolean,
+      default: false,
     },
     width: {
-      type: String,
-      default: '800px' // 默认值
+      type: Number,
+      default: 80 // 默认值
     },
     isClassVisible: {
       type: Boolean,
@@ -146,673 +293,188 @@ export default {
       type: String,
       default: ''
     },
+    classindex: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
+      dialogTableVisible : true,
+      radio1: 0,
+      radio: 0,
       localQuery: this.searchQuery,
+      isDialoVisibal: false,
       options: [
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "篇关摘",
-            label: "篇关摘",
+            value: "title",
+            label: "标题",
           },
           {
-            value: "关键词",
+            value: "keyword",
             label: "关键词",
           },
           {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "全文",
-            label: "全文",
-          },
-          {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "第一作者",
-            label: "第一作者",
+            value: "institution",
+            label: "机构",
           },
           {
-            value: "通讯作者",
-            label: "通讯作者",
+            value: "source",
+            label: "出版物",
           },
           {
-            value: "作者单位",
-            label: "作者单位",
-          },
-          {
-            value: "导师",
-            label: "导师",
-          },
-          {
-            value: "摘要",
+            value: "abstract",
             label: "摘要",
           },
           {
-            value: "小标题",
-            label: "小标题",
-          },
-          {
-            value: "参考文献",
-            label: "参考文献",
-          },
-          {
-            value: "分类号",
-            label: "分类号",
-          },
-          {
-            value: "文献来源",
-            label: "文献来源",
-          },
-          {
-            value: "DOI",
+            value: "doi",
             label: "DOI",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "篇关摘",
-            label: "篇关摘",
+            value: "title",
+            label: "专利名",
           },
           {
-            value: "关键词",
-            label: "关键词",
+            value: "inventor",
+            label: "发明人",
           },
           {
-            value: "题名",
-            label: "题名",
+            value: "applicant",
+            label: "申请人",
           },
           {
-            value: "全文",
-            label: "全文",
+            value: "apply_number",
+            label: "申请号",
           },
           {
-            value: "作者",
-            label: "作者",
+            value: "issue_number",
+            label: "公开号",
           },
           {
-            value: "第一作者",
-            label: "第一作者",
+            value: "ipc",
+            label: "IPC",
           },
           {
-            value: "通讯作者",
-            label: "通讯作者",
-          },
-          {
-            value: "作者单位",
-            label: "作者单位",
-          },
-          {
-            value: "导师",
-            label: "导师",
-          },
-          {
-            value: "摘要",
-            label: "摘要",
-          },
-          {
-            value: "小标题",
-            label: "小标题",
-          },
-          {
-            value: "参考文献",
-            label: "参考文献",
-          },
-          {
-            value: "分类号",
-            label: "分类号",
-          },
-          {
-            value: "文献来源",
-            label: "文献来源",
-          },
-          {
-            value: "DOI",
-            label: "DOI",
+            value: "cpc",
+            label: "CPC",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "篇关摘",
-            label: "篇关摘",
+            value: "title",
+            label: "标题",
           },
           {
-            value: "关键词",
-            label: "关键词",
+            value: "subject",
+            label: "服务领域",
           },
           {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "全文",
-            label: "全文",
-          },
-          {
-            value: "作者",
-            label: "作者",
-          },
-          {
-            value: "第一作者",
-            label: "第一作者",
-          },
-          {
-            value: "通讯作者",
-            label: "通讯作者",
-          },
-          {
-            value: "作者单位",
-            label: "作者单位",
-          },
-          {
-            value: "导师",
-            label: "导师",
-          },
-          {
-            value: "摘要",
-            label: "摘要",
-          },
-          {
-            value: "小标题",
-            label: "小标题",
-          },
-          {
-            value: "参考文献",
-            label: "参考文献",
-          },
-          {
-            value: "分类号",
-            label: "分类号",
-          },
-          {
-            value: "文献来源",
-            label: "文献来源",
-          },
-          {
-            value: "DOI",
-            label: "DOI",
+            value: "institution",
+            label: "主办单位",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "篇关摘",
-            label: "篇关摘",
+            value: "title",
+            label: "标题",
           },
           {
-            value: "关键词",
-            label: "关键词",
+            value: "subject",
+            label: "领域",
           },
           {
-            value: "题名",
-            label: "题名",
+            value: "author",
+            label: "编译者",
           },
           {
-            value: "全文",
-            label: "全文",
+            value: "source",
+            label: "快报产品",
           },
           {
-            value: "作者",
-            label: "作者",
+            value: "platform",
+            label: "来源",
           },
           {
-            value: "第一作者",
-            label: "第一作者",
-          },
-          {
-            value: "通讯作者",
-            label: "通讯作者",
-          },
-          {
-            value: "作者单位",
-            label: "作者单位",
-          },
-          {
-            value: "导师",
-            label: "导师",
-          },
-          {
-            value: "摘要",
+            value: "abstract",
             label: "摘要",
-          },
-          {
-            value: "小标题",
-            label: "小标题",
-          },
-          {
-            value: "参考文献",
-            label: "参考文献",
-          },
-          {
-            value: "分类号",
-            label: "分类号",
-          },
-          {
-            value: "文献来源",
-            label: "文献来源",
-          },
-          {
-            value: "DOI",
-            label: "DOI",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "篇关摘",
-            label: "篇关摘",
+            value: "title",
+            label: "标题",
           },
           {
-            value: "关键词",
-            label: "关键词",
-          },
-          {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "全文",
-            label: "全文",
-          },
-          {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "第一作者",
-            label: "第一作者",
+            value: "keyword",
+            label: "关键词",
           },
           {
-            value: "通讯作者",
-            label: "通讯作者",
+            value: "provider",
+            label: "发布机构",
           },
           {
-            value: "作者单位",
-            label: "作者单位",
-          },
-          {
-            value: "导师",
-            label: "导师",
-          },
-          {
-            value: "摘要",
+            value: "abstract",
             label: "摘要",
           },
           {
-            value: "小标题",
-            label: "小标题",
-          },
-          {
-            value: "参考文献",
-            label: "参考文献",
-          },
-          {
-            value: "分类号",
-            label: "分类号",
-          },
-          {
-            value: "文献来源",
-            label: "文献来源",
-          },
-          {
-            value: "DOI",
-            label: "DOI",
+            value: "cstr",
+            label: "CSTR",
           },
         ],
         [
           {
-            value: "主题",
+            value: "",
             label: "主题",
           },
           {
-            value: "篇关摘",
-            label: "篇关摘",
+            value: "title",
+            label: "书名",
           },
           {
-            value: "关键词",
-            label: "关键词",
+            value: "isbn",
+            label: "ISBN",
           },
           {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "全文",
-            label: "全文",
-          },
-          {
-            value: "作者",
+            value: "author",
             label: "作者",
           },
           {
-            value: "第一作者",
-            label: "第一作者",
-          },
-          {
-            value: "通讯作者",
-            label: "通讯作者",
-          },
-          {
-            value: "作者单位",
-            label: "作者单位",
-          },
-          {
-            value: "导师",
-            label: "导师",
-          },
-          {
-            value: "摘要",
-            label: "摘要",
-          },
-          {
-            value: "小标题",
-            label: "小标题",
-          },
-          {
-            value: "参考文献",
-            label: "参考文献",
-          },
-          {
-            value: "分类号",
-            label: "分类号",
-          },
-          {
-            value: "文献来源",
-            label: "文献来源",
-          },
-          {
-            value: "DOI",
-            label: "DOI",
-          },
-        ],
-        [
-          {
-            value: "主题",
-            label: "主题",
-          },
-          {
-            value: "篇关摘",
-            label: "篇关摘",
-          },
-          {
-            value: "关键词",
-            label: "关键词",
-          },
-          {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "全文",
-            label: "全文",
-          },
-          {
-            value: "作者",
-            label: "作者",
-          },
-          {
-            value: "第一作者",
-            label: "第一作者",
-          },
-          {
-            value: "通讯作者",
-            label: "通讯作者",
-          },
-          {
-            value: "作者单位",
-            label: "作者单位",
-          },
-          {
-            value: "导师",
-            label: "导师",
-          },
-          {
-            value: "摘要",
-            label: "摘要",
-          },
-          {
-            value: "小标题",
-            label: "小标题",
-          },
-          {
-            value: "参考文献",
-            label: "参考文献",
-          },
-          {
-            value: "分类号",
-            label: "分类号",
-          },
-          {
-            value: "文献来源",
-            label: "文献来源",
-          },
-          {
-            value: "DOI",
-            label: "DOI",
-          },
-        ],
-        [
-          {
-            value: "主题",
-            label: "主题",
-          },
-          {
-            value: "篇关摘",
-            label: "篇关摘",
-          },
-          {
-            value: "关键词",
-            label: "关键词",
-          },
-          {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "全文",
-            label: "全文",
-          },
-          {
-            value: "作者",
-            label: "作者",
-          },
-          {
-            value: "第一作者",
-            label: "第一作者",
-          },
-          {
-            value: "通讯作者",
-            label: "通讯作者",
-          },
-          {
-            value: "作者单位",
-            label: "作者单位",
-          },
-          {
-            value: "导师",
-            label: "导师",
-          },
-          {
-            value: "摘要",
-            label: "摘要",
-          },
-          {
-            value: "小标题",
-            label: "小标题",
-          },
-          {
-            value: "参考文献",
-            label: "参考文献",
-          },
-          {
-            value: "分类号",
-            label: "分类号",
-          },
-          {
-            value: "文献来源",
-            label: "文献来源",
-          },
-          {
-            value: "DOI",
-            label: "DOI",
-          },
-        ],
-        [
-          {
-            value: "主题",
-            label: "主题",
-          },
-          {
-            value: "篇关摘",
-            label: "篇关摘",
-          },
-          {
-            value: "关键词",
-            label: "关键词",
-          },
-          {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "全文",
-            label: "全文",
-          },
-          {
-            value: "作者",
-            label: "作者",
-          },
-          {
-            value: "第一作者",
-            label: "第一作者",
-          },
-          {
-            value: "通讯作者",
-            label: "通讯作者",
-          },
-          {
-            value: "作者单位",
-            label: "作者单位",
-          },
-          {
-            value: "导师",
-            label: "导师",
-          },
-          {
-            value: "摘要",
-            label: "摘要",
-          },
-          {
-            value: "小标题",
-            label: "小标题",
-          },
-          {
-            value: "参考文献",
-            label: "参考文献",
-          },
-          {
-            value: "分类号",
-            label: "分类号",
-          },
-          {
-            value: "文献来源",
-            label: "文献来源",
-          },
-          {
-            value: "DOI",
-            label: "DOI",
-          },
-        ],
-        [
-          {
-            value: "123",
-            label: "123",
-          },
-          {
-            value: "篇关摘",
-            label: "篇关摘",
-          },
-          {
-            value: "关键词",
-            label: "关键词",
-          },
-          {
-            value: "题名",
-            label: "题名",
-          },
-          {
-            value: "全文",
-            label: "全文",
-          },
-          {
-            value: "作者",
-            label: "作者",
-          },
-          {
-            value: "第一作者",
-            label: "第一作者",
-          },
-          {
-            value: "通讯作者",
-            label: "通讯作者",
-          },
-          {
-            value: "作者单位",
-            label: "作者单位",
-          },
-          {
-            value: "导师",
-            label: "导师",
-          },
-          {
-            value: "摘要",
-            label: "摘要",
-          },
-          {
-            value: "小标题",
-            label: "小标题",
-          },
-          {
-            value: "参考文献",
-            label: "参考文献",
-          },
-          {
-            value: "分类号",
-            label: "分类号",
-          },
-          {
-            value: "文献来源",
-            label: "文献来源",
-          },
-          {
-            value: "DOI",
-            label: "DOI",
+            value: "publisher",
+            label: "出版社",
           },
         ],
       ],
-      radio: 10,
       selectValue: "Option1",
       titleList: [],
       input: '',
@@ -822,8 +484,32 @@ export default {
     for (var i = 0; i < this.options.length; i++) {
       this.titleList.push(this.options[i][0].value);
     }
+    if (this.$store.state.searchType === "")
+      this.radio1 = 0
+    else {
+      if (newValue === "articles")
+        this.radio1 = 0;
+      else if (newValue === "patents")
+        this.radio1 = 1;
+      else if (newValue === "reports")
+        this.radio1 = 3;
+      else if (newValue === "sciencedata")
+        this.radio1 = 4;
+      else if (newValue === "books")
+        this.radio1 = 5;
+    }
+    console.log(this.radio1)
+    console.log(this.titleList)
   },
   methods: {
+    mouseOverToChangeSeniorColor(id) {
+      var ele = document.querySelector("#" + id);
+      ele.style.color = "#d1edc4"
+    },
+    mouseOutToChangeSeniorColor(id) {
+      var ele = document.querySelector("#" + id);
+      ele.style.color = "white"
+    },
     cancelRadio() {
       this.radio = 10;
     },
@@ -836,6 +522,10 @@ export default {
       this.$emit('update:searchQuery', value);
     },
     emitSearch() {
+      if(this.localQuery === "")
+      {
+        return;
+      }
       let map = new Map();
       map.set(0, "articles");
       map.set(1, "patents");
@@ -843,15 +533,55 @@ export default {
       map.set(3, "reports");
       map.set(4, "sciencedata");
       map.set(5, "books");
-      var a = map.get(this.radio);
-        this.$emit('search', { query: this.localQuery, option: this.titleList[this.radio],class : a });
+      var a = map.get(this.radio1);
+      this.$emit('search', { query: this.localQuery, option: this.titleList[this.radio1], class: a });
+      var query = this.localQuery;
+      console.log(query)
+      console.log(this.titleList[this.radio1])
+      var content = this.titleList[this.radio1];
+      //path: '/searchResults/:query?/:type?/:content?',
+      if (content === "") {
+        this.$router.push({
+          path: '/searchResults/' + query
+        }).then(() => {
+          window.location.reload();
+        });;
+      }
+      else {
+        var type = "symple"
+        this.$router.push({
+          path: '/searchResults/' + query + "/" + type + "/" + content
+        }).then(() => {
+          window.location.reload();
+        });;
+      }
+
     }
   },
   watch: {
     // 确保响应父组件传递的 prop 更改
     searchQuery(newVal) {
       this.localQuery = newVal;
+    },
+    '$store.state.searchType'(newValue, oldValue) {
+      if (newValue === "articles")
+        this.radio1 = 0;
+      else if (newValue === "patents")
+        this.radio1 = 1;
+      else if (newValue === "reports")
+        this.radio1 = 3;
+      else if (newValue === "sciencedata")
+        this.radio1 = 4;
+      else if (newValue === "books")
+        this.radio1 = 5;
     }
+  },
+  computedWidth() {
+    var temp = this.width;
+    return `${temp}%`;
+  },
+  radio1(newVal) {
+    this.radio = newVal
   }
 };
 </script>

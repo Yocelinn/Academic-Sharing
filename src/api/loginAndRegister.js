@@ -1,9 +1,9 @@
 import { post, get} from "./api";
 
 export function SendVerifyCode(email){
-    let data={};
-    data.email=email;
-    return post("/user/sendVerifyCode/?email="+email,data);
+    let param={};
+    param.email=email;
+    return get("/user/sendVerifyCode",param);
 }
 
 export function Register(nick_name, email, password, captcha){
@@ -24,7 +24,7 @@ export function Login(email, password){
 
 export function Logoff(){
     let data={};
-    return post("/user/collectThesis",data);
+    return post("/user/logoff",data);
 }
 
 export function GetUserInformation(){

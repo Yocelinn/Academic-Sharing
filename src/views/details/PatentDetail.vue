@@ -108,7 +108,7 @@
                 
                 <div class="info-title"><el-icon><Operation /></el-icon>常用操作</div>
                 <div class="button-container">
-                  <div class="button-list"><el-icon><Star /></el-icon>收藏</div>
+                  <div class="button-list" @click="collect()"><el-icon><Star /></el-icon>收藏</div>
                   <div class="button-list"><el-icon><Promotion /></el-icon>推荐</div>
                 </div>
               </div>
@@ -180,9 +180,16 @@ import { onMounted,ref } from 'vue';
     },
     data() {
       return {
-        selectedSection: null,
+        selectedSection: 'section1',
         authors:[ 'K·C·舍尔姆' ,'C·利希特瑙' ,'M·克莱因' ,'S·佩尔' ,'P·莱伯'],
       };
+    },
+    watch: { // 监听，当路由发生变化的时候执行
+        $route(to, from){
+            // console.log(from.path); // 从哪来
+            // console.log(to.path); // 到哪去
+            location.reload()
+        },
     },
     methods: {
       scrollToSection(selector) {
@@ -192,7 +199,19 @@ import { onMounted,ref } from 'vue';
           this.selectedSection = selector.slice(1); // 更新选中项
         }
       },
-      
+      handleIntersection(entries) {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // entry.target 是当前进入视口的元素
+            this.selectedSection = entry.target.id;
+          }
+        });
+      },
+      gotoPaper(paperId) {
+        var workId = String(paperId)
+        this.$router.push({name:'PaperDetail', query:{workId} });
+        console.log(paperId)
+      }
     }
   }
   </script>
@@ -337,7 +356,7 @@ import { onMounted,ref } from 'vue';
     border-bottom: solid 2px #d1d1d1; 
     padding: 5px 10px;
     text-align: left;
-    background-color: #5dd39a;
+    background-color: rgba(56, 168, 64, 0.7);
     border-radius: 5px;
     color:rgb(251, 251, 251);
     font-weight: 500;
@@ -376,7 +395,7 @@ import { onMounted,ref } from 'vue';
      /* padding-bottom: 10px; */ 
     padding: 5px 10px;
     text-align: left;
-    background-color: #8fc0a9;
+    background-color: rgba(56, 168, 64, 0.7);
     border-radius: 5px;
     color:white;
     font-weight: 500;

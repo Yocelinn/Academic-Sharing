@@ -5,7 +5,9 @@
             <ul><div class="nav-label"><el-icon><Position /></el-icon>导航信息</div>
             <li><div class="section-text" :class="{ 'active': selectedSection === 'section1' }" @click="scrollToSection('#section1')">作品基本信息</div></li>
             <li><div class="section-text" :class="{ 'active': selectedSection === 'section2' }" @click="scrollToSection('#section2')">相关文献推荐</div></li>
-            <li><div class="section-text" :class="{ 'active': selectedSection === 'section3' }" @click="scrollToSection('#section3')">交流评论</div></li>
+            <li><div class="section-text" :class="{ 'active': selectedSection === 'section3' }" @click="scrollToSection('#section3')">引用文献</div></li>
+            <li><div class="section-text" :class="{ 'active': selectedSection === 'section4' }" @click="scrollToSection('#section4')">交流评论</div></li>
+
             </ul>
         </nav>
       </div>
@@ -13,25 +15,26 @@
         <section id="section1">
             <el-card shadow="never" class="detail-card">
                 <div class="title">
-                    <!-- <h1 class="paper-title" v-html="detailInfo.title">{{ detailInfo.title }}</h1> -->
                     <h1 class="paper-title" v-html="detailInfo.title"></h1>
 
                 </div>
                 <div class="author">
                   <el-icon style="margin-right:10px"><Avatar /></el-icon>
-                  <div class="author-list">
+                  <div class="author-list" v-if="detailInfo.authors!=''">
                     <div class="author-item" v-for="(item, index) in detailInfo.authors" :key="index">
-                      {{ item.authorName }} <div v-if="index < detailInfo.authors.length-1"> , </div>
+                      <!-- <div class="rela-index" v-for="(rela, rela_index) in detailInfo.relation_index" :key="rela_index"> -->
+                        {{ item }}<div class="rela-id" >{{ detailInfo.relation_index[index] }}</div> <div v-if="index < detailInfo.authors.length-1"> , </div>
+                      <!-- </div> -->
                     </div> 
                   </div>
                   </div>
                 <div class="institution">
-                 1. 电子科技大学信息与软件工程学院
+                  <div v-for="(institu, index) in detailInfo.institutions" :key="index">{{ index+1+"." +  institu }}</div>
                 </div>
                 <div class="detail">
                     <div class="content-container">
                       <div class="little-title">关键词：</div>
-                      <div class="content"> 
+                      <div class="content" v-if="detailInfo.keywords != ''"> 
                           <div class="keyword-item"  v-for="(keyword, index) in detailInfo.keywords" :key="index" >
                             {{ keyword }}
                           </div>
@@ -41,7 +44,7 @@
                     <div class="content-container">
                         <div class="little-title">摘要：</div>
                         <!-- <div class="content">{{ detailInfo.abstractContent }}</div> -->
-                        <div v-html="detailInfo.abstractContent" class="content"></div>
+                        <div v-html="detailInfo.abstract" class="content"></div>
                     </div>
                 
                     <div class="content-container">
@@ -49,16 +52,7 @@
                         <div class="content">{{ detailInfo.publicationDate }}</div>
                     </div>
                 
-                    <div class="content-container">
-                        <div class="little-title">文献编号：</div>
-                        <!-- <div class="content">123-12345</div> -->
-                    </div>
                 </div>
-                <!-- <div class="button-list">
-                    <el-button>收藏</el-button>
-                    <el-button>预览</el-button>
-                    <el-button>去往来源</el-button>
-                </div> -->
             </el-card>
             
         </section>
@@ -68,153 +62,175 @@
                 <h2 class="recommend-title" >相关文献推荐</h2> 
             </div>
             <ol class="paper-list">
-              <li class="list-item" v-for="(item, index) in paperList" :key="index">
-                <div class="recommend-papar-name" @click="gotoPaper(item.workId)" v-html=" item.workName "></div>
+              <li class="list-item" v-for="(item, index) in detailInfo.recommendations" :key="index">
+                <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div>
                 <!--因为v-html，有的文章标题是有格式的
                   <div class="recommend-papar-name" @click="gotoPaper(item.workId)"> {{ item.workName }} </div> -->
                 <!-- <div class="detail-list" >
                   <div class="detail-item" v-for="(person, index) in item.authors" :key="index"> {{ person }}. </div>
                 </div> -->
-                <div class="detail-list"> {{ item.sourceName }}, {{ item.publicationYear }}</div>
+                <div class="detail-list"> {{ item.info }}</div>
               </li>
             </ol>
+            <el-divider><el-icon><star-filled /></el-icon></el-divider>
           </div>
         </section>
-        <section id="section3">    
+        <section id="section3">
+          <div class="recommend-card">
+            <div>
+                <h2 class="recommend-title" >引用文献</h2> 
+            </div>
+            <ol class="paper-list">
+              <li class="list-item" v-for="(item, index) in detailInfo.ref_articles" :key="index">
+                <!-- <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div> -->
+                <div class="recommend-papar-name"  v-html=" item.title "></div>
+
+                <div class="detail-list"> {{ item.info }}</div>
+              </li>
+            </ol>
+            <el-divider><el-icon><star-filled /></el-icon></el-divider>
+          </div>
+        </section>
+        <section id="section4">    
           <div class="comment-card">
             <div class="comment-label" >评论区</div> 
             <div class="comment-container">
                 <div class="comment-title">
                   还没有评论/ 评论 108
                 </div>
-                <div class="comment-input"><textarea class="reply-box"> 我的评论 </textarea>  </div>
-                <div class="replys">还没有评论</div>
+                <div class="comment-input"><textarea id="commentBox" class="reply-box" placeholder="我的评论"></textarea><button @click="postComment()" class="reply-button">发布</button></div>
+                <div class="replys" v-if="comments.length == 0">还没有评论</div>
+                <div v-else class="comment-list" v-for="(item, index) in comments" :key="index">
+                  <div class="comment-user">{{ item.userId }}</div>
+                  <div class="comment-content">{{ item.content }}</div>
+                  <div class="comment-time">{{ item.time }}</div>
+                </div>
              </div>
           </div>
         
         </section>
        </div>
-        <el-col :span="6">
-            <el-card shadow="hover" class="other-info-card">
-              <div class="info-box">
-                <div class="info-title"><el-icon><Link /></el-icon>文章来源</div>
-                
-                <div class="button-container">
-                  <a class="button-list"  target="_blank" :href="detailInfo.source.soureId"><el-icon><Connection /></el-icon>去往来源</a>
-                  <a class="button-list"  target="_blank" :href="detailInfo.location.pdf_url"><el-icon><Reading /></el-icon>查看全文</a>
+      <el-col :span="6">
+          <el-card shadow="hover" class="other-info-card">
+            <div class="info-box">
+              <div class="info-title"><el-icon><Link /></el-icon>文章来源</div>
+              
+              <div class="button-container">
+                <!-- <a class="button-list"  target="_blank" :href="detailInfo.source.soureId"><el-icon><Connection /></el-icon>去往来源</a>
+                <a class="button-list"  target="_blank" :href="detailInfo.location.pdf_url"><el-icon><Reading /></el-icon>查看全文</a> -->
 
-                </div>
               </div>
-              <div class="info-box">
-                
-                <div class="info-title"><el-icon><Operation /></el-icon>常用操作</div>
-                <div class="button-container">
-                  <div class="button-list"><el-icon><Star /></el-icon>收藏</div>
-                  <div class="button-list"><el-icon><Promotion /></el-icon>推荐</div>
-                </div>
+            </div>
+            <div class="info-box">
+              
+              <div class="info-title"><el-icon><Operation /></el-icon>常用操作</div>
+              <div class="button-container">
+                <div class="button-list"><el-icon><Star /></el-icon>收藏</div>
+                <div class="button-list"><el-icon><Promotion /></el-icon>推荐</div>
               </div>
-              <div class="info-box">
-                
-                <div class="info-title"><el-icon><Histogram /></el-icon>被引次数：
-                  <div style="font-style: italic; color:gray">{{detailInfo.citedByCount}}</div></div>
-                
-              </div>
-              <div class="info-box">
+            </div>
+            <!-- <div class="info-box">
+              <div class="info-title"><el-icon><Histogram /></el-icon>被引次数：
+                <div style="font-style: italic; color:gray">{{detailInfo.citedByCount}}</div></div>
+            </div> -->
+            <div class="info-box">
 
-                <div class="info-title"><el-icon><Edit /></el-icon>问题反馈</div>
-                <div class="button-container">
-                  <div class="button-list"><el-icon><Warning /></el-icon>数据错误</div>
-                  <div class="button-list"><el-icon><Remove /></el-icon>撤稿申请</div>
-                </div>
+              <div class="info-title"><el-icon><Edit /></el-icon>问题反馈</div>
+              <div class="button-container">
+                <div class="button-list" @click="reportError()"><el-icon><Warning /></el-icon>数据错误</div>
+                <div class="button-list" @click="reportRevoke()"><el-icon><Remove /></el-icon>撤稿申请</div>
               </div>
-            </el-card>
+            </div>
+          </el-card>
 
-        </el-col>
-        <el-backtop :right="100" :bottom="100" color="#8fc0a9"/>
+      </el-col>
+      <el-backtop :right="100" :bottom="100" color="#8fc0a9"/>
+      <el-dialog v-model="dialogVisible" :title="dialog.title" width="40%" center>
+        <div class="input-container" v-if="!successVisible">
+          <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="申请信息" style="width:500px;">
+              <el-input v-model="formInline.content" placeholder="请填写申请信息" type="textarea" clearable >
+                </el-input>
+            </el-form-item>
+            <!-- <el-form-item label="联系方式" style="width:500px;">
+              
+            </el-form-item> -->
+          </el-form>
+        </div>
+        <el-result icon="success" title="Success Tip" sub-title="Please follow the instructions" v-else>
+          <template #extra>
+            <el-button type="primary" @click="closeDialog">关闭</el-button>
+          </template>
+        </el-result>
+        <template #footer v-if="!successVisible">
+          <span class="dialog-footer" >
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="onSubmit">
+              提交
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
     </div>
         
   </template>
   
   <script>
-import { onMounted,ref,watch } from 'vue';
-import { useRoute } from 'vue-router';
-import * as PaperApi from '../../api/paper'
+  import { onMounted,ref,watch,reactive } from 'vue';
+  import { useRoute } from 'vue-router';
+  import * as PaperApi from '../../api/paper';
+  import moment from 'moment'; 
+  import axios from 'axios';
   
   export default {
     name: 'PaperDetail',
-    setup(props, { router }) {
+    setup() {
       // 通过 useRoute 对象获取路由参数
       var workId = useRoute().query.workId;
-      const paperList = ref({});
       const detailInfo = ref({
         title: '',
-        authors: [{}],
-        keywords: [''],
+        authors: '',
+        keywords: '',
         publicationDate: '',
         workId: '',
-        abstractContent: '',
+        abstract: '',
         source: {},
-        location: {},
         citedByCount: 0,
+        recommendations: [{}],
+        ref_articles: [{}],
+        institutions: [''],
+        relation_index: [],
+      });
+      const comments = ref([{
+        id: 1000,
+        content: '',
+        userId: 0,
+        workId: '',
+        time: '',
+      }]);
+      const dialogVisible = ref(false);
+      const dialog = ref({
+        title: '',
+        content: '',
       })
-      // const routeChanged = ref(false);
-
-      // 监听路由变化
-      
+      const formInline = reactive({
+        content: '',
+        contact:'',
+        date: '',
+      })
+      const successVisible = ref(false)
       
       onMounted( () => {
-        getPaperList();
+        // getPaperList();
         getDetailInfo();
+        getComments();
         
       })
 
-      function getPaperList() {
-        if(workId == null){
-          workId = 'https://openalex.org/W2741809807';
-        } else {
-          console.log(workId)
-        }
-        // paperList.value = [
-        //   { 
-        //     name:  '基于深度学习的食品安全风险知识图谱构建方法[J]. ',
-        //     authors: ['袁刚','郭爽','唐琦','许入文','王金国','韩春晓','温圣军','张文通'],
-        //     resource: '质量安全与检验检测,2023(05)'
-        //   },
-        //   { 
-        //     name: '主流知识图谱存储系统试验对比[J]',
-        //     authors: ['葛唯益','王振宇','王羽','陆辰','姜晓夏'],
-        //     resource: '指挥信息系统与技术,2019(05)'
-        //   },
-        //   { 
-        //     name: '面向档案的知识图谱构建方法研究[J]', 
-        //     authors: ['王电化','钱涛','钱立新','盛琦','夏春梅'],
-        //     resource: '湖北科技学院学报,2020(01)'
-        //   },
-        //   { 
-        //     name: '知识图谱可视化查询技术综述[J]',
-        //     authors: ['王鑫','傅强','王林','徐大为','王昊奋'],
-        //     resource: '计算机工程,2020(06)'
-        //   },
-        //   { 
-        //     name: '知识图谱学习和推理研究进展[J]',
-        //     authors: ['吴运兵','杨帆','赖国华','林开标'],
-        //     resource: '小型微型计算机系统,2016(09)'
-        //   }
-        // ];
-          PaperApi.GetReferenceById(workId)
-          .then( (response) => {
-            if(response.code == 200) {
-              paperList.value = response.data;
-              console.log(paperList.value)
-              console.log(response)
-            } else {
-              console.log(response.code)
-            }
-          })
-      }
+
       function getDetailInfo() {
         if(workId == null){
-          workId = 'https://openalex.org/W2741809807';
+          workId = 'c6f51ede40a548e08e9cc5c5f57fba31';
         }
         PaperApi.DisplayWorkHomePage(workId)
         .then((response) => {
@@ -227,11 +243,76 @@ import * as PaperApi from '../../api/paper'
           }
         })
       }
-    
+      function getComments() {
+        PaperApi.GetCommentByWorkId('1000')
+        .then((response) => {
+          console.log(response)
+          // comments.value = response;
+          // if(response.code == 200) {
+            comments.value = response;
+            for(var i=0; i < comments.value.length; i++) {
+              comments.value[i].time = moment(comments.value[i].time).utcOffset(8).format('YYYY/MM/DD HH:mm:ss')
+
+            }
+
+            console.log(comments.value)
+          // } else {
+          //   console.log(response.code)
+          // }
+        })
+      }
+
+      function postComment() {
+        var textarea = document.getElementById('commentBox');
+
+        // 获取 textarea 的值（文本内容）
+        var content = textarea.value;
+        const commentData = ref({
+          "content": '',
+          "userId": 2,
+          "workId": 0,
+        })
+        // 现在还是测试数据，故userId和workId都不确定
+        commentData.value.content  = content
+        commentData.value.workId = 1000;
+        axios.post('http://114.115.179.52:8089/api/comment/create', commentData.value)
+        .then( (response) => {
+          console.log(response)
+        })
+      }
+
+      function reportError() {
+        dialog.value.title = "报告数据错误"
+        dialogVisible.value = true;
+      }
+      function reportRevoke() {
+        dialog.value.title = "提交撤稿申请"
+        dialogVisible.value = true;
+      }
+      
+
+      const onSubmit = () => {
+        successVisible.value = true;
+        console.log('submit!')
+      }
+      const closeDialog = () => {
+        dialogVisible.value = false;
+        successVisible.value = false;
+      }
 
       return {
-        paperList,
         detailInfo,
+        comments,
+        dialogVisible,
+        dialog,
+        formInline,
+        successVisible,
+
+        postComment,
+        reportError,
+        reportRevoke,
+        onSubmit,
+        closeDialog
       };
 
       
@@ -280,7 +361,8 @@ import * as PaperApi from '../../api/paper'
         var workId = String(paperId)
         this.$router.push({name:'PaperDetail', query:{workId} });
         console.log(paperId)
-      }
+      },
+      
     }
   }
   </script>
@@ -329,6 +411,7 @@ import * as PaperApi from '../../api/paper'
   /*setion的布局*/
   .main-content {
     flex: 1;
+    
   }
   section {
     margin-bottom: 30px; /* 调整各个 section 之间的间距 */
@@ -416,12 +499,14 @@ import * as PaperApi from '../../api/paper'
     font-size: 15px;
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
   }
   .keyword-item {
     border: #45bc82 1px solid;
     border-radius: 15px;
     margin-right: 5px;
-    padding: 2px 3px;
+    padding: 3px 5px;
+    margin-bottom: 5px;
   }
   .button-list {
     margin-right: 20px;
@@ -444,7 +529,9 @@ import * as PaperApi from '../../api/paper'
     border-bottom: solid 2px #d1d1d1; 
     padding: 5px 10px;
     text-align: left;
-    background-color: #5dd39a;
+    /* background-color: #5dd39a; */
+    background-color:rgba(56, 168, 64, 0.7);
+
     border-radius: 5px;
     color:rgb(251, 251, 251);
     font-weight: 500;
@@ -483,7 +570,9 @@ import * as PaperApi from '../../api/paper'
      /* padding-bottom: 10px; */ 
     padding: 5px 10px;
     text-align: left;
-    background-color: #5dd39a;
+    /* background-color: #5dd39a; */
+    /* background-color: #54ac69; */
+    background-color: rgba(56, 168, 64, 0.7);
     border-radius: 5px;
     color:white;
     font-weight: 500;
@@ -505,27 +594,57 @@ import * as PaperApi from '../../api/paper'
   }
   .comment-input {
     margin: 20px;
-    height: 50px;
+    /* min-height: 50px; */
+    /* max-height: 200px; */
+    /* resize: vertical; 允许垂直调整大小 */
+    display: flex;
+    align-items: center;
     border-radius: 5px;
     background-color: #f3f6f3;
   } 
   .reply-box{
     width: 100%;
-    height: 100%;
     padding: 0 10px;
     border: 1px solid var(--Ga1);
     border-radius: 6px;
     background-color: var(--bg3);
     font-family: inherit;
-    line-height: 50px;
+    line-height: 40px;
+    min-height: 40px;
+    max-height: 200px; 
     color: var(--text1);
-    resize: none;
+    resize: vertical;
     outline: none;
   }
   .replys {
     height: 300px;
   }
-
+  .reply-button {
+    height: 30px;
+    background-color: #c2e8d6;
+    border: none;
+    width: 80px;
+    border-radius: 10px;
+  }
+  .comment-list {
+    text-align: left;
+    border-bottom: #5dd39a 1px solid;
+    margin:10px 30px;
+    padding: 5px 10px;
+  }
+  .comment-user {
+    font-weight: 600;
+  }
+  .comment-content {
+    font-weight: normal;
+    margin-left: 10px;
+    padding: 10px;
+  }
+  .comment-time {
+    color: grey;
+    margin-left: 20px;
+    font-size: 14px;
+  }
   /* 更多信息布局*/
   .other-info-card {
     height: 600px;
@@ -556,6 +675,9 @@ import * as PaperApi from '../../api/paper'
   }
   :deep(.el-icon) {
     margin-right: 3px;
+  }
+  :deep(.el-textarea__inner)  {
+    height: 250px;
   }
   </style>
   

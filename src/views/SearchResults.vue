@@ -8,21 +8,19 @@
                   <el-icon><Filter /></el-icon>
                   分类浏览
                 </div>
-                <!-- 左侧分类筛选 -->
-               
+                <!-- 左侧分类筛选 --> 
                 <el-collapse class="sr-left-classfier" v-model="activeNames" >
-                  <el-skeleton :loading="loading" animated style="text-align: start;">
+                  <el-skeleton :loading="sr_loading" animated style="text-align: start;">
                     <el-collapse-item v-for="thing in grouptype" :key="thing.tag" 
                     :title="thing.content.alias" :name="thing.tag" class="sr-collapse-item">
                    
                         <el-checkbox-group v-model="aggregations[thing.tag]" class="sr-check-group" @change="handleClassfierChange" >
-                            <el-checkbox class="sr-check-item" v-for="option in thing.content.aggregations" :key="option.value" :label="option.key">
+                            <el-checkbox class="sr-check-item" v-for="option in thing.content.aggregations" :key="option.value" :label="option.origin_key">
                             </el-checkbox>
                         </el-checkbox-group>    
                     </el-collapse-item>
                   </el-skeleton>
                 </el-collapse>
-                
               </div>
             </div>
             <div class="sr-main">
@@ -34,16 +32,36 @@
                     @tab-change="changeCurAcademyType()"
                     stretch="true"
                   >
+
                     <div v-for="item in academyTypes" :key="item.id">
                       <el-tab-pane :label=item.type :name="item.key">
+                        <div class="selectedTag">
+                         <div class="TagTitle">筛选条件：</div> 
+                         <div v-for="thing in grouptype" :key="thing">
+                       
+                          <el-tag
+                           
+                            v-for="tag in aggregations[thing.tag]" 
+                            :key="tag"
+                            class="SingleTag"
+                            closable
+                            :disable-transitions="false"
+                            @close="handleClose(thing,tag)"
+                          >
+                          <!-- <div v-for="name in aggregations[tag.tag]" :key="name">  {{ name }}</div> -->
+                          {{ tag }}
+                          </el-tag> 
+                        </div>
+                        </div>
                         <div class="sr-toolbar">
                           <!-- 统计数、排序等结果展示处理工具 -->
+                          
                           <el-skeleton :loading="loading" animated style="text-align: start;">
                           <div class="sr-statistic">
                               共<span class="sr-num">&ensp;{{ papers_total }}&ensp;</span>条结果
                           </div>
                         </el-skeleton>
-                          <el-select v-model="timeRange" placeholder="时间范围" @change="handleTimeRangeChange">
+                          <!-- <el-select v-model="timeRange" placeholder="时间范围" @change="handleTimeRangeChange">
                             <el-option
                               v-for="item in TimeRangeOptions"
                               :key="item.value"
@@ -58,7 +76,8 @@
                               :label="item.label"
                               :value="item"
                             />
-                          </el-select>
+                          </el-select> -->
+                       
                       </div>
                     </el-tab-pane>
                     </div>
@@ -122,7 +141,10 @@
   import SciencedataResult from "@/components/SearchResults/ScienceResult.vue";
   import BookResult from "@/components/SearchResults/BookResult.vue"
   import { defineComponent,ref,h, onMounted,onUnmounted,computed } from "vue";
-  import {post,get} from "../api/api.js"
+  import {useRoute} from 'vue-router'
+  import { mapMutations } from "vuex";
+  // import {post,get} from "../api/api.js"
+  import {search,searchForAggregations} from "../api/classification.js"
   export default defineComponent ({
     components: {
       ArticleResult,PatentResult,BulletinResult,ReportResult,SciencedataResult,BookResult
@@ -138,10 +160,13 @@
       onMounted(async ()=>{
       try{
           loading.value=true;
+          sr_loading.value=true;
+          // query=this.$route.query.query
+          console.log(query)
+          console.log(strategy.value)
           await getResults();
           await getGroupClassifier();
           await new Promise(resolve => setTimeout(resolve, 2000));
-
           const srPaperResultsElement = srPaperResultsRef.value;
           // console.log("addScrollListener")
           // console.log(srPaperResultsElement)
@@ -158,7 +183,7 @@
       });
       onUnmounted(() => {
         const srPaperResultsElement = srPaperResultsRef.value;
-        console.log("removeScrollListener")
+        // console.log("removeScrollListener")
         if (srPaperResultsElement) {
           srPaperResultsElement.removeEventListener('scroll', handleScroll);
         }
@@ -170,13 +195,14 @@
         const sizePerPage=ref(6);
         var curPage=ref(1);
         var loading=ref(false);
+        var sr_loading=ref(false);
       //——————————————————————————————————————...——————————————————————————————————————  
       var isLastPage=ref(false)
+      // const { changeSearchType } = mapMutations(['changeSearchType']);
       const articlesWithSkeleton = computed(() => {
             const loadedContent = articles.value.content || [];
             const skeletonCount = loading.value ? sizePerPage.value : 0;
             const skeletonArray = new Array(skeletonCount).fill({ isContent: false });
-
             // 将已加载的内容与骨架屏合并，并添加 isContent 属性标记
             return loadedContent.map(content => ({ ...content, isContent: true })).concat(skeletonArray);
         });
@@ -207,7 +233,16 @@
           // console.log("page:"+curPage.value)
           loading.value=false;
         }
-       const timeRange=ref("时间范围");
+        // const route=useRoute();
+        // console.log(route)
+        const query =useRoute().params.query;
+        
+        var strategy=ref({type:"",content:""})
+        strategy.type=useRoute().params.type;
+        strategy.content=useRoute().params.content;
+       
+        // const strategy = useRoute().query.strategy;
+        const timeRange=ref("时间范围");
         const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'},{value:'10years',label:"近十年"}]
         const RankingMethod=ref("综合排序");
         const RankingOptions=[{value:'comprehensive',label:"综合排序"},{value:'reletive',label:"相关排序"},{value:'time',label:"时间排序"}]
@@ -229,13 +264,14 @@
         //默认六种学术成果类型
         const academyTypes=ref([{id:1,type:"论文",key:"articles"},
                             {id:2,type:"专利",key:"patents"},
-                            {id:4,type:"快报",key:"bulletins"},
+                            // {id:4,type:"快报",key:"bulletins"},
                             {id:5,type:"动态快讯",key:"reports"},
                             {id:6,type:"科学数据",key:"sciencedata"},
                             {id:7,type:"图书",key:"books"}
                         ])  
         
         var grouptype=ref({})
+       // var selectedClassification=ref([{id:1,name:"haha"},{id:2,name:"1234"}])
         // var groupClassifier=ref([{id:1,"type": {}},
         //                           {id:2,"subject":{}},
         //                           {id:3,"year": {}},
@@ -249,9 +285,18 @@
         //                        )
         const activeNames = ref(['1'])
         const checkList=ref({})
-        
-      
-       
+      // 移除已选条件的标签，后续这个selectedClassification需要换为aggregations
+        function handleClose(thing,tag){
+          // var indexToRemove=selectedClassification.value.indexOf(tag)
+          // console.log(thing.tag)
+          // console.log(aggregations.value[thing.tag].indexOf(tag))
+          var indexToRemove=aggregations.value[thing.tag].indexOf(tag);
+          if(indexToRemove!=-1){
+            aggregations.value[thing.tag].splice(indexToRemove,1)
+          } 
+          handleClassfierChange();
+         
+        }
         function handleTimeRangeChange(){
           console.log(timeRange)
         }
@@ -265,10 +310,11 @@
           await init();
           // console.log(curPage.value)
           loading.value=true;
+          sr_loading.value=true;
           await getResults();
           await getGroupClassifier();
           await new Promise(resolve => setTimeout(resolve, 300));
-          loading.value=false;
+          // loading.value=false;
         }
         async function changeCurAcademyType(){
           // console.log("Type Changed")
@@ -277,8 +323,11 @@
           aggregations.value={};
           await init();
           loading.value=true;
+          sr_loading.value=true;
+          // changeSearchType(curAcademyType.value)
           await getResults();
           await getGroupClassifier();
+          this.$store.commit('changeSearchType',curAcademyType.value);
           // await new Promise(resolve => setTimeout(resolve, 300));
           
         }
@@ -290,16 +339,21 @@
               jsonString[key] = aObject[key].join(', ');
             }
           }
+          // console.log(jsonString)
           // console.log("searchPage"+curPage.value)
-          post(`/search/${curAcademyType.value}`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          // post(`/search/${curAcademyType.value}`,{"query":query,"strategy":strategy,"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          // search(`${curAcademyType.value}`,{"query":query,"strategy":strategy,"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          search(curAcademyType.value,curPage.value,sizePerPage.value,"date","desc",query,strategy.value,jsonString)
           .then(response=>{
             // console.log(response)
             papers_total.value=response.total
+            // console.log(response)
+            // console.log("total_papers:"+response.total)
             isLastPage.value=response.is_last;
             // if(curPage.value===1 ||JSON.stringify(articles.value)=="{}"||JSON.stringify(patents.value)=="{}"||JSON.stringify(bulletins.value)=="{}"||JSON.stringify(reports.value)=="{}"||JSON.stringify(sciencedata.value)=="{}"||JSON.stringify(books.value)=="{}"){
               if(curAcademyType.value==="articles"){  JSON.stringify(articles.value)=="{}"?articles.value=response:articles.value.content.push(...response.content);}
               else if(curAcademyType.value==="patents"){ JSON.stringify(patents.value)=="{}"?patents.value=response:patents.value.content.push(...response.content);}
-              else if(curAcademyType.value==="bulletins"){  JSON.stringify(bulletins.value)=="{}"?bulletins.value=response:bulletins.value.content.push(...response.content); }
+              // else if(curAcademyType.value==="bulletins"){  JSON.stringify(bulletins.value)=="{}"?bulletins.value=response:bulletins.value.content.push(...response.content); }
               else if(curAcademyType.value==="reports"){  JSON.stringify(reports.value)=="{}"?reports.value=response:reports.value.content.push(...response.content); }
               else if(curAcademyType.value==="sciencedata"){  JSON.stringify(sciencedata.value)=="{}"?sciencedata.value=response:sciencedata.value.content.push(...response.content);}
               else if(curAcademyType.value==="books"){  JSON.stringify(books.value)=="{}"?books.value=response:books.value.content.push(...response.content);  }
@@ -325,13 +379,30 @@
               jsonString[key] = aObject[key].join(', ');
             }
           }
+          // console.log("string:")
           // console.log(jsonString)
-          post(`/search/${curAcademyType.value}/aggregations`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          // post(`/search/${curAcademyType.value}/aggregations`,{"page":curPage,"size":sizePerPage,"order_field":"date","aggregations":jsonString})
+          // searchForAggregations(curAcademyType.value,{"page":curPage.value,"size":sizePerPage.value,"order_field":"date","aggregations":jsonString})
+          searchForAggregations(curAcademyType.value,curPage.value,sizePerPage.value,"date","desc", query,strategy.value,jsonString)
           .then(response=>{
             // console.log("getClassifier")
               grouptype.value=response;
+              const tagNames = response.map(item => item.tag);
+              // console.log(tagNames)
+              
+                
+                tagNames.forEach(name => {
+                  if(aggregations.value[name]==undefined){
+                    // console.log("aggregation is null"+aggregations.value)
+                    aggregations.value[name] =[];
+                  }
+                  
+                });
+              
+
+              // console.log(aggregations.value)
               // console.log(grouptype.value)
-              loading.value=false;
+              sr_loading.value=false;
           })
           .catch(error => {
             console.error("Error fetching data:", error);
@@ -341,8 +412,9 @@
             articles,patents,bulletins,reports,sciencedata,books,papers_total,
             academyTypes,grouptype,activeNames,checkList,timeRange,RankingMethod,
             TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange,getResults,handleClassfierChange,
-            count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage,curPage,loading,init,papersLoad,
-            srPaperResultsRef ,handleScroll,articlesWithSkeleton,isLastPage
+            count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage,curPage,loading,sr_loading,
+            init,papersLoad,srPaperResultsRef ,handleScroll,articlesWithSkeleton,isLastPage,handleClose,
+            query,strategy
           }
     },
    
@@ -354,6 +426,7 @@
     display:flex;
     justify-content: space-between;
     padding:10px 100px;
+    height:90vh;
 }
 .sr-left-aside{
     width:20%;
@@ -404,7 +477,6 @@
     flex-direction: column;
     max-height:300px; 
     overflow-y: auto;
-    
 }
 .sr-check-group::-webkit-scrollbar {
   display: none;
@@ -416,12 +488,32 @@
 .sr-main{
     width:80%;
     padding:0 20px;
-   
+    /* height:80vh; */
 }
 
+.selectedTag{
+  display:flex;
+
+  align-items: center;
+  background-color:rgba(219, 225, 213, 0.3);
+  margin:10px;
+  border-radius: 5px;;
+}
+.TagTitle{
+  display:flex;
+  padding-left: 10px;;
+  color:rgb(93, 92, 92);
+  font-weight: 800;
+}
+.SingleTag{
+  margin:10px;
+  height:30px;
+  font-weight:900;
+  font-size:15px;
+}
 .sr-paper-results{
 
- max-height: 100vh; 
+ max-height: 80vh; 
   overflow-y: auto;
 }
 .sr-statistic{
@@ -513,6 +605,9 @@ border:none;
 :deep(.el-input__inner){
   color:white;
   font-weight:900;
+}
+:deep(.el-tag ){
+  --el-tag-bg-color: rgba(104,176,171,0.2);
 }
   </style>
   

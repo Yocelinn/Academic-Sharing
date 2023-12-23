@@ -1,10 +1,10 @@
 <template>
-  <navigationBar :page="this.page"></navigationBar>
+  <navigationBar></navigationBar>
   <router-view/>
 </template>
 
 <script>
-import router from './router';
+import store from './store';
 import navigationBar from './components/home/navigationBar.vue';
 
 export default{
@@ -20,7 +20,14 @@ export default{
     
   },
   mounted(){
-
+    let userInfo = JSON.parse(localStorage.getItem("savedVuex"));
+    if(userInfo===null){
+      store.state.userInfo.isLogin=false;
+      store.state.userInfo.token='';
+      store.state.userInfo.nickName='';
+    } else{
+      store.state.userInfo=userInfo;
+    }
   }
 }
 

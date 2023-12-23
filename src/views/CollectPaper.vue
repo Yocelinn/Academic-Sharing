@@ -9,15 +9,15 @@
             <el-row>
               <el-col :span="16" style="padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
                 <el-card style="height:640px" class="collectcard">
-                  <el-table :data="history" style="width: 100%">
-                    <el-table-column prop="date" label="收藏时间" width="150" />
-                    <el-table-column prop="name" label="学术成果名称" width="180" />
-                    <el-table-column prop="id" label="ID" width="120" />
+                  <el-table :data="collectpapers" style="width: 100%">
+                    <el-table-column prop="userId" label="收藏id" width="150" />
+                    <el-table-column prop="psthesisName" label="学术论文名称" width="228" />
+                    <el-table-column prop="psthesisId" label="ID" width="120" />
                     <el-table-column prop="zone" label="领域" width="120" />
                     <el-table-column prop="writer" label="作者" width="145" />
                     <el-table-column fixed="right" label="操作" width="120">
                       <template #default>
-                        <el-button link type="primary" size="small" @click="handleClick"
+                        <el-button link type="primary" size="small" @click="cancleCollect"
                           >移除收藏</el-button
                         >
                       </template>
@@ -29,7 +29,7 @@
                 <el-card class="card114515">
                   <div class="findcollect">
                     <el-input v-model="input" placeholder="输入你需要查找的收藏成果" class="collectinput" />
-                    <el-button class="collectbutton" type="success">搜索</el-button>
+                    <el-button class="collectbutton" type="success" @click="serchpapers">搜索</el-button>
                   </div>
                 </el-card>
                 <el-card class="collectcard2" style="height: 390px;"> 
@@ -46,13 +46,26 @@
   <script>
   import Personaside from '@/components/Personaside.vue';
   import * as echarts from 'echarts';
-  import { onMounted } from 'vue';
+  import { onMounted,ref } from 'vue';
   import {post,get} from "../api/api.js"
+  import {GetPapers,SelectCP} from "../api/favorite.js"
   export default {
     components: {
       Personaside,
     },
+    methods:{
+      cancleCollect(){
+        
+      },
+      serchpapers(){
+        var promise=SelectCP(this.input)
+        promise.then((response=>{
+          console.log(response.data)
+        }))
+      }
+    },
     setup(){
+      const input =ref('')
       const username='Z-ARC'
       const identity='普通用户'
       const userid='1'
@@ -61,23 +74,13 @@
       const email='123456789@qq.com'
       const zone='计算机'
       const interest='数据库 架构 数据库系统'
-      const history = [
-        {
-          "date":"2023-09-02T12:47:13.219Z",
-          "name":"地底人会梦见螺旋星系吗",
-          "id": 1,
-          "zone": "科学",
-          "writer": "我也不知道",
-        },
-        {
-          "date":"2023-09-02T12:47:13.219Z",
-          "name":"调休打败了中秋国庆",
-          "id": 2,
-          "zone": "历史",
-          "writer": "我也不知道",
-        },
-      ]
+      const collectpapers = ref([])
       onMounted(()=>{
+        var promise = GetPapers()
+        promise.then((response=>{
+          console.log(response.data)
+          collectpapers.value = response.data
+        }))
         const echart1 = echarts.init(document.getElementById('graph'))
         const echarts1option = {
         title: {
@@ -102,6 +105,7 @@
       echart1.setOption(echarts1option)
       })
       return{
+        input,
         username,
         identity,
         name,
@@ -109,7 +113,7 @@
         email,
         zone,
         interest,
-        history,
+        collectpapers,
         userid
       }
     },
@@ -117,9 +121,11 @@
   </script>
   <style>
   .card114515{
+    margin-top: 40px;
     height: 120px;
   }
   .collectcard{
+    margin-top: 40px;
     border-top-color: #688f4e;
     border-top-width: 10px;
   }

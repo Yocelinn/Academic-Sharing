@@ -1,0 +1,135 @@
+[
+    [
+        {
+            "value": "title",
+            "label": "标题"
+        },
+        {
+            "value": "keyword",
+            "label": "关键词"
+        },
+        {
+            "value": "author",
+            "label": "作者"
+        },
+        {
+            "value": "institution",
+            "label": "机构"
+        },
+        {
+            "value": "abstract",
+            "label": "摘要"
+        },
+        {
+            "value": "source",
+            "label": "期刊"
+        }
+    ],
+    [
+        {
+            "value": "title",
+            "label": "专利名"
+        },
+        {
+            "value": "inventor",
+            "label": "发明人"
+        },
+        {
+            "value": "applicant",
+            "label": "专利权人"
+        },
+        {
+            "value": "apply_number",
+            "label": "申请号"
+        },
+        {
+            "value": "ipc",
+            "label": "IPC分类号"
+        },
+        {
+            "value": "cpc",
+            "label": "CPC分类号"
+        }
+    ],
+    [
+        {
+            "value": "title",
+            "label": "标题"
+        },
+        {
+            "value": "subject",
+            "label": "服务领域"
+        },
+        {
+            "value": "institution",
+            "label": "主办单位"
+        }
+    ],
+    [
+        {
+            "value": "title",
+            "label": "标题"
+        },
+        {
+            "value": "subject",
+            "label": "服务领域"
+        },
+        {
+            "value": "source",
+            "label": "情报产品"
+        },
+        {
+            "value": "author",
+            "label": "编译者"
+        },
+        {
+            "value": "abstract",
+            "label": "摘要"
+        }
+    ],
+    [
+        {
+            "value": "title",
+            "label": "标题"
+        },
+        {
+            "value": "keyword",
+            "label": "关键词"
+        },
+        {
+            "value": "provider",
+            "label": "提交者"
+        },
+        {
+            "value": "author",
+            "label": "作者"
+        },
+        {
+            "value": "abstract",
+            "label": "摘要"
+        },
+        {
+            "value": "cstr",
+            "label": "CSTR"
+        }
+    ],
+    [
+        {
+            "value": "title",
+            "label": "书名"
+        },
+        {
+            "value": "isbn",
+            "label": "ISBN"
+        },
+        {
+            "value": "publisher",
+            "label": "出版社"
+        },
+        {
+            "value": "author",
+            "label": "作者"
+        }
+    ]
+    
+]

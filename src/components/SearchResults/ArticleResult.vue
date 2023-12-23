@@ -4,10 +4,12 @@
         <el-card type="primary" class="card" shadow="hover"> 
             <div class="result">
                 <div class="info">
-                <div class="title">{{ paper.title }}</div>
-                <div class="authors">
+                <div class="title" v-if="paper.title" @click="jumpToPaper(paper.id)"><div v-html="paper.title"></div></div>
+                <div class="authors" v-if="paper.author">
                   <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
-                  {{ paper.author.join(', ') }}</div>
+                  <!-- <div v-html="paper.author.join( )"></div> -->
+                  {{ paper.author.join( ) }}
+                 </div>
                 <div class="date">
                   <span class="alias-info">日期: </span>
                   {{ paper.date }}
@@ -15,13 +17,15 @@
                 <div class="keywords" v-if="paper.keywords">
                   <span class="alias-info">关键词: </span>
                   <el-tag class="keywords-tag" v-for="key in paper.keywords" :key="key" type="primary">
-                    {{ key }}
+                    <div v-html="key"></div>
                     </el-tag>
-                     &nbsp;
+                     <!-- &nbsp; -->
                 </div>
                 <div class="abstract-container" :id="`abstract-container_${paper.id}`" >
                    <div class="abstract" :style="{'-webkit-line-clamp': displayAll?'3':'100'}">
-                    <span class="alias-info">摘要: </span>{{  paper.abstracts}} 
+                    <span class="alias-info">摘要: </span>
+                    <span v-html="paper.abstracts"></span>
+                     
                     </div>
                    
                 </div>
@@ -59,7 +63,7 @@
   
   <script>
   import { defineComponent,ref } from "vue"
-  
+  import {useRouter} from "vue-router"
     export default defineComponent({
       props: {
         paper: Object,
@@ -69,7 +73,7 @@
         function toggleText(id) {
           displayAll.value=!displayAll.value;
           const cid='abstract-container_'+id;
-          // console.log(cid)
+          console.log(cid)
           // var textContainer = document.querySelector('.abstract-container');
           var textContainer=document.getElementById(cid)
           var abstractContainer=textContainer.getElementsByClassName('abstract');
@@ -83,7 +87,15 @@
           }
           // console.log(displayAll.value)
       }
-      return {toggleText,displayAll}
+      function jumpToPaper(id){
+        console.log(`/paper/detail/${id}`)
+        // this.$router.push(`/paper/detail/${id}`,"_blank");
+        // this.$router.push(`/paper/detail/${id}`).then(() => {
+      // After the route has been pushed successfully, open a new window or tab
+      window.open(`/paper/detail/${id}`, '_blank');
+    // });
+      }
+      return {toggleText,displayAll,jumpToPaper}
       }
     })
    </script>
