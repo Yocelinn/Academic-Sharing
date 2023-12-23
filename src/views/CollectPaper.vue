@@ -10,14 +10,29 @@
               <el-col :span="16" style="padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
                 <el-card style="height:640px" class="collectcard">
                   <el-table :data="collectpapers" style="width: 100%">
-                    <el-table-column prop="userId" label="收藏id" width="150" />
-                    <el-table-column prop="psthesisName" label="学术论文名称" width="228" />
-                    <el-table-column prop="psthesisId" label="ID" width="120" />
-                    <el-table-column prop="zone" label="领域" width="120" />
-                    <el-table-column prop="writer" label="作者" width="145" />
-                    <el-table-column fixed="right" label="操作" width="120">
-                      <template #default>
-                        <el-button link type="primary" size="small" @click="cancleCollect"
+                    <el-table-column label="收藏id" width="170" >
+                      <template #default="scope">
+                        {{ scope.row.userid }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="学术论文名称" width="258" >
+                      <template #default="scope">
+                        {{ scope.row.psthesisName }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="psthesisId" label="ID" width="140" >
+                      <template #default="scope">
+                        {{ scope.row.psthesisId }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="writer" label="作者" width="175" >
+                      <template #default="scope">
+                        {{ scope.row.writer }}
+                      </template>
+                    </el-table-column>  
+                    <el-table-column fixed="right" label="操作" width="140">
+                      <template #default="scope">
+                        <el-button link type="primary" size="small" @click="cancleCollect(scope.row)"
                           >移除收藏</el-button
                         >
                       </template>
@@ -48,23 +63,33 @@
   import * as echarts from 'echarts';
   import { onMounted,ref } from 'vue';
   import {post,get} from "../api/api.js"
-  import {GetPapers,SelectCP} from "../api/favorite.js"
+  import {GetPapers,SelectCP,DeleteThesis,GetData} from "../api/favorite.js"
   export default {
     components: {
       Personaside,
     },
     methods:{
-      cancleCollect(){
-        
-      },
       serchpapers(){
-        var promise=SelectCP(this.input)
+        var promise=SelectCP(this.input,this.input)
         promise.then((response=>{
           console.log(response.data)
         }))
       }
     },
     setup(){
+      const cancleCollect = (row)=>{
+        var promise=DeleteThesis(row.psthesisId,row.psthesisName)
+        promise.then((response)=>{
+          console.log(response.code)
+          var promise2 = GetPapers()
+          promise2.then((response=>{
+          console.log(response.data)
+          collectpapers.value = response.data
+        }))
+        })
+      }
+      const papernum=ref('')
+      const patentnum=ref('')
       const input =ref('')
       const username='Z-ARC'
       const identity='普通用户'
@@ -81,10 +106,16 @@
           console.log(response.data)
           collectpapers.value = response.data
         }))
+        var promise2 = GetData()
+        promise2.then((response=>{
+          console.log(response.data)
+          echarts1option.series.data[1].value=response.data.numThesis
+          echarts1option.series.data[2].value=response.data.numPatent
+        }))
         const echart1 = echarts.init(document.getElementById('graph'))
         const echarts1option = {
         title: {
-              text: '收藏学术成果领域分布'
+              text: '收藏学术成果统计'
             },
         series:[
           {
@@ -92,11 +123,11 @@
             data:[
             {
               value: 1,
-              name: '科学'
+              name: '学术论文'
             },
             {
               value: 1,
-              name: '历史'
+              name: '学术专利'
             },
             ]
           }
@@ -114,7 +145,10 @@
         zone,
         interest,
         collectpapers,
-        userid
+        userid,
+        papernum,
+        patentnum,
+        cancleCollect
       }
     },
   }

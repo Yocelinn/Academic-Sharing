@@ -1,13 +1,14 @@
 <template>
-	<el-container class="home-container">
+
+	<el-container class="home-container" v-if="true">
 		<el-container>
 			<el-aside>
 				<el-menu
 				:default-active="activePath"
 				class="el-menu-vertical-demo"
-				background-color="#545c64"
+				background-color="#28463C"
 				text-color="#fff"
-				active-text-color="#ffd04b"
+				active-text-color="#B1D182"
 				:router="true">
 					<el-menu-item :index=scholarPath @click="saveNavState(scholarPath)">
 						<el-icon><location /></el-icon>
@@ -32,7 +33,6 @@
 </template>
 
 <script>
-
 export default {
 	data() {
 		return{
@@ -43,6 +43,9 @@ export default {
 		}
 	},
 	created() {
+		if(this.$route.path==="/manage/welcome"){
+			window.sessionStorage.removeItem('activePath')
+		}
 		this.activePath = window.sessionStorage.getItem('activePath')
 	},
 	methods: {

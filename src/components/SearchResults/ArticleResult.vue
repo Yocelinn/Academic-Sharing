@@ -8,13 +8,14 @@
                 <div class="authors" v-if="paper.author">
                   <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
                   <!-- <div v-html="paper.author.join( )"></div> -->
-                  {{ paper.author.join( ) }}
+                  {{ paper.author.join(' ') }}
                  </div>
                 <div class="date">
                   <span class="alias-info">日期: </span>
-                  {{ paper.date }}
+                  {{ paper.date.split('T')[0] }}
+                  <!-- {{ }} -->
                 </div>
-                <div class="keywords" v-if="paper.keywords">
+                <div class="keywords" v-if="paper.keywords&&paper.keywords.length!=0">
                   <span class="alias-info">关键词: </span>
                   <el-tag class="keywords-tag" v-for="key in paper.keywords" :key="key" type="primary">
                     <div v-html="key"></div>
@@ -63,6 +64,7 @@
   
   <script>
   import { defineComponent,ref } from "vue"
+  import moment from 'moment'; 
   import {useRouter} from "vue-router"
     export default defineComponent({
       props: {
@@ -70,6 +72,7 @@
       },
       setup(){
         var displayAll=ref(true)
+        
         function toggleText(id) {
           displayAll.value=!displayAll.value;
           const cid='abstract-container_'+id;

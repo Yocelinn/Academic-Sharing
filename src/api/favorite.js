@@ -59,7 +59,12 @@ export function GetPapers(){
     return get("/user/getCThesis",param)
 }
 
-export function GetTsPs(){
+export function GetPatents(){
     let param={};
-    return get("/user/getTsPs", param);
+    return get("/user/getCPatent",param)
+}
+
+export function GetData(){
+    let param={};
+    return get("/user/getTsPs",param)
 }

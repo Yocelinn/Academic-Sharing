@@ -4,15 +4,15 @@
         <el-card type="primary" class="card" shadow="hover"> 
             <div class="result">
                 <div class="info">
-                <div class="title"><div v-html="paper.title"></div></div>
+                <div class="title"><span v-html="paper.title"></span></div>
                 <div class="authors">
                   
                   <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
                   <!-- <span class="alias-info">发明人</span> -->
                   {{ paper.author.join(', ') }}</div>
                 <div class="date">
-                  <span class="alias-info">发布时间:</span> <div v-html="paper.date"></div>
-                  <span class="alias-info"> 所属服务:</span> <div v-html="paper.serverName"></div>
+                  <span class="alias-info">发布时间:</span> <span v-html="paper.date"></span>
+                  <span class="alias-info"> 所属服务:</span> <span v-html="paper.serverName"></span>
                 </div>
                
                 <div class="abstract-container" :id="`abstract-container_${paper.id}`">

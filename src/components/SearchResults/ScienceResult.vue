@@ -22,7 +22,7 @@
                 <div class="keywords" v-if="paper.keywords">
                   <span class="alias-info">关键词: </span>
                   <el-tag class="keywords-tag" v-for="key in paper.keywords" :key="key" type="primary">
-                    {{ key }}
+                    <span v-html="key"></span>
                     </el-tag>
                      &nbsp;
                 </div>
