@@ -2,45 +2,49 @@
     <el-button type="success" plain @click="this.enterDialog()" id="enterButton">
         登录
     </el-button>
-    <el-dialog v-model="this.open.login" width="25%" style="min-width: 400px;">
-        <div class="dialogBack">     </div>
-        <div class="title">
-            <el-button class="titile-login" text :type="this.loginButtonType" @click="this.switchLoginForm()">登录</el-button>
-            <el-button class="titile-register" text :type="this.registerButtonType" @click="this.switchRegisterForm()">注册</el-button>
+    <el-dialog v-model="this.open.login" width="25%" style="min-width: 500px;">
+        <div class="dialogBack">
+            <div class="title">
+                <el-image class="titleBack" :src="require('@/assets/home/001.jpg')" fit="fill"></el-image>
+                <!-- <el-button class="titile-login" text :type="this.loginButtonType" @click="this.switchToLoginForm()">登录</el-button>
+                <el-button class="titile-register" text :type="this.registerButtonType" @click="this.switchToRegisterForm()">注册</el-button> -->
+            </div>
+            <div class="login" v-if="this.formType==0">
+                <el-form class="loginForm" ref="loginRef" :model="this.login" :rules="this.loginRules">
+                    <el-form-item class="lineHeight" prop="email">
+                        <el-input class="input" type="text" v-model="this.login.email" placeholder="邮箱" maxlength="25" prefix-icon="Message"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="password">
+                        <el-input class="input" type="password" v-model="this.login.password" placeholder="密码" maxlength="25" prefix-icon="Lock"></el-input>
+                    </el-form-item>
+                    <el-button class="loginButton" type="success" @click="this.loginClick()">登录</el-button>
+                    <el-button class="loginToRegister" text="true" @click="this.switchToRegisterForm()">注册新用户</el-button>
+                    <el-button class="forgetButton" text="true">忘记密码</el-button>
+                </el-form>
+            </div>
+            <div class="register" v-if="this.formType==1">
+                <el-button class="returnToLogin" type="success" text="true" @click="this.switchToLoginForm()"><el-icon><Back /></el-icon>已注册</el-button>
+                <el-form class="registerForm" ref="registerRef" :model="this.register" :rules="this.registerRules">
+                    <el-form-item prop="username">
+                        <el-input class="input" type="text" v-model="this.register.username" placeholder="昵称" maxlength="25" prefix-icon="User"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="password">
+                        <el-input class="input" type="password" v-model="this.register.password" placeholder="密码" maxlength="25" prefix-icon="Lock"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="confirmPassword">
+                        <el-input class="input" type="password" v-model="this.register.confirmPassword" placeholder="再次输入密码" maxlength="25" prefix-icon="Lock"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="email">
+                        <el-input class="input" type="text" v-model="this.register.email" placeholder="您的邮箱" maxlength="25" prefix-icon="Message"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="vercode">
+                        <el-input class="input" type="text" v-model="this.register.vercode" placeholder="请输入4位验证码" maxlength="6" style="width: 80%;" prefix-icon="ElementPlus"></el-input>
+                        <el-button class="input" type="success"  @click="this.sendVerCode()" style="width: 20%;font-size: 14px;">获取验证码</el-button>
+                    </el-form-item>
+                    <el-button class="registerButton" type="success" @click="this.registerClick()">注册</el-button>
+                </el-form>
+            </div>
         </div>
-        <div class="login">
-            <el-form v-if="!this.switchForm" class="loginForm" ref="loginRef" :model="this.login" :rules="this.loginRules">
-                <el-form-item label="邮箱" prop="email">
-                    <el-input type="text" v-model="this.login.email" maxlength="25"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="this.login.password" maxlength="25"></el-input>
-                </el-form-item>
-                <el-button class="loginButton" type="success" @click="this.loginClick()">登录</el-button>
-                <el-button class="forgetButton" type="success" text="true">忘记密码?</el-button>
-            </el-form>
-        </div>
-        <!-- <div class="register">
-            <el-form v-if="this.switchForm" class="registerForm" ref="registerRef" :model="this.register" :rules="this.registerRules">
-                <el-form-item label="用户名" prop="username" label-width="20%">
-                    <el-input type="text" v-model="this.register.username" maxlength="25"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" prop="password" label-width="20%">
-                    <el-input type="password" v-model="this.register.password" maxlength="25"></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码" prop="confirmPassword" label-width="20%">
-                    <el-input type="password" v-model="this.register.confirmPassword" maxlength="25"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱" prop="email" label-width="20%">
-                    <el-input type="text" v-model="this.register.email" maxlength="25"></el-input>
-                </el-form-item>
-                <el-form-item label="验证码" prop="vercode" label-width="20%">
-                    <el-input type="text" v-model="this.register.vercode" maxlength="6" style="width: 65%;"></el-input>
-                    <el-button type="success"  @click="this.sendVerCode()">获取验证码</el-button>
-                </el-form-item>
-                <el-button class="registerButton" type="success" @click="this.registerClick()">注册</el-button>
-            </el-form>
-        </div> -->
     </el-dialog>
 </template>
 
@@ -51,6 +55,10 @@ import { ElNotification } from 'element-plus';
 
 export default {
     name: 'LoginAndRegister',
+    components:{
+        
+
+    },
     props: {
         width:{
             type: String,
@@ -70,7 +78,7 @@ export default {
             open: {
                 login: false,
             },
-            switchForm: false,  //false为登录，true为注册
+            formType: 0,  //0为登录，1为注册
             loginButtonType: 'success',
             registerButtonType: 'info',
             login: {
@@ -161,15 +169,22 @@ export default {
             this.register.vercode='';
             this.open.login=true;
         },
-        switchLoginForm(){
-            this.switchForm=false;
+        switchToLoginForm(){
+            this.login.email='';
+            this.login.password='';
             this.loginButtonType='success';
             this.registerButtonType='info';
+            this.formType=0;
         },
-        switchRegisterForm(){
-            this.switchForm=true;
+        switchToRegisterForm(){
+            this.register.username='';
+            this.register.password='';
+            this.register.confirmPassword='';
+            this.register.email='';
+            this.register.vercode='';
             this.loginButtonType='info';
             this.registerButtonType='success';
+            this.formType=1;
         },
         loginClick(){
             this.$refs.loginRef.validate((valid) => {
@@ -212,7 +227,7 @@ export default {
                                 position: 'top-right',
                                 duration: 2000,
                             });
-                            this.switchForm=true;
+                            this.switchToLoginForm();
                         } else{
                             ElNotification({
                                 message: result.info,
@@ -265,15 +280,16 @@ export default {
 
 <style scoped>
 .dialogBack{
-    position: absolute;
+    position: relative;
     width: 100%;
-    height: 100%;
+    height: 375px;
     left: 0%;
     top: 0%;
 }
 .title{
-    position: relative;
-    width: 95%;
+    position: absolute;
+    width: 90%;
+    left: 5%;
     top: -40px;
 }
 .titile-login{
@@ -292,41 +308,78 @@ export default {
     position: relative;
     width: 90%;
     left: 5%;
-    top: 0%;
+    top: 25%;
     /* border-right: 2px solid rgb(138, 167, 231); */
 }
 .register{
-    position: absolute;
+    position: relative;
     width: 90%;
     left: 5%;
-    top: 30%;
+    top: 17%;
 }
 .loginForm{
     position: relative;
-    width: 96%;
+    width: 100%;
+    height: 100%;
+    left: 0%;
     top: 0%;
 }
 .registerForm{
-    width: 96%;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    left: 0%;
+    top: 0%;
 }
 
 .loginButton{
     position: relative;
-    width: 100px;
+    width: 90%;
     height: 40px;
-    left: 20%;
+    left: 0%;
+    top: 20px;
     font-size: larger;
+}
+.loginToRegister{
+    position: relative;
+    width: 20%;
+    height: 30px;
+    left: -25%;
+    top: 28px;
 }
 .forgetButton{
     position: relative;
+    width: 20%;
+    height: 30px;
     left: 25%;
-    top: 0%;
+    top: 28px;
 }
 .registerButton{
     position: relative;
-    width: 100px;
+    width: 90%;
     height: 40px;
+    left: 0%;
+    top: 7px;
     font-size: larger;
+}
+.returnToLogin{
+    position: absolute;
+    width: 20%;
+    height: 25px;
+    left: -5%;
+    top: -40px;
+    font-size: 16px;
+}
+.input{
+    position: relative;
+    height: 35px;
+    font-size: 16px;
+}
+.titleBack{
+    position: relative;
+    width: 40%;
+    height: 80px;
+    background-image: url('@/assets/home/001.jpg');
 }
 
 </style>

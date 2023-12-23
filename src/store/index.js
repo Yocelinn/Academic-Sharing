@@ -12,7 +12,7 @@ export default createStore({
   mutations: {
     login(state, token){
       state.token=token;
-      state.isLogin=true;
+      // state.isLogin=true;
     },
     logout(state){
       state.token="",
