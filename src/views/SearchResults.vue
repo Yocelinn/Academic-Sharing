@@ -37,10 +37,12 @@
                       <el-tab-pane :label=item.type :name="item.key">
                         <div class="selectedTag">
                          <div class="TagTitle">筛选条件：</div> 
+                         <div v-if="query">
+                          <el-tag class="SingleTag">{{ query }}</el-tag>
+                        </div>
                          <div v-for="thing in grouptype" :key="thing">
                        
                           <el-tag
-                           
                             v-for="tag in aggregations[thing.tag]" 
                             :key="tag"
                             class="SingleTag"
@@ -143,6 +145,7 @@
   import { defineComponent,ref,h, onMounted,onUnmounted,computed } from "vue";
   import {useRoute} from 'vue-router'
   import { mapMutations } from "vuex";
+  import {useStore} from "vuex"
   // import {post,get} from "../api/api.js"
   import {search,searchForAggregations} from "../api/classification.js"
   export default defineComponent ({
@@ -162,8 +165,16 @@
           loading.value=true;
           sr_loading.value=true;
           // query=this.$route.query.query
-          console.log(query)
-          console.log(strategy.value)
+          console.log(useRoute())
+          // console.log(query)
+          console.log(strategy)
+          console.log(store)
+          if(store.state.searchType===""){
+            console.log("It's null")
+          }else{
+            curAcademyType=store.state.searchType;
+          }
+          console.log(curAcademyType)
           await getResults();
           await getGroupClassifier();
           await new Promise(resolve => setTimeout(resolve, 2000));
@@ -192,6 +203,8 @@
       //————————————————————————————————一些调用接口用的全局变量————————————————————————————
         var aggregations=ref({});//当前类别下选中的过滤关键词，每次改变curAcademyType时会被清空
         var curAcademyType=ref("articles") //当前选中的成果类别，保存的是academyTypes的key
+        
+        // console.log(curAcademyType.value)
         const sizePerPage=ref(6);
         var curPage=ref(1);
         var loading=ref(false);
@@ -235,11 +248,13 @@
         }
         // const route=useRoute();
         // console.log(route)
-        const query =useRoute().params.query;
-        
+        const query =useRoute().query.query;
+        console.log(query)
+        const store=useStore();
         var strategy=ref({type:"",content:""})
-        strategy.type=useRoute().params.type;
-        strategy.content=useRoute().params.content;
+        strategy.value.type=useRoute().query.type;
+
+        strategy.value.content=useRoute().query.content;
        
         // const strategy = useRoute().query.strategy;
         const timeRange=ref("时间范围");
@@ -408,13 +423,15 @@
             console.error("Error fetching data:", error);
           });
         }
+        
+         
         return {
             articles,patents,bulletins,reports,sciencedata,books,papers_total,
             academyTypes,grouptype,activeNames,checkList,timeRange,RankingMethod,
             TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange,getResults,handleClassfierChange,
             count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage,curPage,loading,sr_loading,
             init,papersLoad,srPaperResultsRef ,handleScroll,articlesWithSkeleton,isLastPage,handleClose,
-            query,strategy
+            query,strategy,store
           }
     },
    
@@ -477,12 +494,16 @@
     flex-direction: column;
     max-height:300px; 
     overflow-y: auto;
+    overflow-x: hidden;
+
 }
 .sr-check-group::-webkit-scrollbar {
   display: none;
 }
 .sr-check-item{
   margin:10px;
+  max-width:30px;
+
 
 }
 .sr-main{

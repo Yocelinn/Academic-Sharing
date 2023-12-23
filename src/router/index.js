@@ -51,7 +51,8 @@ const routes = [
   {
     path: '/searchResults/:query?/:type?/:content?',
     name: 'searchResults',
-    component: () => import('../views/SearchResults.vue')
+    component: () => import('../views/SearchResults.vue'),
+    // props: (route) => ({ query: route.query.query }),
   },
   {
     path: '/paper/detail/:workId?',  // 论文详情页
@@ -116,6 +117,11 @@ const routes = [
     name: 'ProgramDetail',
     component: () => import('../views/details/ProgramDetail.vue')
   },
+  {
+    path:'/allInstitution',//全部机构展示页
+    name:'allInstitution',
+    component: () => import('../views/AllInstitutionDisplay.vue')
+  }
 ]
 
 const router = createRouter({
