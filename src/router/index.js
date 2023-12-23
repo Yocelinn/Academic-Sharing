@@ -44,11 +44,6 @@ const routes = [
     component: () => import('../views/History.vue')
   },
   {
-    path: '/collect',
-    name: 'collect',
-    component: () => import('../views/Collect.vue')
-  },
-  {
     path: '/searchResults',
     name: 'searchResults',
     component: () => import('../views/SearchResults.vue')
@@ -110,6 +105,16 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '../views/PersonalDoorPage.vue')
     }
+  },
+  {
+    path: '/collectPaper',
+    name: 'collectPaper',
+    component: () => import('../views/CollectPaper.vue')
+  },
+  {
+    path: '/collectPatent',
+    name: 'collectPatent',
+    component: () => import('../views/CollectPatent.vue')
   },
 ]
 

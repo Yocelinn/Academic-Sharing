@@ -17,7 +17,7 @@
                     <el-table-column prop="writer" label="作者" width="145" />
                     <el-table-column fixed="right" label="操作" width="120">
                       <template #default>
-                        <el-button link type="primary" size="small" @click="handleClick"
+                        <el-button link type="primary" size="small" @click="cancleCollect"
                           >移除收藏</el-button
                         >
                       </template>
@@ -30,10 +30,6 @@
                   <div class="findcollect">
                     <el-input v-model="input" placeholder="输入你需要查找的收藏成果" class="collectinput" />
                     <el-button class="collectbutton" type="success">搜索</el-button>
-                  </div>
-                </el-card>
-                <el-card class="collectcard2" style="height: 390px;"> 
-                  <div id="graph" style="height: 390px;">
                   </div>
                 </el-card>
               </el-col>
@@ -51,6 +47,11 @@
   export default {
     components: {
       Personaside,
+    },
+    methods:{
+      cancleCollect(){
+        
+      }
     },
     setup(){
       const username='Z-ARC'
@@ -78,28 +79,6 @@
         },
       ]
       onMounted(()=>{
-        const echart1 = echarts.init(document.getElementById('graph'))
-        const echarts1option = {
-        title: {
-              text: '收藏学术成果领域分布'
-            },
-        series:[
-          {
-            type: 'pie',
-            data:[
-            {
-              value: 1,
-              name: '科学'
-            },
-            {
-              value: 1,
-              name: '历史'
-            },
-            ]
-          }
-        ]
-      }
-      echart1.setOption(echarts1option)
       })
       return{
         username,
