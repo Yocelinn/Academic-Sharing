@@ -2,7 +2,7 @@
     <div class="mainContainer">
         <!-- <el-button style="margin-top: 100px;" @click="isDialoVisibal = true">test</el-button>
         <seniorSearchBox v-model="isDialoVisibal"></seniorSearchBox> -->
-        <searchBox width=400 color="white" :isClassVisible=false style="margin-top: 100px;margin-left: 100px;" ></searchBox>
+        <searchBox width=50 color="white" :isClassVisible=false style="margin-top: 100px;margin-left: 100px;" :isLargeModel = true></searchBox>
         <el-button @click="test1">test</el-button>
         <!-- <button @click="test">test</button> -->
     </div>

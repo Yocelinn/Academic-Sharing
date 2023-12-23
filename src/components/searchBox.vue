@@ -1,22 +1,23 @@
 <template>
   <seniorSearchBox v-model="isDialoVisibal" :classindex=radio1></seniorSearchBox>
-  <div class="mainContainer" :style="{ width: computedWidth }">
-    <div class="container" :style="{ width: `${width}px`, backgroundColor: color }">
-      <div class="searchDiv" :style="{ width: `${width}px`, backgroundColor: color }">
-        <div class="selectContainer" v-if="radio != 10">
-          <select class="select" v-model="titleList[radio1]">
+  <div :class="{ 'mainContainer': isLargeModel, 'mainContainerSmallModel': !isLargeModel }"  :style="{ width: `${width}%`, backgroundColor: color }">
+    <div class="container" >
+      <div :class="{ 'searchDiv': isLargeModel, 'searchDivSmallModel': !isLargeModel }" :style="{ backgroundColor: color }">
+        <div :class="{ 'selectContainer': isLargeModel, 'selectContainerSmallModel': !isLargeModel }" v-if="radio != 10">
+          <select class="select"  :class="{ 'select': isLargeModel, 'selectSmallModel': !isLargeModel }" v-model="titleList[radio1]">
             <option v-for="(item, index) in options[radio1]" :key="item.value" :label="item.label" :value="item.value"
               :selected="index === 0">
               {{ item.label }}
             </option>
           </select>
         </div>
-        <div class="inputContainer">
+        <div  :class="{ 'inputContainer': isLargeModel, 'inputContainerSmallModel': !isLargeModel }">
           <el-input placeholder="中文文献、外文文献" class="input" v-model="localQuery" @input="updateQuery" />
         </div>
-        <el-button type="primary" style="position: relative;margin-left:5%;top: 15px;" @click="emitSearch">搜索</el-button>
+        <el-button type="primary" style="position: relative;margin-left:0%;top: 5px;width : 15%;max-width: 60px;" @click="emitSearch" v-if="!isLargeModel" size="small">搜索</el-button>
+        <el-button type="primary" style="position: relative;margin-left:0%;top: 15px;width : 15%;max-width: 60px;" @click="emitSearch" v-if="isLargeModel">搜索</el-button>
       </div>
-      <div class="classDiv" :style="{ width: `${width}px` }" v-if="isClassVisible">
+      <div :class="{ 'classDiv': isLargeModel, 'classDivSmallModel': !isLargeModel }" :style="{ width: `${width}%` }" v-if="isClassVisible">
         <div class="top" style="padding-bottom: 0px" v-if="isClassVisible">
           <el-radio-group v-model="radio1" style="color: #409EFF;" text-color="red" fill='red' size="large">
             <el-radio :label="0" class="item" fill="red">论文</el-radio>
@@ -30,17 +31,30 @@
         </div>
       </div>
     </div>
-    <span style="position: relative;display: flex;top: 17px;left: 8px;color: white;cursor: pointer;" id="seniorSearchBox"
+    <span style="position: relative;display: flex;top: 17px;left: 0px;color: white;cursor: pointer;" id="seniorSearchBox"
       @mouseover="mouseOverToChangeSeniorColor('seniorSearchBox')"
-      @mouseout="mouseOutToChangeSeniorColor('seniorSearchBox')" @click="isDialoVisibal = true">
+      @mouseout="mouseOutToChangeSeniorColor('seniorSearchBox')" @click="isDialoVisibal = true" v-if="isLargeModel">
+      高级搜索
+    </span>
+    <span style="position: relative;display: flex;top: 8px;left: 0px;color: white;cursor: pointer;" id="seniorSearchBox"
+      @mouseover="mouseOverToChangeSeniorColor('seniorSearchBox')"
+      @mouseout="mouseOutToChangeSeniorColor('seniorSearchBox')" @click="isDialoVisibal = true" v-if="!isLargeModel">
       高级搜索
     </span>
   </div>
 </template>
 <style scoped>
 .mainContainer {
-  position: relative;
+  position: absolute;
   display: flex;
+  min-width: 900px;
+  height: 80px;
+}
+.mainContainerSmallModel {
+  position: absolute;
+  display: flex;
+  min-width: 900px;
+  height: 50px;
 }
 
 /* 选中后的字体颜色 */
@@ -84,9 +98,10 @@
   flex-direction: column;
   /* 垂直方向排列 */
   align-items: center;
-  width: 1000px;
   /* 垂直居中对齐 */
   border-radius: 2%;
+  width: 85%;
+  overflow: hidden;
 }
 
 .classDiv {
@@ -100,12 +115,24 @@
   width: 100%;
   margin-top: 20px;
 }
+.classDivSmallModel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* 垂直方向排列 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  height: 30px;
+  width: 100%;
+  margin-top: 10px;
+}
+
 
 .input {
   position: relative;
   display: flex;
   flex: 1;
-  width: 550px;
+  width: 50%;
 }
 
 :deep(.el-input__wrapper) {
@@ -128,6 +155,17 @@
   overflow: hidden;
 }
 
+.inputContainerSmallModel {
+  position: relative;
+  display: flex;
+  top: 5px;
+  height: 25px;
+  width: 60%;
+  float: left;
+  margin-left: 40px;
+  overflow: hidden;
+}
+
 .selectContainer {
   float: left;
   position: relative;
@@ -144,13 +182,42 @@
   border-right-color: #b1b3b8;
 }
 
+.selectContainerSmallModel {
+  float: left;
+  position: relative;
+  display: flex;
+  left: 15px;
+  top: 5px;
+  height: 25px;
+  width: 8%;
+  border-style: solid;
+  border-left: 0;
+  border-top: 0;
+  border-bottom: 0;
+  border-right-width: 2px;
+  border-right-color: #b1b3b8;
+}
+
+
 .searchDiv {
   flex-direction: column;
   /* 垂直方向排列 */
   align-items: center;
   /* 垂直居中对齐 */
   height: 60px;
-  width: 850px;
+  width: 95%;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px #42b983;
+  background-color: white;
+}
+
+.searchDivSmallModel {
+  flex-direction: column;
+  /* 垂直方向排列 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  height: 40px;
+  width: 97%;
   border-radius: 5px;
   box-shadow: 2px 2px 5px #42b983;
   background-color: white;
@@ -165,6 +232,16 @@
   display: flex;
   appearance: none;
   padding-top: 10px;
+}
+.selectSmallModel {
+  outline: none;
+  height: 20px;
+  width: 100%;
+  border: 0;
+  position: relative;
+  display: flex;
+  appearance: none;
+  padding-top: 5px;
 }
 </style>
 
@@ -182,6 +259,10 @@ export default {
     color: {
       type: String,
       default: 'white',
+    },
+    isLargeModel: {
+      type: Boolean,
+      default: false,
     },
     width: {
       type: Number,
@@ -423,8 +504,8 @@ export default {
     }
   },
   computedWidth() {
-    var temp = this.width + 50;
-    return `${temp}px`;
+    var temp = this.width;
+    return `${temp}%`;
   },
   radio1(newVal) {
     this.radio = newVal
