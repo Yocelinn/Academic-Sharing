@@ -1,0 +1,17 @@
+[
+    {"token" : "TS={主题}"},
+    {"token" : "TI={提名}"},
+    {"token" : "KY={关键词}"},
+    {"token" : "AU={作者}"},
+    {"token" : "AF={机构}"},
+    {"token" : "AB={摘要}"},
+    {"token" : "SO={期刊}"},
+    {"token" : "PY={出版年}"},
+    {"token" : "AND"},
+    {"token" : "OR"},
+    {"token" : "NOT"},
+    {"token" : "+"},
+    {"token" : "-"},
+    {"token" : "?"},
+    {"token" : "*"}
+]
