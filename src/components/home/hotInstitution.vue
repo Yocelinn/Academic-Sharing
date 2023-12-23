@@ -66,6 +66,9 @@ export default{
 .item{
     position: relative;
     height: 10%;
-
+    width: 100%;
+    line-height: 10%;
+    text-align: left;
+    font-style: italic;
 }
 </style>
