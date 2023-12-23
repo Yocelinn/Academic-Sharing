@@ -6,12 +6,14 @@
         <div id="home" class="address" style="width: 5%;left: 20%;" @click="">首页</div>
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
         <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
-        
-        <!-- <searchBox width=400 color="black" style="left: 50%;position: absolute;display: flex;height: 50px;width : 400px;z-index: 9999;mar" :isClassVisible=false></searchBox> -->
-        <div v-if="this.$store.state.isLogin">
+        <div class="searchBlock">
+            <searchBox width=100 color="white" :isClassVisible=false style="margin-top: 100px;margin-left: 100px;" :isLargeModel = false></searchBox>
         </div>
-        <div v-else id="" class="button" style="width: 10%;right: 5%;">
-            <LoinAndRegister width="80px" height="50px" font-size="16px"></LoinAndRegister>
+        <div v-if="this.$store.state.userInfo.isLogin" class="button" style="width: 15%;right: 2%;">
+            <Loggedin></Loggedin>
+        </div>
+        <div v-else id="" class="button" style="width: 10%;right: 10%;">
+            <LoinAndRegister width="75px" height="38px" font-size="16px"></LoinAndRegister>
         </div>
     </div>
 </template>

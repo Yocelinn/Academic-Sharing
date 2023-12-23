@@ -14,28 +14,33 @@
             </el-dropdown>
         </div>
         <div class="first">你好，</div>
-        <div class="nickName">Jeruisi</div>
+        <div class="nickName">{{ this.$store.state.userInfo.showName }}</div>
     </div>
 </template>
 
 <script>
 import store from '@/store';
+import { ref, watch } from 'vue';
 
 export default{
     props: {
         
     },
     data() {
-
+        return{
+            nickName: "",
+        }
     },
     methods:{
         logOutClick(){
             store.commit("logout");
         },
-        
     },
     mounted(){
-
+        var nickNameWatcher=ref(store.state.nickName);
+        watch(nickNameWatcher, (newValue, oldValue) => {
+            console.log(newValue.size());
+        })
     },
 }
 
