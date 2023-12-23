@@ -28,31 +28,34 @@
                     </div> 
                   </div>
                   </div>
-                <div class="institution">
-                  <div v-for="(institu, index) in detailInfo.institutions" :key="index">{{ index+1+"." +  institu }}</div>
-                </div>
-                <div class="detail">
-                    <div class="content-container">
-                      <div class="little-title">关键词：</div>
-                      <div class="content" v-if="detailInfo.keywords != ''"> 
-                          <div class="keyword-item"  v-for="(keyword, index) in detailInfo.keywords" :key="index" >
-                            {{ keyword }}
-                          </div>
+                <el-skeleton :loading="loading" animated :rows="4">
+                  <div class="institution" >
+                    <div v-for="(institu, index) in detailInfo.institutions" :key="index">{{ index+1+"." +  institu }}</div>
+                  </div>
+                  <div class="detail">
+                      <div class="content-container">
+                        <div class="little-title">关键词：</div>
+                        <div class="content" v-if="detailInfo.keywords != ''"> 
+                            <div class="keyword-item"  v-for="(keyword, index) in detailInfo.keywords" :key="index" >
+                              {{ keyword }}
+                            </div>
+                        </div>
+                        
                       </div>
-                      
-                    </div>
-                    <div class="content-container">
-                        <div class="little-title">摘要：</div>
-                        <!-- <div class="content">{{ detailInfo.abstractContent }}</div> -->
-                        <div v-html="detailInfo.abstract" class="content"></div>
-                    </div>
-                
-                    <div class="content-container">
-                        <div class="little-title">发表日期：</div>
-                        <div class="content">{{ detailInfo.publicationDate }}</div>
-                    </div>
-                
-                </div>
+                      <div class="content-container">
+                          <div class="little-title">摘要：</div>
+                          <!-- <div class="content">{{ detailInfo.abstractContent }}</div> -->
+                          <div v-html="detailInfo.abstract" class="content"></div>
+                      </div>
+                  
+                      <div class="content-container">
+                          <div class="little-title">发表日期：</div>
+                          <div class="content">{{ detailInfo.publicationDate }}</div>
+                      </div>
+                  
+                  </div>
+                  
+                </el-skeleton>
             </el-card>
             
         </section>
@@ -61,17 +64,19 @@
             <div>
                 <h2 class="recommend-title" >相关文献推荐</h2> 
             </div>
-            <ol class="paper-list">
-              <li class="list-item" v-for="(item, index) in detailInfo.recommendations" :key="index">
-                <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div>
-                <!--因为v-html，有的文章标题是有格式的
-                  <div class="recommend-papar-name" @click="gotoPaper(item.workId)"> {{ item.workName }} </div> -->
-                <!-- <div class="detail-list" >
-                  <div class="detail-item" v-for="(person, index) in item.authors" :key="index"> {{ person }}. </div>
-                </div> -->
-                <div class="detail-list"> {{ item.info }}</div>
-              </li>
-            </ol>
+            <el-skeleton :loading="loading" animated :rows="1" alignment="flex-start">
+              <ol class="paper-list">
+                <li class="list-item" v-for="(item, index) in detailInfo.recommendations" :key="index">
+                  <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div>
+                  <!--因为v-html，有的文章标题是有格式的
+                    <div class="recommend-papar-name" @click="gotoPaper(item.workId)"> {{ item.workName }} </div> -->
+                  <!-- <div class="detail-list" >
+                    <div class="detail-item" v-for="(person, index) in item.authors" :key="index"> {{ person }}. </div>
+                  </div> -->
+                  <div class="detail-list"> {{ item.info }}</div>
+                </li>
+              </ol>
+            </el-skeleton>
             <el-divider><el-icon><star-filled /></el-icon></el-divider>
           </div>
         </section>
@@ -157,7 +162,7 @@
             </el-form-item> -->
           </el-form>
         </div>
-        <el-result icon="success" title="Success Tip" sub-title="Please follow the instructions" v-else>
+        <el-result icon="success" title="提交成功" sub-title="感谢您的反馈！" v-else>
           <template #extra>
             <el-button type="primary" @click="closeDialog">关闭</el-button>
           </template>
@@ -167,6 +172,18 @@
             <el-button @click="dialogVisible = false">取消</el-button>
             <el-button type="primary" @click="onSubmit">
               提交
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog v-model="alertLogVisible" title="提示" width="30%" center>
+        <el-form-item>
+          <span style="width: 100%;text-align: center;font-weight: 600;font-size: 15px;">  您还未登录，请先登录 </span>
+        </el-form-item>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button type="primary" @click="alertLogVisible = false">
+              好
             </el-button>
           </span>
         </template>
@@ -181,6 +198,8 @@
   import * as PaperApi from '../../api/paper';
   import moment from 'moment'; 
   import axios from 'axios';
+  import store from '@/store';
+
   
   export default {
     name: 'PaperDetail',
@@ -219,6 +238,7 @@
         date: '',
       })
       const successVisible = ref(false)
+      const alertLogVisible = ref(false)
       
       onMounted( () => {
         // getPaperList();
@@ -244,7 +264,7 @@
         })
       }
       function getComments() {
-        PaperApi.GetCommentByWorkId('1000')
+        PaperApi.GetCommentByWorkIdAndType('1')
         .then((response) => {
           console.log(response)
           // comments.value = response;
@@ -275,19 +295,27 @@
         // 现在还是测试数据，故userId和workId都不确定
         commentData.value.content  = content
         commentData.value.workId = 1000;
-        axios.post('http://114.115.179.52:8089/api/comment/create', commentData.value)
-        .then( (response) => {
-          console.log(response)
+        PaperApi.PostComment(commentData.value, workId)
+        .then((response) => {
+          console.log("postComment result:" + response)
         })
       }
 
       function reportError() {
-        dialog.value.title = "报告数据错误"
-        dialogVisible.value = true;
+        // if(store.state.isLogin){
+          dialog.value.title = "报告数据错误"
+          dialogVisible.value = true;
+        // } else {
+        //   alertLogVisible.value = true;
+        // }
       }
       function reportRevoke() {
-        dialog.value.title = "提交撤稿申请"
-        dialogVisible.value = true;
+        if(store.state.isLogin){
+          dialog.value.title = "提交撤稿申请"
+          dialogVisible.value = true;
+        } else {
+            alertLogVisible.value = true;
+        }
       }
       
 
@@ -307,12 +335,13 @@
         dialog,
         formInline,
         successVisible,
+        alertLogVisible,
 
         postComment,
         reportError,
         reportRevoke,
         onSubmit,
-        closeDialog
+        closeDialog,
       };
 
       
@@ -679,5 +708,11 @@
   :deep(.el-textarea__inner)  {
     height: 250px;
   }
+  :deep(.el-skeleton__p.is-first) {
+    width: 100%;
+}
+:deep(.el-skeleton__p.is-last) {
+    width: 100%;
+}
   </style>
   

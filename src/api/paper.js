@@ -1,10 +1,20 @@
 import { post, get } from "./api";
 
 
-export function GetCommentByWorkId(workId){
+export function GetCommentByWorkIdAndType(workId){
     let param={};
     param.workId=workId;
-    return get('/comment/getByWorkId', param);
+    param.type='article';
+    return get('/comment/getByWorkIdAndType', param);
+}
+
+export function PostComment(content, workId){
+    let data={};
+    data.content=content;
+    data.workId=workId;
+    data.type = 'article';
+    data.userId = 2;
+    return post("/comment/create", data)
 }
 
 export function DisplayWorkHomePage(workId){
