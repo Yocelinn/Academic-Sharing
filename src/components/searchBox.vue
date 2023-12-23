@@ -1,23 +1,28 @@
 <template>
   <seniorSearchBox v-model="isDialoVisibal" :classindex=radio1></seniorSearchBox>
-  <div class="mainContainerSmallModel" :style = "{width: `${width}%`}">
-    <div class="container" >
-      <div :class="{ 'searchDiv': isLargeModel, 'searchDivSmallModel': !isLargeModel }" :style="{ backgroundColor: color }">
+  <div :class="{ 'mainContainer': isLargeModel, 'mainContainerSmallModel': !isLargeModel }" :style="{ width: `${width}%` }">
+    <div class="container">
+      <div :class="{ 'searchDiv': isLargeModel, 'searchDivSmallModel': !isLargeModel }"
+        :style="{ backgroundColor: color }">
         <div :class="{ 'selectContainer': isLargeModel, 'selectContainerSmallModel': !isLargeModel }" v-if="radio != 10">
-          <select class="select"  :class="{ 'select': isLargeModel, 'selectSmallModel': !isLargeModel }" v-model="titleList[radio1]">
+          <select class="select" :class="{ 'select': isLargeModel, 'selectSmallModel': !isLargeModel }"
+            v-model="titleList[radio1]">
             <option v-for="(item, index) in options[radio1]" :key="item.value" :label="item.label" :value="item.value"
               :selected="index === 0">
               {{ item.label }}
             </option>
           </select>
         </div>
-        <div  :class="{ 'inputContainer': isLargeModel, 'inputContainerSmallModel': !isLargeModel }">
+        <div :class="{ 'inputContainer': isLargeModel, 'inputContainerSmallModel': !isLargeModel }">
           <el-input placeholder="中文文献、外文文献" class="input" v-model="localQuery" @input="updateQuery" />
         </div>
-        <el-button type="primary" style="position: relative;margin-left:0%;top: 5px;width : 15%;max-width: 60px;" @click="emitSearch" v-if="!isLargeModel" size="small">搜索</el-button>
-        <el-button type="primary" style="position: relative;margin-left:0%;top: 15px;width : 15%;max-width: 60px;" @click="emitSearch" v-if="isLargeModel">搜索</el-button>
+        <el-button type="primary" style="position: relative;margin-right:20px;top: 5px;width : 15%;max-width: 60px;float: right;"
+          @click="emitSearch" v-if="!isLargeModel" size="small">搜索</el-button>
+        <el-button type="primary" style="position: relative;right: 20px;top: 15px;width : 15%;max-width: 60px;float: right;"
+          @click="emitSearch" v-if="isLargeModel">搜索</el-button>
       </div>
-      <div :class="{ 'classDiv': isLargeModel, 'classDivSmallModel': !isLargeModel }" :style="{ width: `${width}%` }" v-if="isClassVisible">
+      <div :class="{ 'classDiv': isLargeModel, 'classDivSmallModel': !isLargeModel }" :style="{ width: `${width}%` }"
+        v-if="isClassVisible">
         <div class="top" style="padding-bottom: 0px" v-if="isClassVisible">
           <el-radio-group v-model="radio1" style="color: #409EFF;" text-color="red" fill='red' size="large">
             <el-radio :label="0" class="item" fill="red">论文</el-radio>
@@ -47,9 +52,10 @@
 .mainContainer {
   position: relative;
   display: flex;
-  height: 80px;
+  height: 200px;
   width: 100%;
 }
+
 .mainContainerSmallModel {
   position: relative;
   display: flex;
@@ -115,6 +121,7 @@
   width: 100%;
   margin-top: 20px;
 }
+
 .classDivSmallModel {
   position: relative;
   display: flex;
@@ -242,6 +249,7 @@
   appearance: none;
   padding-top: 10px;
 }
+
 .selectSmallModel {
   outline: none;
   height: 20px;
@@ -292,6 +300,7 @@ export default {
   },
   data() {
     return {
+      dialogTableVisible : true,
       radio1: 0,
       radio: 0,
       localQuery: this.searchQuery,
@@ -444,7 +453,7 @@ export default {
           },
         ],
         [
-        {
+          {
             value: "",
             label: "主题",
           },
@@ -477,8 +486,18 @@ export default {
     }
     if (this.$store.state.searchType === "")
       this.radio1 = 0
-    else
-      this.radio1 = this.$store.state.searchType;
+    else {
+      if (newValue === "articles")
+        this.radio1 = 0;
+      else if (newValue === "patents")
+        this.radio1 = 1;
+      else if (newValue === "reports")
+        this.radio1 = 3;
+      else if (newValue === "sciencedata")
+        this.radio1 = 4;
+      else if (newValue === "books")
+        this.radio1 = 5;
+    }
     console.log(this.radio1)
     console.log(this.titleList)
   },
@@ -503,6 +522,10 @@ export default {
       this.$emit('update:searchQuery', value);
     },
     emitSearch() {
+      if(this.localQuery === "")
+      {
+        return;
+      }
       let map = new Map();
       map.set(0, "articles");
       map.set(1, "patents");
@@ -512,7 +535,27 @@ export default {
       map.set(5, "books");
       var a = map.get(this.radio1);
       this.$emit('search', { query: this.localQuery, option: this.titleList[this.radio1], class: a });
+      var query = this.localQuery;
+      console.log(query)
       console.log(this.titleList[this.radio1])
+      var content = this.titleList[this.radio1];
+      //path: '/searchResults/:query?/:type?/:content?',
+      if (content === "") {
+        this.$router.push({
+          path: '/searchResults/' + query
+        }).then(() => {
+          window.location.reload();
+        });;
+      }
+      else {
+        var type = "symple"
+        this.$router.push({
+          path: '/searchResults/' + query + "/" + type + "/" + content
+        }).then(() => {
+          window.location.reload();
+        });;
+      }
+
     }
   },
   watch: {
@@ -521,7 +564,16 @@ export default {
       this.localQuery = newVal;
     },
     '$store.state.searchType'(newValue, oldValue) {
-      this.radio1 = newValue
+      if (newValue === "articles")
+        this.radio1 = 0;
+      else if (newValue === "patents")
+        this.radio1 = 1;
+      else if (newValue === "reports")
+        this.radio1 = 3;
+      else if (newValue === "sciencedata")
+        this.radio1 = 4;
+      else if (newValue === "books")
+        this.radio1 = 5;
     }
   },
   computedWidth() {
