@@ -94,6 +94,7 @@ const routes = [
   // },
   {
     path: '/institution',
+    name: 'institution',
     component: () => import("../views/InstitutionView.vue")
   },
   {

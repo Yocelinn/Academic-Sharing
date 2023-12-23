@@ -66,3 +66,8 @@ export function FilterCommentReport(status) {
   param.status = status;
   return get('/report/getCommentBystatus', param);
 }
+
+export function GetNum() {
+  let param = {};
+  return get('/report/getSuccessRate', param);
+}

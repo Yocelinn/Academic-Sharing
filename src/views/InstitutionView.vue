@@ -301,6 +301,7 @@ export default {
           name: item.display_name,
           draggable: true,
           symbolSize: item.relationship=="child"?50:80,
+          node_id: item.id,
           itemStyle: {
               color: this.randomColor()
           },
