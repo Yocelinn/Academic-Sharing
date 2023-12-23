@@ -27,7 +27,16 @@
                       <el-icon v-else><ArrowUp /></el-icon>{{displayAll?'显示全部':'收起'}}
                     </button>
                 </div>
-                
+                <div class="paper-link" v-if="paper.orignal_url">
+                    <!-- <span class="alias-info">原文链接: </span> -->
+                    <span class="link-tag" >
+                      <a :href="paper.orignal_url" target="_blank" style="text-decoration: none;">
+                      <el-button > 原文链接</el-button>
+                      &ensp;
+                    </a>
+                    </span>
+                   
+                </div>
   
             </div>
             </div>

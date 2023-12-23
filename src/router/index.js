@@ -49,7 +49,7 @@ const routes = [
     component: () => import('../views/Collect.vue')
   },
   {
-    path: '/searchResults',
+    path: '/searchResults/:query?/:type?/:content?',
     name: 'searchResults',
     component: () => import('../views/SearchResults.vue')
   },
@@ -110,6 +110,11 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '../views/PersonalDoorPage.vue')
     }
+  },
+  {
+    path: '/program/detail',  // 项目详情页
+    name: 'ProgramDetail',
+    component: () => import('../views/details/ProgramDetail.vue')
   },
 ]
 
