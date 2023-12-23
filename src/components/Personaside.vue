@@ -27,12 +27,6 @@
             <span>收藏成果</span>
           </el-menu-item>
         </router-link>
-        <router-link to="/mine">
-          <el-menu-item index="7" v-if="this.$store.state.ifvip">
-            <el-icon><document /></el-icon>
-            <span>我的成果</span>
-          </el-menu-item>
-        </router-link>
       </el-menu>
     </el-row>
   </template>
