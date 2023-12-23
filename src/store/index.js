@@ -37,6 +37,7 @@ export default createStore({
     },
     changeSearchType(state, searchType){
       state.searchType=searchType;
+      sessionStorage.setItem('saveSearchType', searchType);
     },
     changeCurrentPage(state, currentPage){
       state.currentPage=currentPage;
