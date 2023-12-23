@@ -32,6 +32,10 @@
                     <el-button class="collectbutton" type="success">搜索</el-button>
                   </div>
                 </el-card>
+                <el-card class="collectcard2" style="height: 390px;"> 
+                  <div id="graph" style="height: 390px;">
+                  </div>
+                </el-card>
               </el-col>
             </el-row>
           </el-main>
@@ -44,6 +48,7 @@
   import * as echarts from 'echarts';
   import { onMounted } from 'vue';
   import {post,get} from "../api/api.js"
+  import {GetPapers} from "../api/favorite.js"
   export default {
     components: {
       Personaside,
@@ -79,6 +84,32 @@
         },
       ]
       onMounted(()=>{
+        var promise = GetPapers()
+        promise.then((response=>{
+          console.log(response.data)
+        }))
+        const echart1 = echarts.init(document.getElementById('graph'))
+        const echarts1option = {
+        title: {
+              text: '收藏学术成果领域分布'
+            },
+        series:[
+          {
+            type: 'pie',
+            data:[
+            {
+              value: 1,
+              name: '科学'
+            },
+            {
+              value: 1,
+              name: '历史'
+            },
+            ]
+          }
+        ]
+      }
+      echart1.setOption(echarts1option)
       })
       return{
         username,
@@ -99,6 +130,7 @@
     height: 120px;
   }
   .collectcard{
+    margin-top: 40px;
     border-top-color: #688f4e;
     border-top-width: 10px;
   }

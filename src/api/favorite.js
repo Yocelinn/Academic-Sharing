@@ -53,3 +53,8 @@ export function SelectCP(selectPName, mod){
     param.mod=mod;
     return get("/user/selectCP", param)
 }
+
+export function GetPapers(){
+    let param={};
+    return get("/user/getCThesis",param)
+}

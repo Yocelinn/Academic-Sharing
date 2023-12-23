@@ -129,6 +129,7 @@
     align-items: c
   }
   .historycard{
+    margin-top: 40px;
     border-top-color: #688f4e;
     border-top-width: 10px ;
   }
