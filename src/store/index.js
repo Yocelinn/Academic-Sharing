@@ -5,21 +5,25 @@ export default createStore({
     isLogin: false,
     token: "",
     searchType: "",
+    currentPage: "",
   },
   getters: {
   },
   mutations: {
     login(state, token){
       state.token=token;
-      // state.isLogin=true;
+      state.isLogin=true;
     },
     logout(state){
-      state.authorization="",
+      state.token="",
       state.isLogin=false;
     },
     changeSearchType(state, searchType){
       state.searchType=searchType;
-    }
+    },
+    changeCurrentPage(state, currentPage){
+      state.currentPage=currentPage;
+    },
   },
   actions: {
   },

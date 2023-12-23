@@ -7,27 +7,26 @@
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
         <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
         <div v-if="this.$store.state.isLogin">
-
+            <Loggedin ></Loggedin>
         </div>
         <div v-else id="" class="button" style="width: 10%;right: 5%;">
-            <LoinAndRegister width="80px" height="50px" font-size="16px"></LoinAndRegister>
+            <LoinAndRegister width="65px" height="40px" font-size="16px"></LoinAndRegister>
         </div>
     </div>
 </template>
 
 <script>
 import LoinAndRegister from '@/components/user/LoinAndRegister.vue';
+import Loggedin from '@/components/user/Loggedin.vue';
 import store from '@/store';
 
 export default {
     props:{
-        page: {
-            type: Number,
-            default: 0
-        }
+        
     },
     components:{
         LoinAndRegister,
+        Loggedin,
     },
     data(){
         return{
@@ -35,19 +34,11 @@ export default {
         }
     },
     methods:{
-        setPage(){
-            for(var i=0;i<this.idList.length;i++){
-                var tmp=document.getElementById(this.idList[i]);
-                tmp.className="address";
-            }
-            if(this.page!=0){
-                var tmp=document.getElementById(this.idList[this.page-1]);
-                tmp.className="choose";
-            }
-        },
+        
+        
     },
     mounted(){
-        this.setPage();
+        
     }
 }
 
@@ -58,7 +49,7 @@ export default {
     position: relative;
     width: 100%;
     min-width: 1200px;
-    height: 70px;
+    height: 50px;
     background-color: #688f4e;
 }
 .logo{

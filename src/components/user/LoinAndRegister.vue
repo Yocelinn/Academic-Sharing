@@ -2,7 +2,8 @@
     <el-button type="success" plain @click="this.enterDialog()" id="enterButton">
         登录
     </el-button>
-    <el-dialog v-model="this.open.login" width="50%" style="min-width: 800px;">
+    <el-dialog v-model="this.open.login" width="25%" style="min-width: 400px;">
+        <div class="dialogBack">     </div>
         <div class="title">
             <el-button class="titile-login" text :type="this.loginButtonType" @click="this.switchLoginForm()">登录</el-button>
             <el-button class="titile-register" text :type="this.registerButtonType" @click="this.switchRegisterForm()">注册</el-button>
@@ -18,9 +19,8 @@
                 <el-button class="loginButton" type="success" @click="this.loginClick()">登录</el-button>
                 <el-button class="forgetButton" type="success" text="true">忘记密码?</el-button>
             </el-form>
-            <el-image v-else :src="require('@/assets/LoginAndRegister/register.jpg')" fit="fill"/>
         </div>
-        <div class="register">
+        <!-- <div class="register">
             <el-form v-if="this.switchForm" class="registerForm" ref="registerRef" :model="this.register" :rules="this.registerRules">
                 <el-form-item label="用户名" prop="username" label-width="20%">
                     <el-input type="text" v-model="this.register.username" maxlength="25"></el-input>
@@ -40,14 +40,14 @@
                 </el-form-item>
                 <el-button class="registerButton" type="success" @click="this.registerClick()">注册</el-button>
             </el-form>
-            <el-image v-else class="registerImage" :src="require('@/assets/LoginAndRegister/login.jpg')" fit="fill"/>
-        </div>
+        </div> -->
     </el-dialog>
 </template>
 
 <script>
 import { Login, Register, SendVerifyCode } from '@/api/loginAndRegister';
 import store from '@/store';
+import { ElNotification } from 'element-plus';
 
 export default {
     name: 'LoginAndRegister',
@@ -174,10 +174,27 @@ export default {
         loginClick(){
             this.$refs.loginRef.validate((valid) => {
                 if(valid){
-                    console.log("login");
                     var promise=Login(this.login.email, this.login.password);
                     promise.then((result)=>{
-                        store.commit("login",result.data.token);
+                        if(result.code==200){
+                            store.commit("login",result.data.token);
+                            ElNotification({
+                                message: "欢迎回来",
+                                type: 'success',
+                                showClose: true,
+                                position: 'top-right',
+                                duration: 2000,
+                            });
+                            this.open.login=false;
+                        } else{
+                            ElNotification({
+                                message: result.info,
+                                type: 'warning',
+                                showClose: true,
+                                position: 'top-right',
+                                duration: 2000,
+                            });
+                        }
                     })
                 }
             })
@@ -185,10 +202,26 @@ export default {
         registerClick(){
             this.$refs.registerRef.validate((valid) => {
                 if(valid){
-                    console.log("register");
                     var promise=Register(this.register.username, this.register.email, this.register.password, this.register.vercode);
                     promise.then((result)=>{
-                        console.log(result);
+                        if(result.code==200){
+                            ElNotification({
+                                message: '欢迎您的到来，我的朋友',
+                                type: 'success',
+                                showClose: true,
+                                position: 'top-right',
+                                duration: 2000,
+                            });
+                            this.switchForm=true;
+                        } else{
+                            ElNotification({
+                                message: result.info,
+                                type: 'warning',
+                                showClose: true,
+                                position: 'top-right',
+                                duration: 2000,
+                            });
+                        }
                     })
                 }
             })
@@ -198,7 +231,23 @@ export default {
                 if(valid){
                     var promise=SendVerifyCode(this.register.email);
                     promise.then((result)=>{
-                        console.log(result);
+                        if(result.code==200){
+                            ElNotification({
+                                message: result.data,
+                                type: 'success',
+                                showClose: true,
+                                position: 'top-right',
+                                duration: 2000,
+                            });
+                        } else{
+                            ElNotification({
+                                message: result.info,
+                                type: 'warning',
+                                showClose: true,
+                                position: 'top-right',
+                                duration: 2000,
+                            });
+                        }
                     })
                 }
             })
@@ -215,6 +264,13 @@ export default {
 </script>
 
 <style scoped>
+.dialogBack{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0%;
+    top: 0%;
+}
 .title{
     position: relative;
     width: 95%;
@@ -234,33 +290,26 @@ export default {
 }
 .login{
     position: relative;
-    width: 48%;
-    height: 340px;
-    top: 0px
+    width: 90%;
+    left: 5%;
+    top: 0%;
     /* border-right: 2px solid rgb(138, 167, 231); */
 }
 .register{
     position: absolute;
-    width: 50%;
-    left: 49%;
+    width: 90%;
+    left: 5%;
     top: 30%;
 }
 .loginForm{
     position: relative;
     width: 96%;
-    top: 75px;
+    top: 0%;
 }
 .registerForm{
     width: 96%;
 }
 
-.registerImage{
-    position: relative;
-    top: -47px;
-    left: -11px;
-    width: 91%;
-    height: 91%;
-}
 .loginButton{
     position: relative;
     width: 100px;
