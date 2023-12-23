@@ -58,3 +58,8 @@ export function GetPapers(){
     let param={};
     return get("/user/getCThesis",param)
 }
+
+export function GetTsPs(){
+    let param={};
+    return get("/user/getTsPs", param);
+}

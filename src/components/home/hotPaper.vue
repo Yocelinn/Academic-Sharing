@@ -1,5 +1,5 @@
 <template>
-    <div class="back">
+    <!-- <div class="back">
         <div class="total">
             <div class="border"> </div>
             <div class="title">
@@ -17,6 +17,11 @@
                 知名机构
             </div>
         </div>
+    </div> -->
+    <div class="paper">
+        <el-card class="paperCard">
+
+        </el-card>
     </div>
 </template>
 
@@ -42,6 +47,19 @@ export default{
 </script>
 
 <style scoped>
+.paper{
+    position: relative;
+    width: 90%;
+    height: 90%;
+    left: 5%;
+    top: 0%;
+
+}
+.paperCard{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
 .back{
     position: relative;
     left: 5%;
