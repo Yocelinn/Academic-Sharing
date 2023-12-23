@@ -9,15 +9,15 @@
     <el-card>
       <el-row :gutter="24">
 				<el-col :span="8">
-					<el-input placeholder="请输入内容" clearable>
+					<el-input placeholder="请输入内容" clearable v-model="searchKey">
 					</el-input>
 				</el-col>
         <el-col :span="1">
-          <el-button type="primary" :icon="Search">Search</el-button>
+          <el-button type="primary" :icon="Search" @click="searchCommentReport">Search</el-button>
         </el-col>
         <el-col :span="10"></el-col>
         <el-col :span="5">
-          <el-select v-model="value" class="m-2" placeholder="Select" clearable >
+          <el-select v-model="value" class="m-2" placeholder="Select" clearable @change="filterCommentReport">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -32,18 +32,19 @@
         <el-table-column type="index"></el-table-column>
         <el-table-column label="发起人" prop="reporterName"></el-table-column>
         <el-table-column label="时间" prop="time"></el-table-column>
+        <el-table-column label="评论内容" prop="reporteeComment"></el-table-column>
         <el-table-column label="举报理由" prop="reason"></el-table-column>
         <el-table-column label="状态">
           <template #default="scope">
-            <el-button type="info" plain v-if="scope.row.ischeck==0">待处理</el-button>
-            <el-button type="warning" plain v-if="scope.row.ischeck==1">处理中</el-button>
-            <el-button type="success" plain v-if="scope.row.ischeck==2">已处理</el-button>
-            <el-button type="danger" plain v-if="scope.row.ischeck==3">已驳回</el-button>
+            <el-button type="info" plain v-if="scope.row.ischeck==1">待处理</el-button>
+            <el-button type="warning" plain v-if="scope.row.ischeck==2">处理中</el-button>
+            <el-button type="success" plain v-if="scope.row.ischeck==3">已处理</el-button>
+            <el-button type="danger" plain v-if="scope.row.ischeck==4">已驳回</el-button>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180px">
           <template #default="scope">
-            <el-button circle  @click="infoVisible = true">
+            <el-button circle  @click="showCommentReport(scope.row)">
               <el-icon ><More /></el-icon>
             </el-button>
             <el-button type="primary" round @click="handleComment(scope.row)">开始处理</el-button>
@@ -51,7 +52,7 @@
         </el-table-column>
       </el-table>
       
-      <el-pagination
+      <!-- <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="queryInfo.pagenum"
@@ -59,21 +60,25 @@
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
-      </el-pagination>
+      </el-pagination> -->
       
       <el-dialog title="查看信息" v-model="infoVisible" width="50%" destroy-on-close>
-        <el-form :model="infoForm" ref="infoFormRef" label-width="70px">
+        <el-form :model="infoForm" ref="infoFormRef" label-width="140px" v-loading="dialog_loading" label-position="left">
           <el-form-item label="发起人" prop="reporterName">
-            <el-input v-model="infoForm.reporterName" disabled></el-input>
+            <el-text>{{infoForm.reporterName}}</el-text>
+            <!-- <el-input v-model="infoForm.reporterName" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="时间" prop="time">
-            <el-input v-model="infoForm.time" disabled></el-input>
+            <el-text>{{infoForm.time}}</el-text>
+            <!-- <el-input v-model="infoForm.time" disabled></el-input> -->
           </el-form-item>
-          <el-form-item label="评论内容" prop="commentContent">
-            <el-input v-model="infoForm.commentContent" disabled></el-input>
+          <el-form-item label="评论内容" prop="reporteeComment">
+            <el-text>{{infoForm.reporteeComment}}</el-text>
+            <!-- <el-input v-model="infoForm.commentContent" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="举报理由" prop="reason">
-            <el-input v-model="infoForm.reason" disabled></el-input>
+            <el-text>{{infoForm.reason}}</el-text>
+            <!-- <el-input v-model="infoForm.reason" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="具体描述" prop="description">
             <el-text>{{infoForm.description}}</el-text>
@@ -87,22 +92,26 @@
       </el-dialog>
 
       <el-dialog title="处理" v-model="handleVisible" width="50%" destroy-on-close>
-        <el-form :model="handleForm" ref="handleFormRef" label-width="70px">
+        <el-form :model="handleForm" ref="handleFormRef" label-width="140px" v-loading="dialog_loading" label-position="left">
           <el-form-item label="发起人" prop="reporterName">
-            <el-input v-model="handleForm.reporterName" disabled></el-input>
+            <el-text>{{handleForm.reporterName}}</el-text>
+            <!-- <el-input v-model="infoForm.reporterName" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="时间" prop="time">
-            <el-input v-model="handleForm.time" disabled></el-input>
+            <el-text>{{handleForm.time}}</el-text>
+            <!-- <el-input v-model="infoForm.time" disabled></el-input> -->
           </el-form-item>
-          <el-form-item label="评论内容" prop="commentContent">
-            <el-input v-model="handleForm.commentContent" disabled></el-input>
+          <el-form-item label="评论内容" prop="reporteeComment">
+            <el-text>{{handleForm.reporteeComment}}</el-text>
+            <!-- <el-input v-model="infoForm.commentContent" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="举报理由" prop="reason">
-            <el-input v-model="handleForm.reason" disabled></el-input>
+            <el-text>{{handleForm.reason}}</el-text>
+            <!-- <el-input v-model="infoForm.reason" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="具体描述" prop="description">
             <el-text>{{handleForm.description}}</el-text>
-            <!-- <el-input v-model="handleForm.description" type="textarea" :rows="15" disabled></el-input> -->
+            <!-- <el-input v-model="infoForm.description" type="textarea" :rows="15" disabled></el-input> -->
           </el-form-item>
         </el-form>
 
@@ -131,7 +140,7 @@
 <script>
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
-import {AllCommentReport, GetCommentReportByID, HandleCommentReport} from '../../api/report.js'
+import {AllCommentReport, GetCommentReportByID, HandleCommentReport, SearchCommentReport, FilterCommentReport} from '../../api/report.js'
 export default {
   data() {
     return {
@@ -290,7 +299,7 @@ export default {
       }
       else if(s.ischeck === 4){
         this.handleForm.id = s.id
-        var promise = GetPaperReportById(s.id);
+        var promise = GetCommentReportByID(s.id);
         promise.then((result)=>{
           this.handlingReport = result.data[0]
         })
@@ -344,7 +353,42 @@ export default {
         this.rejectDialogVisible = false
       })
     },
-    
+    searchCommentReport() {
+      this.loading = true;
+      var promise = SearchCommentReport(this.searchKey);
+      promise.then((result)=>{
+        this.loading = false
+        this.commentList = result.data
+        if(this.value!=""){
+          for(var i=0; i<this.commentList.length; i++){
+            if(this.commentList[i].ischeck!=this.value){
+              this.commentList.splice(i, 1)
+            }
+          }
+        }
+      })
+    },
+    filterCommentReport() {
+      this.loading = true;
+      if(this.value==""){
+        this.getAllCommentReport()
+      }else{
+        var promise = FilterCommentReport(this.value);
+        promise.then((result)=>{
+          this.loading = false
+          this.commentList = result.data
+          if(this.searchKey!=""){
+            for(var i=0; i<this.commentList.length; i++){
+              if(!this.commentList[i].reporterName.includes(this.searchKey)&&
+              !this.commentList[i].reporteeComment.includes(this.searchKey)&&
+              !this.commentList[i].reason.includes(this.searchKey)){
+                this.paperList.splice(i, 1)
+              }
+            }
+          }
+        })
+      }
+    }
   },
 }
 </script>
