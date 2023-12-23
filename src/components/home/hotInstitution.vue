@@ -6,7 +6,7 @@
                     知名机构：Well-Known Institutions
                 </div>
             <div class="body">
-
+                <div class="item">中国科学院</div>
             </div>
         </el-card>
     </div>
@@ -50,7 +50,7 @@ export default{
     font-size: 17px;
     font-weight: 900;
     font-style: italic;
-    color: #8fc0a4;
+    color: #68b0ab;
 }
 .header:hover{
     cursor: pointer;
@@ -62,5 +62,8 @@ export default{
     height: 620px;
     top: 0px;
     border: 1px solid silver;
+}
+.item{
+    
 }
 </style>

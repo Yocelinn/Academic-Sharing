@@ -1,4 +1,3 @@
-import { ElNotification } from 'element-plus';
 import { createStore } from 'vuex'
 
 export default createStore({
@@ -11,7 +10,7 @@ export default createStore({
     },
     searchType: "",
     currentPage: "",
-    isHome: true,
+    isHome: false,
   },
   getters: {
   },
