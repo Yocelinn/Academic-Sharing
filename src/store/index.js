@@ -29,13 +29,6 @@ export default createStore({
       localStorage.setItem('savedVuex', JSON.stringify(state.userInfo));
     },
     logout(state){
-      ElNotification({
-        message: "再见，尊敬的"+state.userInfo.nickName,
-        type: 'success',
-        showClose: true,
-        position: 'top-right',
-        duration: 2000,
-      })
       state.userInfo.token="",
       state.userInfo.nickName="",
       state.userInfo.showName="",
