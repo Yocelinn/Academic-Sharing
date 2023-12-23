@@ -20,7 +20,7 @@
                 </div>
                 <div class="author">
                   <el-icon style="margin-right:10px"><Avatar /></el-icon>
-                  <div class="author-list">
+                  <div class="author-list" v-if="detailInfo.authors!=''">
                     <div class="author-item" v-for="(item, index) in detailInfo.authors" :key="index">
                       <!-- <div class="rela-index" v-for="(rela, rela_index) in detailInfo.relation_index" :key="rela_index"> -->
                         {{ item }}<div class="rela-id" >{{ detailInfo.relation_index[index] }}</div> <div v-if="index < detailInfo.authors.length-1"> , </div>
@@ -34,7 +34,7 @@
                 <div class="detail">
                     <div class="content-container">
                       <div class="little-title">关键词：</div>
-                      <div class="content"> 
+                      <div class="content" v-if="detailInfo.keywords != ''"> 
                           <div class="keyword-item"  v-for="(keyword, index) in detailInfo.keywords" :key="index" >
                             {{ keyword }}
                           </div>
@@ -110,53 +110,77 @@
         
         </section>
        </div>
-        <el-col :span="6">
-            <el-card shadow="hover" class="other-info-card">
-              <div class="info-box">
-                <div class="info-title"><el-icon><Link /></el-icon>文章来源</div>
-                
-                <div class="button-container">
-                  <!-- <a class="button-list"  target="_blank" :href="detailInfo.source.soureId"><el-icon><Connection /></el-icon>去往来源</a>
-                  <a class="button-list"  target="_blank" :href="detailInfo.location.pdf_url"><el-icon><Reading /></el-icon>查看全文</a> -->
+      <el-col :span="6">
+          <el-card shadow="hover" class="other-info-card">
+            <div class="info-box">
+              <div class="info-title"><el-icon><Link /></el-icon>文章来源</div>
+              
+              <div class="button-container">
+                <!-- <a class="button-list"  target="_blank" :href="detailInfo.source.soureId"><el-icon><Connection /></el-icon>去往来源</a>
+                <a class="button-list"  target="_blank" :href="detailInfo.location.pdf_url"><el-icon><Reading /></el-icon>查看全文</a> -->
 
-                </div>
               </div>
-              <div class="info-box">
-                
-                <div class="info-title"><el-icon><Operation /></el-icon>常用操作</div>
-                <div class="button-container">
-                  <div class="button-list"><el-icon><Star /></el-icon>收藏</div>
-                  <div class="button-list"><el-icon><Promotion /></el-icon>推荐</div>
-                </div>
+            </div>
+            <div class="info-box">
+              
+              <div class="info-title"><el-icon><Operation /></el-icon>常用操作</div>
+              <div class="button-container">
+                <div class="button-list"><el-icon><Star /></el-icon>收藏</div>
+                <div class="button-list"><el-icon><Promotion /></el-icon>推荐</div>
               </div>
-              <div class="info-box">
-                
-                <div class="info-title"><el-icon><Histogram /></el-icon>被引次数：
-                  <div style="font-style: italic; color:gray">{{detailInfo.citedByCount}}</div></div>
-                
-              </div>
-              <div class="info-box">
+            </div>
+            <!-- <div class="info-box">
+              <div class="info-title"><el-icon><Histogram /></el-icon>被引次数：
+                <div style="font-style: italic; color:gray">{{detailInfo.citedByCount}}</div></div>
+            </div> -->
+            <div class="info-box">
 
-                <div class="info-title"><el-icon><Edit /></el-icon>问题反馈</div>
-                <div class="button-container">
-                  <div class="button-list"><el-icon><Warning /></el-icon>数据错误</div>
-                  <div class="button-list"><el-icon><Remove /></el-icon>撤稿申请</div>
-                </div>
+              <div class="info-title"><el-icon><Edit /></el-icon>问题反馈</div>
+              <div class="button-container">
+                <div class="button-list" @click="reportError()"><el-icon><Warning /></el-icon>数据错误</div>
+                <div class="button-list" @click="reportRevoke()"><el-icon><Remove /></el-icon>撤稿申请</div>
               </div>
-            </el-card>
+            </div>
+          </el-card>
 
-        </el-col>
-        <el-backtop :right="100" :bottom="100" color="#8fc0a9"/>
+      </el-col>
+      <el-backtop :right="100" :bottom="100" color="#8fc0a9"/>
+      <el-dialog v-model="dialogVisible" :title="dialog.title" width="40%" center>
+        <div class="input-container" v-if="!successVisible">
+          <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="申请信息" style="width:500px;">
+              <el-input v-model="formInline.content" placeholder="请填写申请信息" type="textarea" clearable >
+                </el-input>
+            </el-form-item>
+            <!-- <el-form-item label="联系方式" style="width:500px;">
+              
+            </el-form-item> -->
+          </el-form>
+        </div>
+        <el-result icon="success" title="Success Tip" sub-title="Please follow the instructions" v-else>
+          <template #extra>
+            <el-button type="primary" @click="closeDialog">关闭</el-button>
+          </template>
+        </el-result>
+        <template #footer v-if="!successVisible">
+          <span class="dialog-footer" >
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="onSubmit">
+              提交
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
     </div>
         
   </template>
   
   <script>
-import { onMounted,ref,watch } from 'vue';
-import { useRoute } from 'vue-router';
-import * as PaperApi from '../../api/paper';
-import moment from 'moment'; 
-import axios from 'axios';
+  import { onMounted,ref,watch,reactive } from 'vue';
+  import { useRoute } from 'vue-router';
+  import * as PaperApi from '../../api/paper';
+  import moment from 'moment'; 
+  import axios from 'axios';
   
   export default {
     name: 'PaperDetail',
@@ -165,8 +189,8 @@ import axios from 'axios';
       var workId = useRoute().query.workId;
       const detailInfo = ref({
         title: '',
-        authors: [{}],
-        keywords: [''],
+        authors: '',
+        keywords: '',
         publicationDate: '',
         workId: '',
         abstract: '',
@@ -183,8 +207,18 @@ import axios from 'axios';
         userId: 0,
         workId: '',
         time: '',
-        }])
-      
+      }]);
+      const dialogVisible = ref(false);
+      const dialog = ref({
+        title: '',
+        content: '',
+      })
+      const formInline = reactive({
+        content: '',
+        contact:'',
+        date: '',
+      })
+      const successVisible = ref(false)
       
       onMounted( () => {
         // getPaperList();
@@ -246,12 +280,39 @@ import axios from 'axios';
           console.log(response)
         })
       }
-     
+
+      function reportError() {
+        dialog.value.title = "报告数据错误"
+        dialogVisible.value = true;
+      }
+      function reportRevoke() {
+        dialog.value.title = "提交撤稿申请"
+        dialogVisible.value = true;
+      }
+      
+
+      const onSubmit = () => {
+        successVisible.value = true;
+        console.log('submit!')
+      }
+      const closeDialog = () => {
+        dialogVisible.value = false;
+        successVisible.value = false;
+      }
 
       return {
         detailInfo,
         comments,
+        dialogVisible,
+        dialog,
+        formInline,
+        successVisible,
+
         postComment,
+        reportError,
+        reportRevoke,
+        onSubmit,
+        closeDialog
       };
 
       
@@ -300,7 +361,8 @@ import axios from 'axios';
         var workId = String(paperId)
         this.$router.push({name:'PaperDetail', query:{workId} });
         console.log(paperId)
-      }
+      },
+      
     }
   }
   </script>
@@ -349,6 +411,7 @@ import axios from 'axios';
   /*setion的布局*/
   .main-content {
     flex: 1;
+    
   }
   section {
     margin-bottom: 30px; /* 调整各个 section 之间的间距 */
@@ -466,7 +529,9 @@ import axios from 'axios';
     border-bottom: solid 2px #d1d1d1; 
     padding: 5px 10px;
     text-align: left;
-    background-color: #5dd39a;
+    /* background-color: #5dd39a; */
+    background-color:rgba(56, 168, 64, 0.7);
+
     border-radius: 5px;
     color:rgb(251, 251, 251);
     font-weight: 500;
@@ -505,7 +570,9 @@ import axios from 'axios';
      /* padding-bottom: 10px; */ 
     padding: 5px 10px;
     text-align: left;
-    background-color: #5dd39a;
+    /* background-color: #5dd39a; */
+    /* background-color: #54ac69; */
+    background-color: rgba(56, 168, 64, 0.7);
     border-radius: 5px;
     color:white;
     font-weight: 500;
@@ -608,6 +675,9 @@ import axios from 'axios';
   }
   :deep(.el-icon) {
     margin-right: 3px;
+  }
+  :deep(.el-textarea__inner)  {
+    height: 250px;
   }
   </style>
   

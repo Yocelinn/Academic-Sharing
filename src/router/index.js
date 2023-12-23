@@ -44,12 +44,7 @@ const routes = [
     component: () => import('../views/History.vue')
   },
   {
-    path: '/collect',
-    name: 'collect',
-    component: () => import('../views/Collect.vue')
-  },
-  {
-    path: '/searchResults/:query?/:type?/:content?',
+    path: '/searchResults',
     name: 'searchResults',
     component: () => import('../views/SearchResults.vue')
   },
@@ -112,9 +107,19 @@ const routes = [
     }
   },
   {
-    path: '/program/detail',  // 项目详情页
+    path: '/program/detail/:funderId?',  // 项目详情页
     name: 'ProgramDetail',
     component: () => import('../views/details/ProgramDetail.vue')
+  },
+  {
+    path: '/collectPaper',
+    name: 'collectPaper',
+    component: () => import('../views/CollectPaper.vue')
+  },
+  {
+    path: '/collectPatent',
+    name: 'collectPatent',
+    component: () => import('../views/CollectPatent.vue')
   },
 ]
 
