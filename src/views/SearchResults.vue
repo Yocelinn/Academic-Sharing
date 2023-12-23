@@ -162,8 +162,8 @@
           loading.value=true;
           sr_loading.value=true;
           // query=this.$route.query.query
-
-         
+          console.log(query)
+          console.log(strategy.value)
           await getResults();
           await getGroupClassifier();
           await new Promise(resolve => setTimeout(resolve, 2000));
@@ -233,10 +233,14 @@
           // console.log("page:"+curPage.value)
           loading.value=false;
         }
-        const query =useRoute().query.query;
+        // const route=useRoute();
+        // console.log(route)
+        const query =useRoute().params.query;
+        
         var strategy=ref({type:"",content:""})
-        strategy.type=useRoute().query.type;
-        strategy.content=useRoute().query.content;
+        strategy.type=useRoute().params.type;
+        strategy.content=useRoute().params.content;
+       
         // const strategy = useRoute().query.strategy;
         const timeRange=ref("时间范围");
         const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'},{value:'10years',label:"近十年"}]
@@ -260,7 +264,7 @@
         //默认六种学术成果类型
         const academyTypes=ref([{id:1,type:"论文",key:"articles"},
                             {id:2,type:"专利",key:"patents"},
-                            {id:4,type:"快报",key:"bulletins"},
+                            // {id:4,type:"快报",key:"bulletins"},
                             {id:5,type:"动态快讯",key:"reports"},
                             {id:6,type:"科学数据",key:"sciencedata"},
                             {id:7,type:"图书",key:"books"}
@@ -349,7 +353,7 @@
             // if(curPage.value===1 ||JSON.stringify(articles.value)=="{}"||JSON.stringify(patents.value)=="{}"||JSON.stringify(bulletins.value)=="{}"||JSON.stringify(reports.value)=="{}"||JSON.stringify(sciencedata.value)=="{}"||JSON.stringify(books.value)=="{}"){
               if(curAcademyType.value==="articles"){  JSON.stringify(articles.value)=="{}"?articles.value=response:articles.value.content.push(...response.content);}
               else if(curAcademyType.value==="patents"){ JSON.stringify(patents.value)=="{}"?patents.value=response:patents.value.content.push(...response.content);}
-              else if(curAcademyType.value==="bulletins"){  JSON.stringify(bulletins.value)=="{}"?bulletins.value=response:bulletins.value.content.push(...response.content); }
+              // else if(curAcademyType.value==="bulletins"){  JSON.stringify(bulletins.value)=="{}"?bulletins.value=response:bulletins.value.content.push(...response.content); }
               else if(curAcademyType.value==="reports"){  JSON.stringify(reports.value)=="{}"?reports.value=response:reports.value.content.push(...response.content); }
               else if(curAcademyType.value==="sciencedata"){  JSON.stringify(sciencedata.value)=="{}"?sciencedata.value=response:sciencedata.value.content.push(...response.content);}
               else if(curAcademyType.value==="books"){  JSON.stringify(books.value)=="{}"?books.value=response:books.value.content.push(...response.content);  }
@@ -484,6 +488,7 @@
 .sr-main{
     width:80%;
     padding:0 20px;
+    /* height:80vh; */
 }
 
 .selectedTag{
@@ -508,7 +513,7 @@
 }
 .sr-paper-results{
 
- max-height: 100vh; 
+ max-height: 80vh; 
   overflow-y: auto;
 }
 .sr-statistic{
