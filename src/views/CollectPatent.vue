@@ -63,7 +63,7 @@
   import * as echarts from 'echarts';
   import { onMounted,ref } from 'vue';
   import {post,get} from "../api/api.js"
-  import {GetPatents,SelectCT,DeletePatent} from "../api/favorite.js"
+  import {GetPatents,SelectCT,DeletePatent,GetData} from "../api/favorite.js"
   export default {
     components: {
       Personaside,
@@ -141,6 +141,10 @@
         ]
       }
       echart1.setOption(echarts1option)
+      var test=GetData()
+      test.then((response=>{
+        console.log(response.data)
+      }))
       })
       return{
         collectpatents,

@@ -64,6 +64,7 @@
   import { onMounted,ref } from 'vue';
   import {post,get} from "../api/api.js"
   import {GetPapers,SelectCP,DeleteThesis,GetData} from "../api/favorite.js"
+  import store from '@/store';
   export default {
     components: {
       Personaside,
@@ -82,6 +83,7 @@
         promise.then((response)=>{
           console.log(response.code)
           var promise2 = GetPapers()
+          console.log(store.state.userInfo.token)
           promise2.then((response=>{
           console.log(response.data)
           collectpapers.value = response.data
@@ -105,12 +107,11 @@
         promise.then((response=>{
           console.log(response.data)
           collectpapers.value = response.data
-        }))
-        var promise2 = GetData()
-        promise2.then((response=>{
+          console.log(store.state.token)
+          var promise2 = GetData()
+          promise2.then((response=>{
           console.log(response.data)
-          echarts1option.series.data[1].value=response.data.numThesis
-          echarts1option.series.data[2].value=response.data.numPatent
+        }))
         }))
         const echart1 = echarts.init(document.getElementById('graph'))
         const echarts1option = {

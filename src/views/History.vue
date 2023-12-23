@@ -46,7 +46,7 @@
                 <el-card class="card114514">
                     <div class="findhistory">
                       <el-input v-model="input" placeholder="输入你需要查找的历史记录" class="historyinput" />
-                      <el-button class="historybutton" type="success">搜索</el-button>
+                      <el-button class="historybutton" type="success" @click="searchhistorys">搜索</el-button>
                     </div>
                 </el-card>
                 <el-card class="historycard2" style="height: 390px;"> 
@@ -70,15 +70,9 @@
       Personaside,
     },
     methods:{
-      historydelete(row){
-      get('/record/search/?id=1').then((response)=>{
-      console.log(row.searchID);
-      console.log(response.data.message);
-    }
-    )
-    },
     },
     setup(){
+      const input=ref('')
       const username='Z-ARC'
       const identity='普通用户'
       const name='测试'
@@ -88,6 +82,25 @@
       const userid='1'
       const interest='数据库 架构 数据库系统'
       const history = ref([])
+      const searchhistorys=()=>{
+        var promise=SearchHistory(input.value)
+        promise.then((response=>{
+          console.log(response.data)
+          history.value = response.data
+          console.log(history.value)
+        }))
+      }
+      const historydelete=(row)=>{
+        var promise=DeleteHistory(row.searchID)
+        promise.then((response=>{
+          console.log(response.data)
+          var promise2 = GetHistory()
+          promise2.then((response=>{
+          console.log(response.data),
+          history.value = response.data
+        }))
+        }))
+      }
       onMounted(()=>{
         var promise = GetHistory()
         promise.then((response=>{
@@ -130,7 +143,10 @@
         email,
         zone,
         interest,
-        history
+        history,
+        input,
+        searchhistorys,
+        historydelete
       }
     },
   }
