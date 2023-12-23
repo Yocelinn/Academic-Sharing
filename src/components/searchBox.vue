@@ -48,14 +48,12 @@
   position: relative;
   display: flex;
   height: 80px;
-  background-color: red;
   width: 100%;
 }
 .mainContainerSmallModel {
   position: relative;
   display: flex;
   height: 50px;
-  background-color: red;
   width: 100%;
 }
 
