@@ -231,6 +231,7 @@
 <script>
 import FindDoor from '@/components/FindDoor.vue';
 import { getAuthorInfo } from "../api/portal.js"
+
 export default {
     components: {
         FindDoor
