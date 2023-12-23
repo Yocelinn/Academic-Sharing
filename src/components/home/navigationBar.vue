@@ -6,27 +6,35 @@
         <div id="home" class="address" style="width: 5%;left: 20%;" @click="">首页</div>
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
         <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
-        <div v-if="this.$store.state.isLogin">
-            <Loggedin ></Loggedin>
+        <div class="searchBlock">
+            <searchBox width=100></searchBox>
         </div>
-        <div v-else id="" class="button" style="width: 10%;right: 5%;">
-            <LoinAndRegister width="65px" height="40px" font-size="16px"></LoinAndRegister>
+        <div v-if="this.$store.state.isLogin" class="button" style="width: 15%;right: 2%;">
+            <Loggedin></Loggedin>
+        </div>
+        <div v-else id="" class="button" style="width: 10%;right: 10%;">
+            <LoinAndRegister width="75px" height="38px" font-size="16px"></LoinAndRegister>
         </div>
     </div>
 </template>
 
 <script>
 import LoinAndRegister from '@/components/user/LoinAndRegister.vue';
-import Loggedin from '@/components/user/Loggedin.vue';
+import Loggedin from '../user/Loggedin.vue';
+import searchBox from '../searchBox.vue';
 import store from '@/store';
 
 export default {
     props:{
-        
+        page: {
+            type: Number,
+            default: 0
+        }
     },
     components:{
         LoinAndRegister,
         Loggedin,
+        searchBox,
     },
     data(){
         return{
@@ -34,11 +42,19 @@ export default {
         }
     },
     methods:{
-        
-        
+        setPage(){
+            for(var i=0;i<this.idList.length;i++){
+                var tmp=document.getElementById(this.idList[i]);
+                tmp.className="address";
+            }
+            if(this.page!=0){
+                var tmp=document.getElementById(this.idList[this.page-1]);
+                tmp.className="choose";
+            }
+        },
     },
     mounted(){
-        
+        this.setPage();
     }
 }
 
@@ -104,6 +120,13 @@ export default {
     left: 0;
     background: rgba(255, 255, 255, 0.3);
     /* border-bottom: 5px solid #ff9c00; */
+}
+.searchBlock{
+    position: absolute;
+    width: 40%;
+    height: 100%;
+    left: 40%;
+    top: 0%;
 }
 
 </style>

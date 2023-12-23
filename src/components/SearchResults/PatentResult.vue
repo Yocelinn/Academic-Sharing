@@ -4,12 +4,14 @@
       <el-card type="primary" class="card" shadow="hover"> 
           <div class="result">
               <div class="info">
-              <div class="title">{{ paper.title }}</div>
+              <div class="title"><div v-html="paper.title"></div></div>
               <div class="authors">
                 
                 <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
                 <!-- <span class="alias-info">发明人</span> -->
-                {{ paper.inventors.join(', ') }}</div>
+                <!-- <div v-html="paper.inventors.join(', ')"></div> -->
+                {{ paper.inventors.join(', ') }}
+              </div>
               <div class="date">
                 <span class="alias-info">申请日:</span> {{ paper.apply_date }}
                 <span class="alias-info"> 申请号:</span> {{ paper.apply_number }}
@@ -17,7 +19,7 @@
              
               <div class="abstract-container" :id="`abstract-container_${paper.id}`">
                  <div class="abstract">
-                  <span class="alias-info">摘要:</span>{{  paper.abstracts}} 
+                  <span class="alias-info">摘要:</span><span v-html="paper.abstracts"></span>
                   </div>
                  
               </div>
