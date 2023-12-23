@@ -107,7 +107,7 @@
         promise.then((response=>{
           console.log(response.data)
           collectpapers.value = response.data
-          console.log(store.state.token)
+          console.log(store.state.userInfo.token)
           var promise2 = GetData()
           promise2.then((response=>{
           console.log(response.data)
