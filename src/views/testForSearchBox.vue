@@ -1,21 +1,28 @@
 <template>
     <div class="mainContainer">
-        <searchBox width="400px" color="red" :isClassVisible=true :searchQuery="searchText" @update:searchQuery="searchText = $event"
-            @search="handleSearch"></searchBox>
-        <button @click="test">test</button>
+        <!-- <el-button style="margin-top: 100px;" @click="isDialoVisibal = true">test</el-button>
+        <seniorSearchBox v-model="isDialoVisibal"></seniorSearchBox> -->
+        <searchBox width=800 color="white" :isClassVisible=false :searchQuery="searchText" @update:searchQuery="searchText = $event"
+            @search="handleSearch" style="margin-top: 100px;margin-left: 100px;" :radio1="radio"></searchBox>
+        <el-button @click="test1">test</el-button>
+        <!-- <button @click="test">test</button> -->
     </div>
 </template>
 <style></style>
 <script>
 import searchBox from '../components/searchBox.vue'
+import seniorSearchBox from '../components/seniorSearchPage.vue'
 import {claimPortal} from "../api/portal.js"
 export default {
     components: {
-        searchBox
+        searchBox,
+        seniorSearchBox
     },
     data() {
         return {
-            searchText: ''
+            radio : 0,
+            searchText: '',
+            isDialoVisibal : false,
         }
     },
     methods: {
@@ -28,6 +35,10 @@ export default {
             promise.then((result) =>{
                 console.log(result);
             })
+        },
+        test1(){
+            this.radio++;
+            console.log(this.radio)
         }
     }
 }
