@@ -1,5 +1,5 @@
 <template>
-  <navigationBar :page="this.page"></navigationBar>
+  <navigationBar></navigationBar>
   <router-view/>
 </template>
 
