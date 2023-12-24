@@ -2,7 +2,7 @@
     <div class="hot-title">
         热点领域
     </div>
-    <button class="typeButton" @click="this.switchShowType()">{{ this.typeString }}</button>
+    <!-- <button class="typeButton" @click="this.switchShowType()">{{ this.typeString }}</button> -->
     <div v-show="this.showType==='barGraph'" class="barGraph">
         <div id="bar"></div>
         <div id="barTitle"></div>
@@ -126,8 +126,8 @@ export default{
     position: absolute;
     background-color: #2b463c;
     width: 10%;
-    height: 30px;
-    top: -15px;
+    height: 7.6%;
+    top: 6.2%;
     left: 45%;
     z-index: 1;
     font-size: 20px;
@@ -170,9 +170,11 @@ export default{
 }
 .barGraph{
     position: relative;
-    left: 2%;
-    width: 96%;
-    height: 100%;
+    left: 5%;
+    width: 90%;
+    height: 80%;
+    top: 10%;
+    background-color: #faf3dd;
 }
 #bar{
     position: relative;

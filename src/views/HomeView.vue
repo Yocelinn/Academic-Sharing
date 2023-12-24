@@ -1,21 +1,24 @@
 <template>
   <div class="searchBlock">
-    <div class="searchBackgroundImage" fit="fill"></div>
+    <div class="searchBackgroundImage"></div>
     <div class="search">
-        <searchBox width=100 color="white" :isClassVisible=false  :isLargeModel = true></searchBox>
+      <searchBox width=100 color="white" :isClassVisible=false  :isLargeModel = true></searchBox>
+    </div>
+    <div class="numberBlock">
+      <div class="numberLeft" style="left: 15%;">
+        <div class="numberTitle">3156032</div>
+        <div class="number">期刊论文</div>
       </div>
-  </div>
-  <div class="numberBlock">
-    <div class="numberLeft" style="left: 15%;">
-      <div class="numberTitle">3156032</div>
-      <div class="number">期刊论文</div>
-    </div>
-    <div class="numberItem" style="left: 25%;">
-      <div class="numberTitle">1560230</div>
-      <div class="number">学位论文</div>
+      <div class="numberItem" style="left: 25%;">
+        <div class="numberTitle">1560230</div>
+        <div class="number">学位论文</div>
+      </div>
     </div>
   </div>
-  <div style="position: relative;width: 100%;min-width: 1200px;">
+  <div style="position: relative;width: 100%;min-width: 1200px;height: 800px;">
+    <div class="hotInstitutionBlock">
+      <hotInstitution></hotInstitution>
+    </div>
     <div class="hotAreasBlock">
       <hotArea></hotArea>
     </div>
@@ -38,6 +41,7 @@ import hotPaper from '@/components/home/hotPaper.vue';
 import information from '@/components/home/information.vue';
 import statement from '@/components/home/statement.vue';
 import searchBox from '@/components/searchBox.vue';
+import hotInstitution from '@/components/home/hotInstitution.vue';
 
 export default {
   name: 'HomeView',
@@ -48,6 +52,7 @@ export default {
     information,
     statement,
     searchBox,
+    hotInstitution,
   }
 
 }
@@ -58,7 +63,7 @@ export default {
   position: relative;
   width: 100%;
   min-width: 1200px;
-  height: 400px;
+  height: 450px;
 
 }
 .searchBackgroundImage{
@@ -72,14 +77,15 @@ export default {
   position: absolute;
   width: 70%;
   left: 20%;
-  top: 70%
+  top: 60%
 }
 .numberBlock{
-  position: relative;
-  background-color: #688f4e;
+  position: absolute;
   width: 100%;
   min-width: 1200px;
   height: 100px;
+  left: 0%;
+  bottom: 0%;
 }
 .numberLeft{
   position: relative;
@@ -113,19 +119,30 @@ export default {
   height: 40%;
   font-size: large;
 }
-.hotPaperBlock{
+.hotInstitutionBlock{
   position: relative;
-  width: 40%;
-  min-width: 480px;
-  height: 500px;
+  width: 30%;
+  min-width: 360px;
+  height: 800px;
+  left: 2%;
+  top: 0%;
 }
 .hotAreasBlock{
   position: absolute;
-  width: 60%;
-  min-width: 720px;
-  height: 500px;
+  width: 66%;
+  min-width: 792px;
+  height: 400px;
   right: 0%;
-  background-color: #faf3dd;
+  top: 0px;
+  /* background-color: #faf3dd; */
+}
+.hotPaperBlock{
+  position: absolute;
+  width: 66%;
+  min-width: 792px;
+  height: 400px;
+  right: 0%;
+  top: 400px;
 }
 .informationBlock{
   position: relative;

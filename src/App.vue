@@ -20,13 +20,19 @@ export default{
     
   },
   mounted(){
-    let userInfo = JSON.parse(localStorage.getItem("savedVuex"));
+    let userInfo = JSON.parse(localStorage.getItem('savedVuex'));
+    let searchType = sessionStorage.getItem('saveSearchType');
     if(userInfo===null){
       store.state.userInfo.isLogin=false;
       store.state.userInfo.token='';
       store.state.userInfo.nickName='';
     } else{
       store.state.userInfo=userInfo;
+    }
+    if(searchType===null){
+      store.state.searchType='';
+    } else{
+      store.state.searchType=searchType;
     }
   }
 }
