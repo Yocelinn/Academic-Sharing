@@ -1,3 +1,4 @@
+import store from "@/store";
 import { post, get } from "./api";
 
 
@@ -10,10 +11,12 @@ export function GetCommentByWorkIdAndType(workId){
 
 export function PostComment(content, workId){
     let data={};
-    data.content=content;
+    data.content=content.content;
+    data.userId = store.state.userInfo.token;
     data.workId=workId;
     data.type = 'article';
-    data.userId = 2;
+    data.userName = store.state.userInfo.nickName;
+    console.log( data);
     return post("/comment/create", data)
 }
 
