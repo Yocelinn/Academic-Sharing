@@ -113,20 +113,14 @@ const routes = [
     component: () => import('../views/details/ProgramDetail.vue')
   },
   {
-    path: '/collectPaper',
-    name: 'collectPaper',
-    component: () => import('../views/CollectPaper.vue')
-  },
-  {
-    path: '/collectPatent',
-    name: 'collectPatent',
-    component: () => import('../views/CollectPatent.vue')
-  },
-  {
     path:'/allInstitution',//全部机构展示页
     name:'allInstitution',
     component: () => import('../views/AllInstitutionDisplay.vue')
-  }
+  },
+   { path: '/collectPaper',
+    name: 'collectPaper',
+    component: () => import('../views/CollectPaper.vue')
+  },
 ]
 
 const router = createRouter({
