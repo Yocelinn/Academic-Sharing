@@ -23,7 +23,7 @@ export function post(url, data){
 }
 export function get(url, param){
     return new Promise((resolve, reject)=>{
-        axios.get(serverAddress+url,{params:param,headers:{"Authorization": store.state.userInfo.token}}).then(response=>{
+        axios.get(localAddress1+url,{params:param,headers:{"Authorization": store.state.userInfo.token}}).then(response=>{
             resolve(response.data)
         }).catch((error)=>{
                 ElNotification({
