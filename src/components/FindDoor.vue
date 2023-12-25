@@ -1,10 +1,9 @@
 <template>
     <el-dialog v-model="localIsVisibal" title="认领门户">
         <el-table :data="[item]">
-            <el-table-column property="name" label="名字" width="170" />
-            <el-table-column property="company" label="机构" width="170" />
-            <el-table-column property="year" label="年份" width="170" />
-            <el-table-column property="source" label="来源" width="170" />
+            <el-table-column property="name" label="名字" width="230" />
+            <el-table-column property="achievementsNum" label="成果数量" width="230" />
+            <el-table-column property="citationsNum" label="被引次数" width="230" />
         </el-table>
         <div class="introduceContainer">
             <span style="font-size: 15px;">
@@ -36,7 +35,9 @@
 }
 </style>
 <script>
-import {claimPortal} from "../api/portal.js"
+import { claimPortal } from "../api/portal.js"
+import { ElNotification } from 'element-plus';
+import store from '@/store';
 export default {
     props: {
         isVisibal: Boolean,
@@ -61,8 +62,39 @@ export default {
     },
     methods: {
         claimDoor() {
-            var promise = claimPortal("https://openalex.org/A5023888391");
+            if (this.$store.state.userInfo.isLogin == false) {
+                ElNotification({
+                    message: "您还未登陆，请登录后再进行认证",
+                    type: 'error',
+                    showClose: true,
+                    position: 'top-right',
+                    duration: 2000,
+                });
+                return ;
+            }
+            console.log(this.item)
+            var promise = claimPortal(this.item.uid, this.textarea);
             promise.then((result) => {
+                if (result.code == 1022) {
+                    ElNotification({
+                        message: "您已经认领过门户，不能重复认领",
+                        type: 'error',
+                        showClose: true,
+                        position: 'top-right',
+                        duration: 2000,
+                    });
+                }
+                else if (result.code == 200) {
+                    {
+                        ElNotification({
+                            message: "认领成功",
+                            type: 'success',
+                            showClose: true,
+                            position: 'top-right',
+                            duration: 2000,
+                        });
+                    }
+                }
                 console.log(result);
             })
         },

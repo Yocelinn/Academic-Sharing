@@ -15,7 +15,7 @@
           </select>
         </div>
         <div :class="{ 'inputContainer': isLargeModel, 'inputContainerSmallModel': !isLargeModel }">
-          <el-input placeholder="中文文献、外文文献" class="input" v-model="localQuery" @input="updateQuery" />
+          <el-input placeholder="中文文献、外文文献" class="input" v-model="localQuery" @input="updateQuery" @keydown.enter="emitSearch"/>
         </div>
         <el-button type="primary"
           style="position: relative;margin-right:20px;top: 5px;width : 15%;max-width: 60px;float: right;"
@@ -306,7 +306,7 @@ export default {
       dialogTableVisible: true,
       radio1: 0,
       radio: 0,
-      localQuery: this.searchQuery,
+      localQuery: "",
       isDialoVisibal: false,
       options: [
         [
@@ -484,6 +484,10 @@ export default {
     };
   },
   mounted() {
+    var query = this.$route.query
+    this.localQuery = query.query
+    console.log(this.localQuery)
+    console.log(this.$route.query)
     for (var i = 0; i < this.options.length; i++) {
       this.titleList.push(this.options[i][0].value);
     }
