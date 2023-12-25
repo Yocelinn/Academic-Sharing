@@ -3,7 +3,11 @@ export function claimPortal(url){
     return get('/user/relateOpenalex/?openalexId='+url);
 }
 export function getAuthorInfo(uid){
-    return get('/user/getScholarInfo/?user_id='+uid);
+    console.log(uid)
+    var param = {};
+    param.openalexId = uid;
+    param.text = uid
+    return get('/user/getInfoByOpenID',param);
 }
 export function searchPortal(userName,paperName){
     var param = {};

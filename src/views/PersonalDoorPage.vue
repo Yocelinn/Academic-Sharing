@@ -1,7 +1,7 @@
 <template>
+    
     <el-alert title="error" type="error" description="该学者不存在" show-icon v-if="authorIsExit == false" />
     <div v-loading="isLoading" style="margin-top: 100px;">
-
     </div>
     <div v-if="!isLoading">
         <FindDoor v-model="isDialoVisibal" :item="nowPerson">
@@ -33,25 +33,17 @@
                                 <div class="sameName">
                                     <div>
                                         <span>
-                                            同名作者
+                                            类似名字作者
                                         </span>
                                         <el-button type="primary" style="margin-left: 30px;height: 30px;"
-                                            @click="findauthor">
+                                            @click="findauthor" v-if="!authorData.isRelate">
                                             认领门户
                                         </el-button>
                                     </div>
                                     <div v-for="(item, index) in sameNamePerson" :key="index"
                                         style="font-size: 14px;margin-top: 10px;">
-                                        <span style="font-weight: 400;cursor: pointer;color: #529b2e;"
-                                            :id="'sameName' + index" @mouseover="mouseOverToChangeColor('sameName' + index)"
-                                            @mouseleave="mouseLeaveToChangeColor('sameName' + index)">
-                                            {{ item.name }}
-                                        </span>
-                                        <span style="margin-left: 20px;font-weight: 600;cursor: pointer;color: #529b2e;"
-                                            :id="'sameNameFactory' + index"
-                                            @mouseover="mouseOverToChangeColor('sameNameFactory' + index)"
-                                            @mouseleave="mouseLeaveToChangeColor('sameNameFactory' + index)">
-                                            {{ item.factory }}
+                                        <span style="font-weight: 400;color: #529b2e;" :id="'sameName' + index">
+                                            {{ item }}
                                         </span>
                                     </div>
                                 </div>
@@ -66,8 +58,7 @@
                             </span>
                             <div class="detailFieldContainer">
                                 <span v-for="(item, index) in detailField" :key="index" class="eachField"
-                                    :id="'eachField' + index" @mouseover="mouseOverToChangeColor('eachField' + index)"
-                                    @mouseleave="mouseLeaveToChangeColor('eachField' + index)">
+                                    :id="'eachField' + index">
                                     {{ item }}
                                 </span>
                             </div>
@@ -85,9 +76,8 @@
                                         [{{ index + 1 }}]
                                     </span>
                                     <span class="eachMessage" :id="'eachMessage' + index"
-                                        @mousemove="mouseOverToChangeColor('eachMessage' + index)"
-                                        @mouseleave="mouseLeaveToChangeColor('eachMessage' + index)"
-                                        style="color: #529b2e;cursor: pointer;">
+                                        
+                                        style="color: #529b2e;max-width: 600px;overflow: hidden;">
                                         {{ item.title }}.
                                     </span>
                                     <!-- <div>
@@ -123,7 +113,6 @@
     margin-left: 50px;
     font-size: 18px;
     color: #529b2e;
-    cursor: pointer;
 }
 
 .detailFieldContainer {
@@ -172,7 +161,7 @@
     position: relative;
     background-color: #F2F6FC;
     height: auto;
-    width: 400px;
+    width: 300px;
     margin-left: 100px;
 
 }
@@ -193,6 +182,7 @@
     min-height: 670px;
     width: 95%;
     box-shadow: 2px 2px 5px #42b983;
+    background-color: #f0f9eb;
 }
 
 .main {
@@ -231,6 +221,7 @@
 <script>
 import FindDoor from '@/components/FindDoor.vue';
 import { getAuthorInfo } from "../api/portal.js"
+import store from '@/store';
 
 export default {
     components: {
@@ -245,11 +236,6 @@ export default {
             uid: "",
             isDialoVisibal: false,
             nowPerson: {
-                "name": "康家麒",
-                "company": "北京航空航天大学",
-                "essay": ["none", "none", "none"],
-                "year": 2002,
-                "source": "buaa"
 
             },
             sameNamePerson: [
@@ -289,14 +275,21 @@ export default {
             ele.style.color = "#529b2e"
         },
         findauthor() {
-            this.$router.push('/findDoor');
+            this.nowPerson = {}
+            this.nowPerson.name = this.authorName
+            this.nowPerson.achievementsNum = this.authorData.achievementsNum
+            this.nowPerson.citationsNum = this.authorData.citationsNum
+            this.nowPerson.uid = this.uid
+            this.isDialoVisibal = true
         }
     },
     mounted() {
-        this.uid = this.$route.params.uid;
+        console.log(this.$route.query.query)
+        this.uid = this.$route.query.query
         console.log(this.uid);
         var promise = getAuthorInfo(this.uid);
         promise.then((result) => {
+            console.log(result)
             if (result.code == 1008) {
                 this.authorIsExit = false;
                 return;
@@ -309,9 +302,8 @@ export default {
                 console.log(this.authorData)
                 this.authorName = result.data.name
                 this.messageList = this.authorData.myWorkDisArrayList
+                this.sameNamePerson = this.authorData.names
             }
-
-
         })
     },
 
