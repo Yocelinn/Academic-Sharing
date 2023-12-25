@@ -3,7 +3,7 @@
         <div class="userChoose">
             <el-dropdown>
                 <el-button type='warning' link="true" size="large">
-                    <el-icon><ArrowDownBold /></el-icon>
+                    <el-icon><Tools /></el-icon>
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -29,6 +29,7 @@
 import store from '@/store';
 import { ElNotification } from 'element-plus';
 import { Logoff } from '@/api/loginAndRegister';
+import { GetTsPs } from '@/api/favorite';
 
 export default{
     props: {
@@ -71,6 +72,12 @@ export default{
                         duration: 2000,
                     })
                 }
+            })
+        },
+        test(){
+            var promise=GetTsPs();
+            promise.then((result) => {
+                console.log(result);
             })
         }
     },

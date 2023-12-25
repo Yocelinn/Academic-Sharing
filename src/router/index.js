@@ -126,6 +126,11 @@ const routes = [
     name: 'collectPatent',
     component: () => import('../views/CollectPatent.vue')
   },
+  {
+    path:'/allInstitution',//全部机构展示页
+    name:'allInstitution',
+    component: () => import('../views/AllInstitutionDisplay.vue')
+  }
 ]
 
 const router = createRouter({

@@ -35,10 +35,10 @@
         <el-table-column label="举报理由" prop="reason"></el-table-column>
         <el-table-column label="状态">
           <template #default="scope">
-            <el-button type="info" plain v-if="scope.row.status==0">待处理</el-button>
-            <el-button type="warning" plain v-if="scope.row.status==1">处理中</el-button>
-            <el-button type="success" plain v-if="scope.row.status==2">已处理</el-button>
-            <el-button type="danger" plain v-if="scope.row.status==3">已驳回</el-button>
+            <el-button type="info" plain v-if="scope.row.ischeck==0">待处理</el-button>
+            <el-button type="warning" plain v-if="scope.row.ischeck==1">处理中</el-button>
+            <el-button type="success" plain v-if="scope.row.ischeck==2">已处理</el-button>
+            <el-button type="danger" plain v-if="scope.row.ischeck==3">已驳回</el-button>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180px">
@@ -76,7 +76,8 @@
             <el-input v-model="infoForm.reason" disabled></el-input>
           </el-form-item>
           <el-form-item label="具体描述" prop="description">
-            <el-input v-model="infoForm.description" type="textarea" :rows="15" disabled></el-input>
+            <el-text>{{infoForm.description}}</el-text>
+            <!-- <el-input v-model="infoForm.description" type="textarea" :rows="15" disabled></el-input> -->
           </el-form-item>
         </el-form>
 
@@ -100,7 +101,8 @@
             <el-input v-model="handleForm.reason" disabled></el-input>
           </el-form-item>
           <el-form-item label="具体描述" prop="description">
-            <el-input v-model="handleForm.description" type="textarea" :rows="15" disabled></el-input>
+            <el-text>{{handleForm.description}}</el-text>
+            <!-- <el-input v-model="handleForm.description" type="textarea" :rows="15" disabled></el-input> -->
           </el-form-item>
         </el-form>
 
@@ -129,67 +131,75 @@
 <script>
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
+import {AllCommentReport, GetCommentReportByID, HandleCommentReport} from '../../api/report.js'
 export default {
   data() {
     return {
+      loading: true,
+      dialog_loading: true,
+      searchKey: "",
       queryInfo: {
 				query: '',
 				pagenum: 1,
 				pagesize:2
 			},
       commentList: [
-        {
-          id: 1,
-          reporterName: "Test",
-          time: "2023年11月19日22:02:58",
-          commentContent: "ffffffffffffffff",
-          reason: "人身攻击",
-          description: "testtesttest",
-          status: 0,
-        },
-        {
-          id: 2,
-          reporterName: "Test2",
-          time: "2023年11月19日22:17:58",
-          commentContent: "xxxxxxxxxxxxxxxxxxx",
-          reason: "内容无关",
-          description: "testtesttest",
-          status: 1,
-        },
-        {
-          id: 3,
-          reporterName: "Test3",
-          time: "2023年11月19日22:19:58",
-          commentContent: "12345678999999",
-          reason: "违法违规",
-          description: "testtesttest",
-          status: 2,
-        },
-        {
-          id: 4,
-          reporterName: "Test4",
-          time: "2023年11月26日22:19:58",
-          commentContent: "nnnnnnnnnnnnnnnnnnn",
-          reason: "不实信息",
-          description: "testtesttest",
-          status: 1,
-        },
+        // {
+        //   id: 1,
+        //   reporterName: "Test",
+        //   time: "2023年11月19日22:02:58",
+        //   commentContent: "ffffffffffffffff",
+        //   reason: "人身攻击",
+        //   description: "testtesttest",
+        //   ischeck: 0,
+        // },
+        // {
+        //   id: 2,
+        //   reporterName: "Test2",
+        //   time: "2023年11月19日22:17:58",
+        //   commentContent: "xxxxxxxxxxxxxxxxxxx",
+        //   reason: "内容无关",
+        //   description: "testtesttest",
+        //   ischeck: 1,
+        // },
+        // {
+        //   id: 3,
+        //   reporterName: "Test3",
+        //   time: "2023年11月19日22:19:58",
+        //   commentContent: "12345678999999",
+        //   reason: "违法违规",
+        //   description: "testtesttest",
+        //   ischeck: 2,
+        // },
+        // {
+        //   id: 4,
+        //   reporterName: "Test4",
+        //   time: "2023年11月26日22:19:58",
+        //   commentContent: "nnnnnnnnnnnnnnnnnnn",
+        //   reason: "不实信息",
+        //   description: "testtesttest",
+        //   ischeck: 1,
+        // },
       ],
       options: [
         {
-          value: 0,
+          value: 1,
           label: '待处理',
         },
         {
-          value: 1,
+          value: 2,
           label: '处理中',
         },
         {
-          value: 2,
+          value: 3,
           label: '已处理',
         },
+        {
+          value: 4,
+          label: '已驳回',
+        }
       ],
-      value: 0,
+      value: "",
       total: 3,
       infoVisible: false,
       handleVisible: false,
@@ -200,8 +210,10 @@ export default {
         time: "2023年11月19日22:19:58",
         commentContent: "12345678999999",
         reason: "违法违规",
-        description: "testtesttest",
-        status: 2,
+        description: "testtesttesttesttesttest\
+        testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest\
+        testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest",
+        ischeck: 2,
       },
       handleForm: {
         id: 3,
@@ -210,12 +222,31 @@ export default {
         commentContent: "12345678999999",
         reason: "违法违规",
         description: "testtesttest",
-        status: 2,
-      }
+        ischeck: 2,
+      },
+      handlingReport: {}
     }
   },
-
+  created(){
+    this.getAllCommentReport()
+  },
   methods: {
+    getAllCommentReport() {
+      var promise = AllCommentReport();
+      promise.then((result => {
+        this.loading = false
+        this.commentList = result.data
+        if(this.searchKey!=""){
+          for(var i=0; i<this.commentList.length; i++){
+            if(!this.commentList[i].reporterName.includes(this.searchKey)&&
+            !this.commentList[i].reporteeComment.includes(this.searchKey)&&
+            !this.commentList[i].reason.includes(this.searchKey)){
+              this.paperList.splice(i, 1)
+            }
+          }
+        }
+      }))
+    },
     handleSizeChange(newSize) {
       this.queryInfo.pagesize = newSize
       // this.getUserList()
@@ -224,64 +255,102 @@ export default {
       this.queryInfo.pagenum = newPage
       // this.getUserList()
     },
+    showCommentReport(s){
+      this.infoVisible = true
+      this.dialog_loading = true
+      var promise = GetCommentReportByID(s.id);
+      promise.then((result)=>{
+        this.dialog_loading = false
+        this.infoForm = result.data[0]
+      })
+    },
     handleComment(s) {
-      if(s.status === 0){
+      this.dialog_loading = true
+      if(s.ischeck === 1){
         this.handleVisible = true
         this.handleForm.id = s.id
         // console.log(this.handleForm.id)
         for(var comment of this.commentList){
           if(comment.id === this.handleForm.id){
-            comment.status = 1
+            comment.ischeck = 2
           }
         }
+        var promise = GetCommentReportByID(s.id);
+        promise.then((result)=>{
+          this.handleForm = result.data[0]
+          this.handlingReport = result.data[0]
+          var p2 = HandleCommentReport(s.id, 2)
+          p2.then((result)=>{
+            this.dialog_loading = false
+          })
+        })
       }
-      else if(s.status === 1){
+      else if(s.ischeck === 2){
         ElMessage('该事务正在处理中！')
       }
-      else if(s.status === 3){
+      else if(s.ischeck === 4){
+        this.handleForm.id = s.id
+        var promise = GetPaperReportById(s.id);
+        promise.then((result)=>{
+          this.handlingReport = result.data[0]
+        })
         this.rejectDialogVisible = true
       }else{
-        this.infoVisible = true
+        this.showCommentReport(s)
       }
       
     },
     cancelHandle() {
       for(var comment of this.commentList){
         if(comment.id === this.handleForm.id){
-          comment.status = 0
+          comment.ischeck = 1
         }
       }
-      this.handleVisible = false
+      var promise = HandleCommentReport(this.handlingReport.id, 1)
+      promise.then((result)=>{
+        this.handleVisible = false
+      })
     },
     finishHandle() {
       for(var comment of this.commentList){
         if(comment.id === this.handleForm.id){
-          comment.status = 2
+          comment.ischeck = 3
         }
       }
-      console.log(this.commentList)
-      this.handleVisible = false
+      var promise = HandleCommentReport(this.handlingReport.id, 3)
+      promise.then((result)=>{
+        this.handleVisible = false
+      })
     },
     rejectHandle() {
       for(var scholar of this.commentList){
         if(scholar.id === this.handleForm.id){
-          scholar.status = 3
+          scholar.ischeck = 4
         }
       }
-      this.handleVisible = false
+      var promise = HandleCommentReport(this.handlingReport.id, 4)
+      promise.then((result)=>{
+        this.handleVisible = false
+      })
     },
     reOpen() {
       for(var scholar of this.commentList){
         if(scholar.id === this.handleForm.id){
-          scholar.status = 0
+          scholar.ischeck = 1
         }
       }
-      this.rejectDialogVisible = false
-    }
+      var promise = HandleCommentReport(this.handlingReport.id, 1)
+      promise.then((result)=>{
+        this.rejectDialogVisible = false
+      })
+    },
+    
   },
 }
 </script>
 
 <style>
-
+.el-text{
+  text-align: left;
+}
 </style>

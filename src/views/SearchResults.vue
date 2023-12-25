@@ -169,10 +169,13 @@
           // console.log(query)
           console.log(strategy)
           console.log(store)
-          if(store.state.searchType===""){
+          console.log(sessionStorage.getItem('saveSearchType'))
+          if(sessionStorage.getItem('saveSearchType')==null){
             console.log("It's null")
           }else{
-            curAcademyType=store.state.searchType;
+            // curAcademyType=store.state.searchType;
+            curAcademyType=sessionStorage.getItem('saveSearchType')
+
           }
           console.log(curAcademyType)
           await getResults();
@@ -274,7 +277,6 @@
           sciencedata.value={};
           books.value={};
           // console.log("init "+curPage.value)
-
         }
         //默认六种学术成果类型
         const academyTypes=ref([{id:1,type:"论文",key:"articles"},
@@ -342,6 +344,8 @@
           await getResults();
           await getGroupClassifier();
           this.$store.commit('changeSearchType',curAcademyType.value);
+          console.log("afterChnage")
+          console.log(sessionStorage.getItem('saveSearchType'))
           // await new Promise(resolve => setTimeout(resolve, 300));
           
         }
@@ -403,7 +407,7 @@
               grouptype.value=response;
               const tagNames = response.map(item => item.tag);
               // console.log(tagNames)
-              
+              console.log(grouptype.value)
                 
                 tagNames.forEach(name => {
                   if(aggregations.value[name]==undefined){

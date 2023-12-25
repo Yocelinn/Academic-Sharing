@@ -10,12 +10,29 @@
               <el-col :span="16" style="padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
                 <el-card style="height:640px" class="historycard">
                   <el-table :data="history" style="width: 100%">
-                    <el-table-column prop="time" label="浏览时间" width="175" />
-                    <el-table-column prop="content" label="学术成果名称" width="200" />
-                    <el-table-column prop="searchID" label="ID" width="120" />
-                    <el-table-column prop="zone" label="领域" width="250" />
+                    <el-table-column label="浏览时间" width="175" >
+                      <template #default="scope">
+                        {{ scope.row.time }}
+                      </template>
+                    </el-table-column>  
+                    <el-table-column label="学术成果名称" width="200" >
+                      <template #default="scope">
+                        {{ scope.row.name }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="ID" width="120" >
+                      <template #default="scope">
+                        {{ scope.row.searchID }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="领域" width="250" >
+                      <template #default="scope">
+                        {{ scope.row.conceptDis[0].name }} 
+                        {{ scope.row.conceptDis[1].name }}
+                      </template>
+                    </el-table-column>
                     <el-table-column fixed="right" label="操作" width="140">
-                      <template #default>
+                      <template #default="scope">
                         <el-button link type="primary" size="small" @click="historydelete(scope.row)"
                           >删除</el-button
                         >
@@ -47,6 +64,7 @@
   import * as echarts from 'echarts';
   import { onMounted,ref} from 'vue';
   import {post,get} from "../api/api.js"
+  import {GetHistory,DeleteHistory,SearchHistory,GetData}from "../api/record.js"
   export default {
     components: {
       Personaside,
@@ -70,14 +88,12 @@
       const userid='1'
       const interest='数据库 架构 数据库系统'
       const history = ref([])
-      const gethistorylist = () =>{
-        get('/record/search/?id=1').then((response)=>{
-          console.log(response.data);
-          history.value = response.data;
-        })
-      }
       onMounted(()=>{
-        gethistorylist()
+        var promise = GetHistory()
+        promise.then((response=>{
+          console.log(response.data),
+          history.value = response.data
+        }))
         const echart1 = echarts.init(document.getElementById('graph'))
         const echarts1option = {
         title: {
@@ -121,6 +137,7 @@
   </script>
   <style>
   .card114514{
+    margin-top: 40px;
     height: 120px;
   
   }

@@ -116,20 +116,64 @@
 
                 <div class="info-title"><el-icon><Edit /></el-icon>问题反馈</div>
                 <div class="button-container">
-                  <div class="button-list"><el-icon><Warning /></el-icon>数据错误</div>
-                  <div class="button-list"><el-icon><Remove /></el-icon>撤稿申请</div>
+                  <div class="button-list" @click="reportError()"><el-icon><Warning /></el-icon>数据错误</div>
+                  <div class="button-list" @click="reportRevoke()"><el-icon><Remove /></el-icon>撤稿申请</div>
                 </div>
               </div>
             </el-card>
 
         </el-col>
         <el-backtop :right="100" :bottom="100" color="#8fc0a9"/>
+
+        <el-dialog v-model="dialogVisible" :title="dialog.title" width="40%" center>
+        <div class="input-container" v-if="!successVisible">
+          <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="申请信息" style="width:500px;">
+              <el-input v-model="formInline.content" placeholder="请填写申请信息" type="textarea" clearable >
+                </el-input>
+            </el-form-item>
+            <!-- <el-form-item label="联系方式" style="width:500px;">
+              
+            </el-form-item> -->
+          </el-form>
+        </div>
+        <el-result icon="success" title="提交成功" sub-title="感谢您的反馈！" v-else>
+          <template #extra>
+            <el-button type="primary" @click="closeDialog">关闭</el-button>
+          </template>
+        </el-result>
+        <template #footer v-if="!successVisible">
+          <span class="dialog-footer" >
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="onSubmit">
+              提交
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog v-model="alertLogVisible" title="提示" width="30%" center>
+        <el-form-item>
+          <span style="width: 100%;text-align: center;font-weight: 600;font-size: 15px;">  您还未登录，请先登录 </span>
+        </el-form-item>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button type="primary" @click="alertLogVisible = false">
+              好
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
     </div>
         
   </template>
   
   <script>
-import { onMounted,ref } from 'vue';
+  import { onMounted,ref } from 'vue';
+  import { useRoute } from 'vue-router';
+  import * as PatentApi from '../../api/patent';
+  import moment from 'moment'; 
+  import axios from 'axios';
+  import store from '@/store';
   
   export default {
     name: 'PaperDetail',
@@ -137,6 +181,25 @@ import { onMounted,ref } from 'vue';
       const paperList = ref([
         { id: '', name: '', authors:[], resource: ''},
       ]);
+      const comments = ref([{
+        id: 1000,
+        content: '',
+        userId: 0,
+        workId: '',
+        time: '',
+      }]);
+      const dialogVisible = ref(false);
+      const dialog = ref({
+        title: '',
+        content: '',
+      })
+      const formInline = reactive({
+        content: '',
+        contact:'',
+        date: '',
+      })
+      const successVisible = ref(false)
+      const alertLogVisible = ref(false)
       
       onMounted( () => {
         getPaperList();
@@ -171,9 +234,85 @@ import { onMounted,ref } from 'vue';
           }
         ];
       }
+      function getComments() {
+        PatentApi.GetCommentByWorkIdAndType('1')
+        .then((response) => {
+          console.log(response)
+          // comments.value = response;
+          // if(response.code == 200) {
+            comments.value = response;
+            for(var i=0; i < comments.value.length; i++) {
+              comments.value[i].time = moment(comments.value[i].time).utcOffset(8).format('YYYY/MM/DD HH:mm:ss')
+
+            }
+
+            console.log(comments.value)
+          // } else {
+          //   console.log(response.code)
+          // }
+        })
+      }
+
+      function postComment() {
+        var textarea = document.getElementById('commentBox');
+
+        // 获取 textarea 的值（文本内容）
+        var content = textarea.value;
+        const commentData = ref({
+          "content": '',
+          "userId": 2,
+          "workId": 0,
+        })
+        // 现在还是测试数据，故userId和workId都不确定
+        commentData.value.content  = content
+        commentData.value.workId = 1000;
+        PatentApi.PostComment(commentData.value, workId)
+        .then((response) => {
+          console.log("postComment result:" + response)
+        })
+      }
+
+      function reportError() {
+        // if(store.state.isLogin){
+          dialog.value.title = "报告数据错误"
+          dialogVisible.value = true;
+        // } else {
+        //   alertLogVisible.value = true;
+        // }
+      }
+      function reportRevoke() {
+        if(store.state.isLogin){
+          dialog.value.title = "提交撤稿申请"
+          dialogVisible.value = true;
+        } else {
+            alertLogVisible.value = true;
+        }
+      }
+      
+
+      const onSubmit = () => {
+        successVisible.value = true;
+        console.log('submit!')
+      }
+      const closeDialog = () => {
+        dialogVisible.value = false;
+        successVisible.value = false;
+      }
 
       return {
-        paperList
+        paperList,
+        comments,
+        dialogVisible,
+        dialog,
+        formInline,
+        successVisible,
+        alertLogVisible,
+
+        postComment,
+        reportError,
+        reportRevoke,
+        onSubmit,
+        closeDialog,
       };
 
       
