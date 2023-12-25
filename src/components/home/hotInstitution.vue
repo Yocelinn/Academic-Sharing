@@ -2,11 +2,30 @@
     <div class="institution">
         <el-card class="institutionCard">
             <div class="header">
-                    <el-icon><OfficeBuilding /></el-icon>
-                    知名机构：Well-Known Institutions
-                </div>
+                <el-icon><OfficeBuilding /></el-icon>
+                知名机构
+            </div>
             <div class="body">
-                <div class="item">中国科学院</div>
+                <div class="institutionItem">
+                    <el-icon><School /></el-icon>
+                    中国科学院
+                </div>
+                <div class="institutionItem">
+                    <el-icon><School /></el-icon>
+                    中国科学院
+                </div>
+                <div class="institutionItem">
+                    <el-icon><School /></el-icon>
+                    中国科学院
+                </div>
+                <div class="institutionItem">
+                    <el-icon><School /></el-icon>
+                    中国科学院
+                </div>
+                <div class="institutionItem">
+                    <el-icon><School /></el-icon>
+                    中国科学院
+                </div>
             </div>
         </el-card>
     </div>
@@ -44,10 +63,10 @@ export default{
 .header{
     position: relative;
     width: 100%;
-    height: 50px;
+    height: 40px;
     line-height: 100%;
     text-align: left;
-    font-size: 17px;
+    font-size: 24px;
     font-weight: 900;
     font-style: italic;
     color: #68b0ab;
@@ -59,16 +78,26 @@ export default{
 .body{
     position: relative;
     width: 100%;
-    height: 620px;
+    height: 280px;
     top: 0px;
     border: 1px solid silver;
+    border-radius: 4%;
 }
-.item{
+.institutionItem{
     position: relative;
-    height: 10%;
-    width: 100%;
-    line-height: 10%;
+    height: 12%;
+    width: 90%;
+    margin-top: 11px;
+    margin-left: 5%;
     text-align: left;
     font-style: italic;
+    font-size: 20px;
+    font-weight: 600;
+    border-bottom: 2px solid silver;
+    color: #68b0ab;
+}
+.institutionItem:hover{
+    cursor: pointer;
+    color: #4a7c59;
 }
 </style>
