@@ -5,6 +5,7 @@
 </template>
   
 <script>
+  import {GetNum} from '../../api/report.js'
   import * as echarts from 'echarts/core';
   import { GaugeChart } from 'echarts/charts';
   import { CanvasRenderer } from 'echarts/renderers';
@@ -20,7 +21,16 @@
       }
     },
     mounted() {
-      this.initChat()
+      var promise = GetNum()
+      promise.then((result =>{
+        this.scholarAll = result.data.totalRelate
+        this.scholarFinish = result.data.sucRelate
+        this.paperAll = result.data.totalWorkReport
+        this.paperFinish = result.data.sucWorkReport
+        this.commmentAll = result.data.totalCommentReport
+        this.commentFinish = result.data.sucCommentReport
+        this.initChat()
+      }))
     },
     methods: {
       initChat(){
