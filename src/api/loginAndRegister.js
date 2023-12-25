@@ -57,3 +57,10 @@ export function GetScholarInfoBySelf(){
     let param={};
     return get("/user/getScholarInfoSelf",param);
 }
+
+export function AdminLogin(userName, password){
+    let param={};
+    param.userName=userName;
+    param.password=password;
+    return get("/report/adminLogin", param);
+}

@@ -11,7 +11,7 @@
             </div>
             <div class="login" v-if="this.formType==0">
                 <el-form class="loginForm" ref="loginRef" :model="this.login" :rules="this.loginRules">
-                    <el-form-item class="lineHeight" prop="email">
+                    <el-form-item prop="email">
                         <el-input class="input" type="text" v-model="this.login.email" placeholder="邮箱" maxlength="25" prefix-icon="Message"></el-input>
                     </el-form-item>
                     <el-form-item prop="password">

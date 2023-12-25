@@ -42,9 +42,6 @@
       <hotPaper></hotPaper>
     </div>
   </div>
-  <el-dialog v-model="this.open" width="25%" style="min-width: 500px;">
-    
-  </el-dialog>
 </template>
 
 <script>
@@ -70,7 +67,6 @@ export default {
   data(){
     return{
       filedInfo:[{"name" : "", "count" : ""},{"name" : "", "count" : ""},{"name" : "", "count" : ""},{"name" : "", "count" : ""},{"name" : "", "count" : ""},{"name" : "", "count" : ""}],
-      open: false,
     }
   },
   methods:{

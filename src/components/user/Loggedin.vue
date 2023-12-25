@@ -29,7 +29,6 @@
 import store from '@/store';
 import { ElNotification } from 'element-plus';
 import { Logoff } from '@/api/loginAndRegister';
-import { GetTsPs } from '@/api/favorite';
 
 export default{
     props: {
