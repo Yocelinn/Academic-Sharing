@@ -47,7 +47,8 @@ const routes = [
   {
     path: '/searchResults',
     name: 'searchResults',
-    component: () => import('../views/SearchResults.vue')
+    component: () => import('../views/SearchResults.vue'),
+    // props: (route) => ({ query: route.query.query }),
   },
   {
     path: '/paper/detail/:workId?',  // 论文详情页
@@ -55,7 +56,7 @@ const routes = [
     component: () => import('../views/details/PaperDetail.vue')
   },
   {
-    path: '/patent/detail',  // 专利详情页
+    path: '/patent/detail/:patentId?',  // 专利详情页
     name: 'PatentDetail',
     component: () => import('../views/details/PatentDetail.vue')
   },
@@ -95,6 +96,7 @@ const routes = [
   // },
   {
     path: '/institution',
+    name: 'institution',
     component: () => import("../views/InstitutionView.vue")
   },
   {
@@ -113,14 +115,13 @@ const routes = [
     component: () => import('../views/details/ProgramDetail.vue')
   },
   {
-    path: '/collectPaper',
+    path:'/allInstitution',//全部机构展示页
+    name:'allInstitution',
+    component: () => import('../views/AllInstitutionDisplay.vue')
+  },
+   { path: '/collectPaper',
     name: 'collectPaper',
     component: () => import('../views/CollectPaper.vue')
-  },
-  {
-    path: '/collectPatent',
-    name: 'collectPatent',
-    component: () => import('../views/CollectPatent.vue')
   },
 ]
 
