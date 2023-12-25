@@ -142,7 +142,7 @@
               <div class="button-container" v-if="detailInfo.links != '' && detailInfo.links!=null">
                 <!-- <div class="button-container"> -->
                   <!-- {{ detailInfo.link }} -->
-                 <a class="button-list"  target="_blank" :href="detailInfo.links[0].url"><el-icon><Connection /></el-icon>去往来源</a>
+                 <a class="button-list"  target="_blank" :href="detailInfo.links.url"><el-icon><Connection /></el-icon>去往来源</a>
                 <!-- <a class="button-list"  target="_blank" :href="detailInfo.location.pdf_url"><el-icon><Reading /></el-icon>查看全文</a>  -->
 
               </div>
