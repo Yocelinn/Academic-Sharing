@@ -8,7 +8,7 @@
       <div class="searchContainer">
         <div class="search">
           <el-input v-model="searchInput2" placeholder="请输入成果名" class="searchInput" clearable  />
-          <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput" clearable style="margin-top: 20px;"/>
+          <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput" clearable style="margin-top: 20px;" />
           <div style="margin-top: 20px;margin-bottom: 20px;">
             <el-button type="primary" class="searchButton" @click="search">搜索</el-button>
             <el-button type="danger" class="searchButton" @click="searchInput1 = ''; searchInput2 = ''">重置</el-button>
