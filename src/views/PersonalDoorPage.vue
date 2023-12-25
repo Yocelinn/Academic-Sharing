@@ -1,7 +1,6 @@
 <template>
-    
     <el-alert title="error" type="error" description="该学者不存在" show-icon v-if="authorIsExit == false" />
-    <div v-loading="isLoading" style="margin-top: 100px;">
+    <div v-loading="isLoading" style="margin-top: 100px;margin-bottom: 550px;" v-if="isLoading">
     </div>
     <div v-if="!isLoading">
         <FindDoor v-model="isDialoVisibal" :item="nowPerson">
@@ -76,7 +75,6 @@
                                         [{{ index + 1 }}]
                                     </span>
                                     <span class="eachMessage" :id="'eachMessage' + index"
-                                        
                                         style="color: #529b2e;max-width: 600px;overflow: hidden;">
                                         {{ item.title }}.
                                     </span>
@@ -90,6 +88,19 @@
                                         {{ item.date }}
                                     </span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fiedContainer">
+                        <div class="fieldInnerContainer">
+                            <span
+                                style="display: flex;position: relative;font-size: 20px;width: 100%;border-bottom:2px solid #c8c9cc ;height: 40px;">
+                                专家关系网络
+                            </span>
+                            <div style="height: 500px;width: 100%;min-width: 800px;margin-top: 50px;">
+                                <AuthorRelationNet :authors="relatePerson" :name="authorName">
+
+                                </AuthorRelationNet>
                             </div>
                         </div>
                     </div>
@@ -221,11 +232,14 @@
 <script>
 import FindDoor from '@/components/FindDoor.vue';
 import { getAuthorInfo } from "../api/portal.js"
+import { GetAuthorsByAuthor } from "../api/authorRelation"
+import AuthorRelationNet from '@/components/AuthorRelationNet.vue';
 import store from '@/store';
 
 export default {
     components: {
-        FindDoor
+        FindDoor,
+        AuthorRelationNet
     },
     data() {
         return {
@@ -238,6 +252,7 @@ export default {
             nowPerson: {
 
             },
+            relatePerson: [],
             sameNamePerson: [
                 {
                     name: "康家麒",
@@ -296,7 +311,7 @@ export default {
             }
             else {
                 console.log(result);
-                this.isLoading = false;
+
                 this.authorData = result.data;
                 this.detailField = this.authorData.interests
                 console.log(this.authorData)
@@ -304,6 +319,13 @@ export default {
                 this.messageList = this.authorData.myWorkDisArrayList
                 this.sameNamePerson = this.authorData.names
             }
+            var promise1 = GetAuthorsByAuthor(this.uid)
+            promise1.then((result1) => {
+                this.relatePerson = result1.data
+                console.log(this.relatePerson)
+                this.isLoading = false;
+            })
+
         })
     },
 
