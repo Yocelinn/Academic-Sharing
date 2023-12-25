@@ -5,13 +5,29 @@
       <searchBox width=100 color="white" :isClassVisible=false  :isLargeModel = true></searchBox>
     </div>
     <div class="numberBlock">
-      <div class="numberLeft" style="left: 15%;">
-        <div class="numberTitle">3156032</div>
-        <div class="number">期刊论文</div>
+      <div class="numberLeft" style="left: 20%;">
+        <div class="number">{{ this.filedInfo[0].count }}</div>
+        <div class="numberTitle">{{ this.filedInfo[0].name }}</div>
       </div>
-      <div class="numberItem" style="left: 25%;">
-        <div class="numberTitle">1560230</div>
-        <div class="number">学位论文</div>
+      <div class="numberItem" style="left: 30%;">
+        <div class="number">{{ this.filedInfo[1].count }}</div>
+        <div class="numberTitle">{{ this.filedInfo[1].name }}</div>
+      </div>
+      <div class="numberItem" style="left: 40%;">
+        <div class="number">{{ this.filedInfo[2].count }}</div>
+        <div class="numberTitle">{{ this.filedInfo[2].name }}</div>
+      </div>
+      <div class="numberItem" style="left: 50%;">
+        <div class="number">{{ this.filedInfo[3].count }}</div>
+        <div class="numberTitle">{{ this.filedInfo[3].name }}</div>
+      </div>
+      <div class="numberItem" style="left: 60%;">
+        <div class="number">{{ this.filedInfo[4].count }}</div>
+        <div class="numberTitle">{{ this.filedInfo[4].name }}</div>
+      </div>
+      <div class="numberItem" style="left: 70%;">
+        <div class="number">{{ this.filedInfo[5].count }}</div>
+        <div class="numberTitle">{{ this.filedInfo[5].name }}</div>
       </div>
     </div>
   </div>
@@ -26,12 +42,6 @@
       <hotPaper></hotPaper>
     </div>
   </div>
-  <div class="informationBlock">
-    <information></information>
-  </div>
-  <div class="statementBlock">
-    <statement></statement>
-  </div>
 </template>
 
 <script>
@@ -39,9 +49,10 @@ import navigationBar from '@/components/home/navigationBar.vue';
 import hotArea from '@/components/home/hotArea.vue';
 import hotPaper from '@/components/home/hotPaper.vue';
 import information from '@/components/home/information.vue';
-import statement from '@/components/home/statement.vue';
 import searchBox from '@/components/searchBox.vue';
 import hotInstitution from '@/components/home/hotInstitution.vue';
+import { GetAllFields } from '@/api/home';
+import { Hotfield, Hotspots } from '@/api/record';
 
 export default {
   name: 'HomeView',
@@ -50,11 +61,36 @@ export default {
     navigationBar,
     hotPaper,
     information,
-    statement,
     searchBox,
     hotInstitution,
-  }
+  },
+  data(){
+    return{
+      filedInfo:[{"name" : "", "count" : ""},{"name" : "", "count" : ""},{"name" : "", "count" : ""},{"name" : "", "count" : ""},{"name" : "", "count" : ""},{"name" : "", "count" : ""}],
+    }
+  },
+  methods:{
 
+  },
+  mounted(){
+    var promise=GetAllFields();
+    promise.then((result) => {
+      var i=0;
+      for(let key in result){
+        this.filedInfo[i].name=key;
+        this.filedInfo[i].count=result[key];
+        i++;
+      }
+    })
+    var hotarea=Hotfield();
+    hotarea.then((result) => {
+      console.log(result);
+    })
+    var hotspots=Hotspots();
+    hotspots.then((result) => {
+      console.log(result);
+    })
+  }
 }
 </script>
 
@@ -107,8 +143,8 @@ export default {
   place-items: center;
   width: 100%;
   height: 60%;
-  font-size: x-large;
-  
+  font-size: 20px;
+  font-weight: 600;
 }
 .number{
   position: relative;
@@ -117,7 +153,7 @@ export default {
   place-items: center;
   width: 100%;
   height: 40%;
-  font-size: large;
+  font-size: 18px;
 }
 .hotInstitutionBlock{
   position: relative;
@@ -143,18 +179,6 @@ export default {
   height: 400px;
   right: 0%;
   top: 400px;
-}
-.informationBlock{
-  position: relative;
-  width: 100%;
-  min-width: 1200px;
-  height: 250px;
-}
-.statementBlock{
-  position: relative;
-  width: 100%;
-  min-width: 1200px;
-  height: 50px;
 }
 
 </style>

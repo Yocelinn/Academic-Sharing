@@ -17,13 +17,10 @@
                     </div>
                     <div class="passage2">
                     <div class="email">
-                      个人邮箱<span class="passage">{{ email }}</span>
-                    </div>
-                    <div class="zone">
-                      研究领域:<span class="passage">{{ zone }}</span>
+                      个人邮箱:<span class="passage">{{ email }}</span>
                     </div>
                     <div class="interest">
-                      兴趣方向:<span class="passage">{{ interest }}</span>
+                      兴趣方向:<span class="passage">{{ interest1 }};  {{ interest2 }};  {{ interest3 }};</span>
                     </div>
                     <div class="remake"><el-button type="success" :icon="Edit" @click="rewritemessage">修改信息</el-button></div>
                     <el-dialog v-model="dialogFormVisible" title="修改信息">
@@ -66,19 +63,18 @@
               </el-card>
             </el-col>
             <el-col :span="8" style="padding-left: 40px;padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
-              <el-card style="height:360px">
-                <div id="echarts1" style="height:360px"></div>
+              <el-card class="card38888" style="height:360px">
+                <div id="graph" style="height:360px"></div>
               </el-card>
               <div class="data">
                 <el-card class="card4">
                   <div class="dataheader">
-                  <header>个人数据</header>
+                  <header>个人门户</header>
                   </div>
                   <div class="passage3">
-                  <div class="textdata">总成果数：<span class="passage">{{ textdata }}</span></div>
-                  <div class="indexed">被引指数：<span class="passage">{{ indexed }}</span></div>
-                  <div class="index">引用文献：<span class="passage">{{ index }}</span></div>
-                  <div class="patent">专利引用次数：<span class="P6assage">{{ patent }}</span></div>
+                  <div class="identity">学术身份：<span class="passage2">{{ identity }}</span></div>
+                  <div class="indexed">您是学者？<span class="passage2">点击这里</span></div>
+                  <el-button class="identitybutton" @click="jump" type="primary">学术门户</el-button>
                   </div>
                 </el-card>
               </div>
@@ -95,7 +91,9 @@ import * as echarts from 'echarts';
 import { reactive,onMounted ,ref} from 'vue';
 import {post,get} from "../api/api.js"
 import { GetUserInformation,UpdateUserInformation,ChangePasswd} from "../api/loginAndRegister.js"
+import {GetData} from "../api/record.js"
 import store from '@/store';
+import router from "@/router";
 import {
   Check,
   Delete,
@@ -158,6 +156,12 @@ export default {
       this.oldpassword=''
       this.newpassword=''
       this.dialogPassword = false;
+    },
+    jump(){
+      if(this.identity=='普通用户')
+      {
+      router.push(`/findDoor`);
+      }
     }
   },
   setup(){
@@ -178,7 +182,9 @@ export default {
     const phone='1234578910'
     const email=ref('')
     const zone='计算机'
-    const interest='数据库 架构 数据库系统'
+    const interest1=ref('')
+    const interest2=ref('')
+    const interest3=ref('')
     const textdata='149'
     const indexed='1039'
     const index='1103'
@@ -194,40 +200,29 @@ export default {
         email.value = response.data.email;
         persondescription.value = response.data.person_description;
       })
-    const echart1 = echarts.init(document.getElementById('echarts1'))
-    const echarts1option = {
-      title: {
-            text: '学术成果关键词'
-          },
-      series:[
-        {
-          type: 'pie',
-          data:[
+      let echarts1option = {
+        title: {
+              text: '学术成果关键词'
+            },
+        series:[
           {
-            value: 20,
-            name: '建筑'
-          },
-          {
-            value: 27,
-            name: '能源'
-          },
-          {
-            value: 33,
-            name: '物理'
-          },
-          {
-            value: 15,
-            name: '数学'
-          },
-          {
-            value: 5,
-            name: '文学'
+            type: 'pie',
+            data:[]
           }
-          ]
+        ]
         }
-      ]
-    }
-    echart1.setOption(echarts1option)
+        var promise2 = GetData()
+        promise2.then((response=>{
+          console.log(response.data)
+          echarts1option.series[0].data=response.data
+          console.log(response.data[0])
+          interest1.value=response.data[0].name;
+          interest2.value=response.data[1].name;
+          interest3.value=response.data[2].name;
+          console.log(echarts1option.series)
+          const echart1 = echarts.init(document.getElementById('graph'))
+          echart1.setOption(echarts1option)
+        }))
     })
     return{
       dialogFormVisible,
@@ -238,7 +233,9 @@ export default {
       phone,
       email,
       zone,
-      interest,
+      interest1,
+      interest2,
+      interest3,
       userid,
       textdata,
       indexed,
@@ -335,6 +332,7 @@ export default {
 }
 .indexed{
   margin-bottom: 24px;
+  margin-left: 28px;
 }
 .index{
   margin-bottom: 24px;
@@ -355,13 +353,18 @@ export default {
   width: 960px;
   height: 240px;
 }
-
+.card38888{
+  margin-top: 40px;
+}
 .card4{
   margin-top: 40px;
-  height: 370px;
+  height: 200px;
 }
 .passage{
   margin-left: 80px;
+}
+.passage2{
+  margin-left: 70px;
 }
 .P6assage{
   margin-left: 55px;
@@ -373,15 +376,21 @@ export default {
   color: #000;
   margin-left: 20px;
 }
-
+.interest{
+  margin-top: 24px;
+}
 .remake{
-  margin-top: 130px;
+  margin-top: 175px;
 }
 .email{
   margin-top: 24px;
 }
 .identitybutton{
-  margin-left: 20px;
-  margin-top: 35px;
+  margin-left: 105px;
+}
+.identity{
+  margin-top: 24px;
+  margin-bottom: 24px;
+  margin-left: 28px;
 }
 </style>

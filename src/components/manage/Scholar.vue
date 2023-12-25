@@ -1,10 +1,17 @@
 <template>
   <div>
-    <el-breadcrumb separator="/">
-			<el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-			<el-breadcrumb-item>管理页面</el-breadcrumb-item>
-			<el-breadcrumb-item>学术门户审核</el-breadcrumb-item>
-		</el-breadcrumb>
+    <el-row :gutter="24">
+      <el-col :span="22">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>管理页面</el-breadcrumb-item>
+          <el-breadcrumb-item>学术门户审核</el-breadcrumb-item>
+        </el-breadcrumb>
+      </el-col>
+      <el-col :span="2">
+        <el-button type="primary">登出</el-button>
+      </el-col>
+    </el-row>
 
     <el-card>
       <el-row :gutter="24">
@@ -367,5 +374,11 @@ export default {
 <style>
 .el-text{
   text-align: left;
+}
+.el-card{
+  margin-top: 15px;
+}
+.el-breadcrumb{
+  margin-top: 10px;
 }
 </style>
