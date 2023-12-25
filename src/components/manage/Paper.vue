@@ -334,39 +334,39 @@ export default {
       })
     },
     searchPaperReport() {
-    this.loading = true;
-    var promise = SearchPaperReport(this.searchKey);
-    promise.then((result)=>{
-      this.loading = false
-      this.paperList = result.data
-      if(this.value!=""){
-        for(var i=0; i<this.paperList.length; i++){
-          if(this.paperList[i].ischeck!=this.value){
-            this.paperList.splice(i, 1)
-          }
-        }
-      }
-    })
-  },
-  filterPaperReport() {
-    this.loading = true;
-    if(this.value==""){
-      this.getAllPaperReport()
-    }else{
-      var promise = FilterPaperReport(this.value);
+      this.loading = true;
+      var promise = SearchPaperReport(this.searchKey);
       promise.then((result)=>{
         this.loading = false
         this.paperList = result.data
-        if(this.searchKey!=""){
+        if(this.value!=""){
           for(var i=0; i<this.paperList.length; i++){
-            if(!this.paperList[i].reporterName.includes(this.searchKey)){
+            if(this.paperList[i].ischeck!=this.value){
               this.paperList.splice(i, 1)
             }
           }
         }
       })
+    },
+    filterPaperReport() {
+      this.loading = true;
+      if(this.value==""){
+        this.getAllPaperReport()
+      }else{
+        var promise = FilterPaperReport(this.value);
+        promise.then((result)=>{
+          this.loading = false
+          this.paperList = result.data
+          if(this.searchKey!=""){
+            for(var i=0; i<this.paperList.length; i++){
+              if(!this.paperList[i].reporterName.includes(this.searchKey)){
+                this.paperList.splice(i, 1)
+              }
+            }
+          }
+        })
+      }
     }
-  }
   },
 }
 </script>

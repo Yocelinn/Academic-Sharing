@@ -39,6 +39,12 @@
                 {{ e }}
               </span>
             </div>
+            <div class="otherThing" style="display: flex;flex-wrap: wrap;">
+              <span>成果：</span>
+              <span v-for="(e, i) in item.myWorkDisArrayList" :key="i" style="margin-left: 10px;">
+                {{"《" + e.title + "》" }}
+              </span>
+            </div>
             <span class="otherThing">{{ "简介 : " + ((item.introduce == null) ? "暂无" : item.introduce) }}</span>
             <span class="otherThing">{{ "邮箱 : " + ((item.email == null) ? "暂无" : item.email) }}</span>
             <span class="otherThing">{{ "机构 : " + ((item.organization == null) ? "暂无" : item.organization) }}</span>

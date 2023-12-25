@@ -1,5 +1,5 @@
 <template>
-  <div id="my_relation_chart" :style="{width: '100%', height: '300px'}"></div>
+  <div id="my_relation_chart" :style="{width: '100%', height: '500px'}" ></div>
 </template>
 
 <script>
@@ -8,109 +8,13 @@ import "echarts-wordcloud/dist/echarts-wordcloud";
 import "echarts-wordcloud/dist/echarts-wordcloud.min";
   export default {
     name: "VueRalation",
-    // props: {
-    //   wordData: Array
-    // },
+    props: {
+      nodes: Array,
+      edges: Array
+    },
     data () {
       return {
         msg: 'Welcome to Your Vue.js App',
-        // worddata: [
-        //   {
-        //     name: "十九大精神",
-        //     value: 15000
-        //   },
-        //   {
-        //     name: "两学一做",
-        //     value: 10081
-        //   },{
-        //     name: "中华民族",
-        //     value: 9386
-        //   },
-        //   {
-        //     name: "马克思主义",
-        //     value: 7500
-        //   },
-        //   {
-        //     name: "民族复兴",
-        //     value: 7500
-        //   },
-        //   {
-        //     name: "社会主义制度",
-        //     value: 6500
-        //   },
-        //   {
-        //     name: "国防白皮书",
-        //     value: 6500
-        //   },
-        //   {
-        //     name: "创新",
-        //     value: 6000
-        //   },
-        //   {
-        //     name: "民主革命",
-        //     value: 4500
-        //   },
-        //   {
-        //     name: "文化强国",
-        //     value: 3800
-        //   },
-        //   {
-        //     name: "国家主权",
-        //     value: 3000
-        //   },
-        //   {
-        //     name: "伟大复兴",
-        //     value: 2500
-        //   },
-        //   {
-        //     name: "领土完整",
-        //     value: 2300
-        //   },
-        //   {
-        //     name: "安全",
-        //     value: 2000
-        //   },
-        //   {
-        //     name: "从严治党",
-        //     value: 1900
-        //   },
-        //   {
-        //     name: "现代化经济体系",
-        //     value: 1800
-        //   },
-        //   {
-        //     name: "国防动员",
-        //     value: 1700
-        //   },
-        //   {
-        //     name: "信息化战争",
-        //     value: 1600
-        //   },
-        //   {
-        //     name: "局部战争",
-        //     value: 1500
-        //   },
-        //   {
-        //     name: "教育",
-        //     value: 1200
-        //   },
-        //   {
-        //     name: "中国梦",
-        //     value: 1100
-        //   },
-        //   {
-        //     name: "孙子兵法",
-        //     value: 900
-        //   },
-        //   {
-        //     name: "一国两制",
-        //     value: 800
-        //   },
-        //   {
-        //     name: "特色社会主义思想",
-        //     value: 700
-        //   },
-        // ]
       }
     },
     mounted(){
@@ -118,7 +22,7 @@ import "echarts-wordcloud/dist/echarts-wordcloud.min";
     },
     methods: {
       randomColor(){
-        var colors = ['#c8d5b9', '#8fc0a9', "#68b0ab", "#4a7c59", "#2B463C"];
+        var colors = ['#c8d5b9', '#8fc0a9', "#68b0ab", "#4a7c59", "#B1D182"];
         return colors[parseInt(Math.random() * 5)];
       },
       initChart() {
@@ -180,13 +84,13 @@ import "echarts-wordcloud/dist/echarts-wordcloud.min";
             label: {
               normal: {
                 // 是否显示标签
-                show: true,
+                show: false,
                 // 标签位置:'top''left''right''bottom''inside''insideLeft''insideRight''insideTop''insideBottom''insideTopLeft''insideBottomLeft''insideTopRight''insideBottomRight'
                 position: "inside",
                 // 文本样式
                 textStyle: {
                     fontSize: 16,
-                    color: 'white'
+                    color: 'grey'
                 }
               }
             },
@@ -203,42 +107,42 @@ import "echarts-wordcloud/dist/echarts-wordcloud.min";
             //     }
             //   }
             // },
-            data: [{
-                name: "总企业",
-                draggable: true, // 节点是否可拖拽，只在使用力引导布局的时候有用。
-                symbolSize: [80, 80], // 关系图节点标记的大小，可以设置成诸如 10 这样单一的数字，也可以用数组分开表示宽和高，例如 [20, 10] 表示标记宽为20，高为10。
-                itemStyle: {
-                    color: '#28463C'
-                },
-            }, {
-                name: "企业1",
-                draggable: true,
-                symbolSize: [50, 50],
-                itemStyle: {
-                    color: this.randomColor()
-                },
-            }, {
-                name: "企业2",
-                draggable: true,
-                symbolSize: [50, 50],
-                itemStyle: {
-                    color: this.randomColor()
-                },
-            }, {
-                name: "企业3",
-                draggable: true,
-                symbolSize: [50, 50],
-                itemStyle: {
-                    color: this.randomColor()
-                },
-            }, {
-                name: "企业4",
-                draggable: true,
-                symbolSize: [50, 50],
-                itemStyle: {
-                    color: this.randomColor()
-                },
-            }],
+            // data: [{
+            //     name: "总企业",
+            //     draggable: true, // 节点是否可拖拽，只在使用力引导布局的时候有用。
+            //     symbolSize: [80, 80], // 关系图节点标记的大小，可以设置成诸如 10 这样单一的数字，也可以用数组分开表示宽和高，例如 [20, 10] 表示标记宽为20，高为10。
+            //     itemStyle: {
+            //         color: '#28463C'
+            //     },
+            // }, {
+            //     name: "企业1",
+            //     draggable: true,
+            //     symbolSize: [50, 50],
+            //     itemStyle: {
+            //         color: this.randomColor()
+            //     },
+            // }, {
+            //     name: "企业2",
+            //     draggable: true,
+            //     symbolSize: [50, 50],
+            //     itemStyle: {
+            //         color: this.randomColor()
+            //     },
+            // }, {
+            //     name: "企业3",
+            //     draggable: true,
+            //     symbolSize: [50, 50],
+            //     itemStyle: {
+            //         color: this.randomColor()
+            //     },
+            // }, {
+            //     name: "企业4",
+            //     draggable: true,
+            //     symbolSize: [50, 50],
+            //     itemStyle: {
+            //         color: this.randomColor()
+            //     },
+            // }],
             // 节点分类的类目，可选。如果节点有分类的话可以通过 data[i].category 指定每个节点的类目，类目的样式会被应用到节点样式上。图例也可以基于categories名字展现和筛选。
             // categories: [{
             //     // 类目名称，用于和 legend 对应以及格式化 tooltip 的内容。
@@ -253,29 +157,30 @@ import "echarts-wordcloud/dist/echarts-wordcloud.min";
             //     name: "产教融合"
             // }],
             // 节点间的关系数据
-            links: [{
-                target: "企业1",
-                source: "总企业",
-                // 关系对象连接线上的标签内容
-            }, {
-                target: "企业2",
-                source: "总企业",
-            }, {
-                target: "企业3",
-                source: "总企业",
-            }, {
-                target: "企业4",
-                source: "总企业",
-            }]
+            data: this.nodes,
+            links: this.edges,
+            // links: [{
+            //     target: "企业1",
+            //     source: "总企业",
+            //     // 关系对象连接线上的标签内容
+            // }, {
+            //     target: "企业2",
+            //     source: "总企业",
+            // }, {
+            //     target: "企业3",
+            //     source: "总企业",
+            // }, {
+            //     target: "企业4",
+            //     source: "总企业",
+            // }]
           }]
         };
         this.chart.setOption(option);
         // this.chart.on("click", (params) => {
         //   this.$router.push({
-        //     name: 'author',
-        //     query: {id: params.data.id}
+        //     name: 'institution',
+        //     query: {id: params.data.node_id}
         //   })
-        //   console.log(params)
         // });
       },
     }

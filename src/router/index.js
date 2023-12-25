@@ -55,7 +55,7 @@ const routes = [
     component: () => import('../views/details/PaperDetail.vue')
   },
   {
-    path: '/patent/detail',  // 专利详情页
+    path: '/patent/detail/:patentId?',  // 专利详情页
     name: 'PatentDetail',
     component: () => import('../views/details/PatentDetail.vue')
   },
@@ -95,6 +95,7 @@ const routes = [
   // },
   {
     path: '/institution',
+    name: 'institution',
     component: () => import("../views/InstitutionView.vue")
   },
   {
