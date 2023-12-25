@@ -8,7 +8,7 @@
       <div class="searchContainer">
         <div class="search">
           <el-input v-model="searchInput2" placeholder="请输入成果名" class="searchInput" clearable  />
-          <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput" clearable style="margin-top: 20px;"/>
+          <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput" clearable style="margin-top: 20px;" />
           <div style="margin-top: 20px;margin-bottom: 20px;">
             <el-button type="primary" class="searchButton" @click="search">搜索</el-button>
             <el-button type="danger" class="searchButton" @click="searchInput1 = ''; searchInput2 = ''">重置</el-button>
@@ -37,6 +37,12 @@
               <span>关注领域：</span>
               <span v-for="(e, i) in item.interests" :key="i" style="margin-left: 10px;">
                 {{ e }}
+              </span>
+            </div>
+            <div class="otherThing" style="display: flex;flex-wrap: wrap;">
+              <span>成果：</span>
+              <span v-for="(e, i) in item.myWorkDisArrayList" :key="i" style="margin-left: 10px;">
+                {{"《" + e.title + "》" }}
               </span>
             </div>
             <span class="otherThing">{{ "简介 : " + ((item.introduce == null) ? "暂无" : item.introduce) }}</span>

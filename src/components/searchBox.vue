@@ -490,17 +490,18 @@ export default {
     if (this.$store.state.searchType === "")
       this.radio1 = 0
     else {
-      if (newValue === "articles")
+      if (this.$store.state.searchType === "articles")
         this.radio1 = 0;
-      else if (newValue === "patents")
+      else if (this.$store.state.searchType === "patents")
         this.radio1 = 1;
-      else if (newValue === "reports")
+      else if (this.$store.state.searchType === "reports")
         this.radio1 = 3;
-      else if (newValue === "sciencedata")
+      else if (this.$store.state.searchType === "sciencedata")
         this.radio1 = 4;
-      else if (newValue === "books")
+      else if (this.$store.state.searchType === "books")
         this.radio1 = 5;
     }
+    
     console.log(this.radio1)
     console.log(this.titleList)
   },
