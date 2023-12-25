@@ -25,11 +25,28 @@
             <div class="paperTitle">热门文献</div>
             <div class="rightLine"></div>
             <div class="middle"></div>
+            <div class="left">
+                <div v-for="i in this.leftPapers.length" class="paperItem">
+                    <div style="position: relative;width: 100%;height: 65%;top: 20%;">
+                        <el-text size="large" truncated style="width: 100%;font-size: 16px;font-weight: 800;" @click="this.jump(this.leftPapers[i-1].id)">{{ this.leftPapers[i-1].name }}</el-text>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="right">
+                <div v-for="i in this.rightPapers.length" class="paperItem">
+                    <div style="position: relative;width: 100%;height: 65%;top: 20%;">
+                        <el-text size="large" truncated style="width: 100%;font-size: 16px;font-weight: 800;" @click="this.jump(this.leftPapers[i-1].id)">{{ this.rightPapers[i-1].name }}</el-text>
+                    </div>
+                    
+                </div>
+            </div>
         </el-card>
     </div>
 </template>
 
 <script>
+import { Hotspots } from '@/api/record';
 
 export default{
     props:{
@@ -37,14 +54,27 @@ export default{
     },
     data(){
         return{
-
+            leftPapers:[],
+            rightPapers:[],
         }
     },
     methods:{
-
+        jump(id){
+            this.$router.push({name:'PaperDetail', query:{workId : id} });
+        }
     },
     mounted(){
-
+        var promise=Hotspots();
+        promise.then((result) => {
+            if(result.code==200){
+                for(var i=0;i<4;i++){
+                    this.leftPapers.push({"name":result.data[i].name, "author": "", "id": result.data[i].id});
+                }
+                for(var i=4;i<8;i++){
+                    this.rightPapers.push({"name":result.data[i].name, "author": "", "id": result.data[i].id});
+                }
+            }
+        })
     }
 }
 
@@ -111,6 +141,36 @@ export default{
     font-size: 24px;
     font-weight: 900;
 
+}
+.left{
+    position: absolute;
+    width: 45%;
+    height: 80%;
+    top: 15%;
+    left: 2%;
+}
+.right{
+    position: absolute;
+    width: 45%;
+    height: 80%;
+    top: 15%;
+    left: 53%;
+}
+.paperItem{
+    position: relative;
+    height: 20%;
+    width: 90%;
+    margin-top: 11px;
+    margin-left: 5%;
+    text-align: left;
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 600;
+    border-bottom: 2px solid silver;
+    color: #68b0ab;
+}
+.paperItem:hover{
+    cursor: pointer;
 }
 
 .back{
@@ -185,5 +245,6 @@ export default{
     line-height: 100%;
     text-align: right;
 }
+
 
 </style>

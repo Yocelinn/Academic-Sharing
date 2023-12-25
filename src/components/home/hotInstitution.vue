@@ -7,25 +7,8 @@
                 <div class="moreInstitution">更多<el-icon style="position: absolute;height: 100%;width: 100%;top: -15%;right: -5px;"><Right /></el-icon></div>
             </div>
             <div class="body">
-                <div class="institutionItem">
-                    <el-icon><School /></el-icon>
-                    中国科学院
-                </div>
-                <div class="institutionItem">
-                    <el-icon><School /></el-icon>
-                    中国科学院
-                </div>
-                <div class="institutionItem">
-                    <el-icon><School /></el-icon>
-                    中国科学院
-                </div>
-                <div class="institutionItem">
-                    <el-icon><School /></el-icon>
-                    中国科学院
-                </div>
-                <div class="institutionItem">
-                    <el-icon><School /></el-icon>
-                    中国科学院
+                <div v-for="i in institutionList.length" class="institutionItem">
+                    <el-text size="large" truncated style="position: relative; top: 30%;">{{ this.institutionList[i-1].displayName }}</el-text>
                 </div>
             </div>
         </el-card>
@@ -34,19 +17,31 @@
 </template>
 
 <script>
+import { GetInstitutionsForMainPage } from '@/api/institution';
 
 export default{
     props:{
 
     },
     data(){
-
+        return{
+            institutionList:[],
+        }
     },
     methods:{
         jumpToInstitutions(){
             this.$router.push('/allInstitution');
         }
     },
+    mounted(){
+        var promise=GetInstitutionsForMainPage();
+        promise.then((result) => {
+            for(var i=0;i<5;i++){
+                this.institutionList.push(result.results[i]);
+            }
+            console.log(this.institutionList);
+        })
+    }
 }
 </script>
 

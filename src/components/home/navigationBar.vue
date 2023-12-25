@@ -3,9 +3,8 @@
         <div class="logo">
             <el-image :src="require('@/assets/home/logo3.jpg')" style="height: 100%;" />
         </div>
-        <div id="home" class="address" style="width: 5%;left: 20%;" @click="">首页</div>
-        <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
-        <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
+        <div id="home" class="address" style="width: 5%;left: 20%;" @click="this.jumpToHome()">首页</div>
+        <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="this.jumpToPerson()">个人主页</div>
         <div v-if="!this.$store.state.isHome" class="searchBlock">
             <searchBox width=100 color="white" :isClassVisible=false  :isLargeModel = false></searchBox>
         </div>
@@ -51,6 +50,12 @@ export default {
                 var tmp=document.getElementById(this.idList[this.page-1]);
                 tmp.className="choose";
             }
+        },
+        jumpToHome(){
+            this.$router.push("/");
+        },
+        jumpToPerson(){
+            this.$router.push("/person");
         },
     },
     mounted(){
@@ -124,8 +129,8 @@ export default {
 .searchBlock{
     position: absolute;
     height: 100%;
-    width: 42%;
-    left: 40%;
+    width: 49%;
+    left: 33%;
     top: 5px;
 }
 
