@@ -23,16 +23,18 @@
                   <div class="author-list" v-if="detailInfo.authors!=''">
                     <div class="author-item" v-for="(item, index) in detailInfo.authors" :key="index">
                       <!-- <div class="rela-index" v-for="(rela, rela_index) in detailInfo.relation_index" :key="rela_index"> -->
-                        {{ item }}<div class="rela-id" >{{ detailInfo.relation_index[index] }}</div> <div v-if="index < detailInfo.authors.length-1"> , </div>
+                        {{ item }}
+                        <div class="rela-id" v-for="(rela, rela_id) in detailInfo.relation_index[index]" :key="rela_id">{{ rela }},</div> 
+                        <div v-if="index < detailInfo.authors.length-1"> , </div>
                       <!-- </div> -->
                     </div> 
                   </div>
                   </div>
-                <el-skeleton :loading="loading" animated :rows="4">
-                  <div class="institution" >
-                    <div v-for="(institu, index) in detailInfo.institutions" :key="index">{{ index+1+"." +  institu }}</div>
+                
+                  <div class="institution" v-if="detailInfo.keywords != ''">
+                    <div class="institution-item" v-for="(institu, index) in detailInfo.institutions" :key="index">{{ index+1+"." +  institu.name }}</div>
                   </div>
-                  <div class="detail">
+                  <div class="detail" v-if="detailInfo.keywords != ''">
                       <div class="content-container">
                         <div class="little-title">关键词：</div>
                         <div class="content" v-if="detailInfo.keywords != ''"> 
@@ -54,7 +56,8 @@
                       </div>
                   
                   </div>
-                  
+
+                <el-skeleton v-else  animated :rows="4"> 
                 </el-skeleton>
             </el-card>
             
@@ -64,19 +67,21 @@
             <div>
                 <h2 class="recommend-title" >相关文献推荐</h2> 
             </div>
-            <el-skeleton :loading="loading" animated :rows="1" alignment="flex-start">
-              <ol class="paper-list">
-                <li class="list-item" v-for="(item, index) in detailInfo.recommendations" :key="index">
-                  <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div>
-                  <!--因为v-html，有的文章标题是有格式的
-                    <div class="recommend-papar-name" @click="gotoPaper(item.workId)"> {{ item.workName }} </div> -->
-                  <!-- <div class="detail-list" >
-                    <div class="detail-item" v-for="(person, index) in item.authors" :key="index"> {{ person }}. </div>
-                  </div> -->
-                  <div class="detail-list"> {{ item.info }}</div>
-                </li>
-              </ol>
+          
+            <ol class="paper-list" v-if="detailInfo.keywords != ''">
+              <li class="list-item" v-for="(item, index) in detailInfo.recommendations" :key="index">
+                <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div>
+                <!--因为v-html，有的文章标题是有格式的
+                  <div class="recommend-papar-name" @click="gotoPaper(item.workId)"> {{ item.workName }} </div> -->
+                <!-- <div class="detail-list" >
+                  <div class="detail-item" v-for="(person, index) in item.authors" :key="index"> {{ person }}. </div>
+                </div> -->
+                <div class="detail-list"> {{ item.info }}</div>
+              </li>
+            </ol>
+            <el-skeleton v-else animated :rows="2" alignment="flex-start">
             </el-skeleton>
+
             <el-divider><el-icon><star-filled /></el-icon></el-divider>
           </div>
         </section>
@@ -85,7 +90,7 @@
             <div>
                 <h2 class="recommend-title" >引用文献</h2> 
             </div>
-            <ol class="paper-list">
+            <ol class="paper-list" v-if="detailInfo.keywords != ''">
               <li class="list-item" v-for="(item, index) in detailInfo.ref_articles" :key="index">
                 <!-- <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div> -->
                 <div class="recommend-papar-name"  v-html=" item.title "></div>
@@ -93,6 +98,9 @@
                 <div class="detail-list"> {{ item.info }}</div>
               </li>
             </ol>
+            <el-skeleton v-else  animated :rows="2"> 
+            </el-skeleton>
+            
             <el-divider><el-icon><star-filled /></el-icon></el-divider>
           </div>
         </section>
@@ -100,13 +108,16 @@
           <div class="comment-card">
             <div class="comment-label" >评论区</div> 
             <div class="comment-container">
-                <div class="comment-title">
-                  还没有评论/ 评论 108
+                <div class="comment-title" v-if="comments.length == 0">
+                  还没有评论
+                </div>
+                <div class="comment-title" v-else>
+                  评论 {{comments.length}}
                 </div>
                 <div class="comment-input"><textarea id="commentBox" class="reply-box" placeholder="我的评论"></textarea><button @click="postComment()" class="reply-button">发布</button></div>
                 <div class="replys" v-if="comments.length == 0">还没有评论</div>
                 <div v-else class="comment-list" v-for="(item, index) in comments" :key="index">
-                  <div class="comment-user">{{ item.userId }}</div>
+                  <div class="comment-user">{{ item.userName }}</div>
                   <div class="comment-content">{{ item.content }}</div>
                   <div class="comment-time">{{ item.time }}</div>
                 </div>
@@ -120,9 +131,11 @@
             <div class="info-box">
               <div class="info-title"><el-icon><Link /></el-icon>文章来源</div>
               
-              <div class="button-container">
-                <!-- <a class="button-list"  target="_blank" :href="detailInfo.source.soureId"><el-icon><Connection /></el-icon>去往来源</a>
-                <a class="button-list"  target="_blank" :href="detailInfo.location.pdf_url"><el-icon><Reading /></el-icon>查看全文</a> -->
+              <div class="button-container" v-if="detailInfo.links != ''">
+                <!-- <div class="button-container"> -->
+                  <!-- {{ detailInfo.link }} -->
+                 <a class="button-list"  target="_blank" :href="detailInfo.links[0].url"><el-icon><Connection /></el-icon>去往来源</a>
+                <!-- <a class="button-list"  target="_blank" :href="detailInfo.location.pdf_url"><el-icon><Reading /></el-icon>查看全文</a>  -->
 
               </div>
             </div>
@@ -130,8 +143,8 @@
               
               <div class="info-title"><el-icon><Operation /></el-icon>常用操作</div>
               <div class="button-container">
-                <div class="button-list"><el-icon><Star /></el-icon>收藏</div>
-                <div class="button-list"><el-icon><Promotion /></el-icon>推荐</div>
+                <div class="button-list" @click="collect"><el-icon><Star /></el-icon>收藏</div>
+                <div class="button-list" @click="promote"><el-icon><Promotion /></el-icon>推荐</div>
               </div>
             </div>
             <!-- <div class="info-box">
@@ -199,6 +212,7 @@
   import moment from 'moment'; 
   import axios from 'axios';
   import store from '@/store';
+  import { ElNotification } from 'element-plus';
 
   
   export default {
@@ -213,7 +227,7 @@
         publicationDate: '',
         workId: '',
         abstract: '',
-        source: {},
+        links: '',
         citedByCount: 0,
         recommendations: [{}],
         ref_articles: [{}],
@@ -221,11 +235,11 @@
         relation_index: [],
       });
       const comments = ref([{
-        id: 1000,
         content: '',
         userId: 0,
         workId: '',
         time: '',
+        userName: '',
       }]);
       const dialogVisible = ref(false);
       const dialog = ref({
@@ -262,9 +276,10 @@
             console.log(response.code)
           }
         })
+        console.log(detailInfo.value.links)
       }
       function getComments() {
-        PaperApi.GetCommentByWorkIdAndType('1')
+        PaperApi.GetCommentByWorkIdAndType(workId)
         .then((response) => {
           console.log(response)
           // comments.value = response;
@@ -272,7 +287,7 @@
             comments.value = response;
             for(var i=0; i < comments.value.length; i++) {
               comments.value[i].time = moment(comments.value[i].time).utcOffset(8).format('YYYY/MM/DD HH:mm:ss')
-
+              // comments.value[i].userName = store.state.userInfo.nickName
             }
 
             console.log(comments.value)
@@ -289,28 +304,37 @@
         var content = textarea.value;
         const commentData = ref({
           "content": '',
-          "userId": 2,
           "workId": 0,
         })
-        // 现在还是测试数据，故userId和workId都不确定
         commentData.value.content  = content
-        commentData.value.workId = 1000;
-        PaperApi.PostComment(commentData.value, workId)
+        commentData.value.workId = workId;
+        PaperApi.PostComment(commentData.value, workId )
         .then((response) => {
           console.log("postComment result:" + response)
+            if(response == 'true') {
+              textarea.value = '';
+              ElNotification({
+                  message: "评论发布成功！",
+                  type: 'success',
+                  showClose: true,
+                  position: 'top-right',
+                  duration: 2000,
+              });
+              getComments();
+            }
         })
       }
 
       function reportError() {
-        // if(store.state.isLogin){
+        if(store.state.userInfo.isLogin){
           dialog.value.title = "报告数据错误"
           dialogVisible.value = true;
-        // } else {
-        //   alertLogVisible.value = true;
-        // }
+        } else {
+          alertLogVisible.value = true;
+        }
       }
       function reportRevoke() {
-        if(store.state.isLogin){
+        if(store.state.userInfo.isLogin){
           dialog.value.title = "提交撤稿申请"
           dialogVisible.value = true;
         } else {
@@ -327,6 +351,24 @@
         dialogVisible.value = false;
         successVisible.value = false;
       }
+      const collect = () => {
+        ElNotification({
+            message: "收藏成功！",
+            type: 'success',
+            showClose: true,
+            position: 'top-right',
+            duration: 2000,
+        });
+      }
+      const promote = () => {
+        ElNotification({
+            message: "推荐成功！",
+            type: 'success',
+            showClose: true,
+            position: 'top-right',
+            duration: 2000,
+        });
+      }
 
       return {
         detailInfo,
@@ -342,6 +384,8 @@
         reportRevoke,
         onSubmit,
         closeDialog,
+        collect,
+        promote,
       };
 
       
@@ -507,6 +551,13 @@
     text-align: left;
     margin: 10px ;
     cursor: pointer;
+  }
+  .institution-item {
+    padding: 2px;
+  }
+  .rela-id {
+    color: #45bc82;
+    font-size: 10px;
   }
   .little-title {
     /*font-size: larger;
@@ -709,10 +760,10 @@
     height: 250px;
   }
   :deep(.el-skeleton__p.is-first) {
-    width: 100%;
-}
-:deep(.el-skeleton__p.is-last) {
-    width: 100%;
-}
+      width: 100%;
+  }
+  :deep(.el-skeleton__p.is-last) {
+      width: 100%;
+  }
   </style>
   
