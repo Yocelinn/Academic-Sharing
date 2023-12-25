@@ -119,10 +119,16 @@ const routes = [
     name:'allInstitution',
     component: () => import('../views/AllInstitutionDisplay.vue')
   },
-   { path: '/collectPaper',
+  { 
+    path: '/collectPaper',
     name: 'collectPaper',
     component: () => import('../views/CollectPaper.vue')
   },
+  {
+    path: '/collectPatent',
+    name: 'collectPatent',
+    component: () => import('../views/CollectPatent.vue')
+  }
 ]
 
 const router = createRouter({

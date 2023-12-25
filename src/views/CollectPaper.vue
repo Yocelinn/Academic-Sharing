@@ -95,6 +95,7 @@
       const email='123456789@qq.com'
       const zone='计算机'
       const searchcollectspapers=()=>{
+        if(input.value!=''){
         var promise=SelectCT(input.value,"fragment")
         console.log(input.value)
         promise.then((response=>{
@@ -102,6 +103,7 @@
           collectpapers.value = response.data
           console.log(collectpapers.value)
         }))
+      }
       } 
       const interest='数据库 架构 数据库系统'
       const collectpapers = ref([])

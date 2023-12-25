@@ -62,7 +62,7 @@
                     </div>
               </el-card>
             </el-col>
-            <el-col :span="8" style="padding-left: 40px;padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
+            <el-col :span="8" style="padding-left: 10px;padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
               <el-card class="card38888" style="height:360px">
                 <div id="graph" style="height:360px"></div>
               </el-card>
@@ -215,6 +215,7 @@ export default {
         promise2.then((response=>{
           console.log(response.data)
           echarts1option.series[0].data=response.data
+          if(response.data!=null){
           console.log(response.data[0])
           interest1.value=response.data[0].name;
           interest2.value=response.data[1].name;
@@ -222,6 +223,12 @@ export default {
           console.log(echarts1option.series)
           const echart1 = echarts.init(document.getElementById('graph'))
           echart1.setOption(echarts1option)
+          }
+          else if(response.data==null){
+            interest1.value='兴趣关键词1';
+            interest2.value='兴趣关键词2';
+            interest3.value='兴趣关键词3';
+          }
         }))
     })
     return{
