@@ -36,7 +36,7 @@ export default defineComponent({
 
         }
        })
-   
+       var InstitutionPerPage=ref(6);
         const displayedInstitution = computed(() => {
             const startIndex = (currentPage.value - 1) * InstitutionPerPage.value;
             const endIndex = startIndex + InstitutionPerPage.value;
@@ -44,7 +44,7 @@ export default defineComponent({
             return institution.value.slice(startIndex, endIndex);
         });
         var currentPage=ref(1);
-        var InstitutionPerPage=ref(12);
+        
     //     const institution=ref([{id:1,name:11111,introduction:"aaaaaa"},
     //                            {id:2,name:11111,introduction:"aaaaaa"},
     //                            {id:3,name:11111,introduction:"aaaaaa"},
