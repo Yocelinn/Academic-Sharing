@@ -1,5 +1,5 @@
 <template>
-    <div id="mywordcloud" :style="{width: '100%', height: '300px'}" :data="wordData"></div>
+    <div id="mywordcloud" :style="{width: '100%', height: '300px', background: transparent}"></div>
 </template>
 
 <script>
@@ -114,18 +114,18 @@
         }
       },
       mounted(){
-        // this.initChart();
+        this.initChart();
       },
       methods: {
         initChart() {
           this.chart = this.$echarts.init(document.getElementById("mywordcloud"));
           console.log('lll');
           const option = {
-            title: {
-              text: "专家关系网络",
-              x: "center"
-            },
-            backgroundColor: "#fff",
+            // title: {
+            //   text: "专家关系网络",
+            //   x: "center"
+            // },
+            backgroundColor: "",
             // tooltip: {
             //   pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>"
             // },
@@ -180,13 +180,20 @@
           };
           this.chart.setOption(option);
           this.chart.on("click", (params) => {
-            this.$router.push({
-              name: 'author',
-              query: {id: params.data.id}
-            })
-            console.log(params)
+            // this.$router.push({
+            //   name: 'author',
+            //   query: {id: params.data.id}
+            // })
+            // console.log(params)
+            window.open(params.data.id);
           });
         },
       }
     }
 </script>
+
+<style scoped>
+#mywordcloud{
+  background: transparent
+}
+</style>
