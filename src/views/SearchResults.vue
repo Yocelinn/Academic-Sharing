@@ -165,16 +165,16 @@
           loading.value=true;
           sr_loading.value=true;
           // query=this.$route.query.query
-          console.log(useRoute())
+          // console.log(useRoute())
           // console.log(query)
-          console.log(strategy)
-          console.log(store)
+          // console.log(strategy)
+          console.log("searchType")
           console.log(sessionStorage.getItem('saveSearchType'))
           if(sessionStorage.getItem('saveSearchType')==null){
             console.log("It's null")
           }else{
             // curAcademyType=store.state.searchType;
-            curAcademyType=sessionStorage.getItem('saveSearchType')
+            curAcademyType.value=sessionStorage.getItem('saveSearchType')
 
           }
           console.log(curAcademyType)
@@ -205,7 +205,8 @@
       
       //————————————————————————————————一些调用接口用的全局变量————————————————————————————
         var aggregations=ref({});//当前类别下选中的过滤关键词，每次改变curAcademyType时会被清空
-        var curAcademyType=ref("articles") //当前选中的成果类别，保存的是academyTypes的key
+        var curAcademyType=ref("articles")
+        // sessionStorage.getItem('saveSearchType')==null?"articles":sessionStorage.getItem('saveSearchType') //当前选中的成果类别，保存的是academyTypes的key
         
         // console.log(curAcademyType.value)
         const sizePerPage=ref(6);
