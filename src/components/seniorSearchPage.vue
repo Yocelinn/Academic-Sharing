@@ -55,7 +55,7 @@
                     </select>
                   </div>
                   <div class="inputContainer">
-                    <el-input v-model="input[0]" placeholder="中文文献、外文文献" class="input" />
+                    <el-input v-model="input[0]" placeholder="中文文献、外文文献" class="input" @keydown.enter="seniorSearch"/>
                   </div>
                 </div>
                 <el-select v-model="isFass[0]" class="m-2" placeholder="AND" size="large" style="
@@ -151,7 +151,7 @@
               <div style="position: relative;height: 170px;width:90%;box-shadow: 4px 4px 10px #c8c9cc ;margin-top: 20px;"
                 @click.stop="isKeyboardShown = true">
                 <el-input v-model="professionInput" placeholder="请输入专业检索式" :rows="7" type="textarea"
-                  style="height: 90%;width: 99%;box-shadow: box-shadow: 2 2 2 5px var(--el-input-border-color, var(--el-border-color)) inset;;margin-top:7px" />
+                  style="height: 90%;width: 99%;box-shadow: box-shadow: 2 2 2 5px var(--el-input-border-color, var(--el-border-color)) inset;;margin-top:7px" @keydown.enter="seniorSearch" />
               </div>
             </div>
             <div class="eachContainer" v-if="radioValue == '3'">
@@ -270,8 +270,8 @@
               </div>
               <div class="bottomThing">
                 <el-button @click="reset">重置条件</el-button>
-                <el-button type="primary" style="margin-left: 100px" @click="seniorSearch">检索</el-button>
-              </div>
+                <el-button type="primary" style="margin-left: 100px" @click="seniorSearch" >检索</el-button>
+              </div> 
             </div>
           </div>
         </div>
@@ -282,6 +282,7 @@
 <script>
 // @ is an alias to /src
 import { ref } from "vue";
+import { ElNotification } from 'element-plus';
 export default {
   watch: {
     isVisibal(newVal) {
@@ -439,8 +440,26 @@ export default {
       var type = ""
       var content = ""
       if (this.radioValue == '2') {
+        if (this.professionInput === "") {
+          ElNotification({
+            title: 'Error',
+            message: '专业搜索栏不能为空',
+            type: 'error',
+          })
+          return
+        }
         content = this.professionInput;
         type = "professional"
+        this.$router.push({
+          path: "/searchResults",
+          query: {
+            query: query,
+            type: type,
+            content: content
+          }
+        }).then(() => {
+          window.location.reload();
+        });
       }
       else {
         type = "advanced"
@@ -448,6 +467,14 @@ export default {
         var tempInput = []
         var tempValue = []
         var tempSelect = []
+        if (this.input[0] === "") {
+          ElNotification({
+            title: 'Error',
+            message: '第一栏不能为空',
+            type: 'error',
+          })
+          return
+        }
         for (var i = 0; i < 3; i++) {
           tempInput[i] = this.input[i]
           tempValue[i] = this.value[i]
@@ -461,19 +488,31 @@ export default {
           else
             tempIsFass[i] = ""
         content += tempValue[0] + "=" + tempInput[0] + tempIsFass[0]
-        content += " " + tempSelect[0] + " "
-        content += tempValue[1] + "=" + tempInput[1] + tempIsFass[1]
-        content += " " + tempSelect[1] + " "
-        content += tempValue[2] + "=" + tempInput[2] + tempIsFass[2]
+
+        if (tempInput[1] !== "") {
+          content += " " + tempSelect[0] + " "
+          content += tempValue[1] + "=" + tempInput[1] + tempIsFass[1]
+
+
+        }
+        if (tempInput[2] !== "") {
+          content += " " + tempSelect[1] + " "
+          content += tempValue[2] + "=" + tempInput[2] + tempIsFass[2]
+        }
         if (this.dateValue1 !== "") {
           content += " AND year=" + this.dateValue1 + "," + this.dateValue2
         }
-        this.$router.push({
-          path: '/searchResults/' + type + "/" + content
+        console.log(content)
+          this.$router.push({
+          path: "/searchResults",
+          query: {
+            query: query,
+            type: type,
+            content: content
+          }
         }).then(() => {
           window.location.reload();
-        });;;
-
+        });
       }
     },
     addToken(token) {
@@ -498,11 +537,11 @@ export default {
       this.dateValue2 = "";
       var temp
       if (this.classindex == 1)
-        temp = ["专利名", "专利名", "专利名", "专利名", "专利名"];
+        temp = ["title", "title", "title", "title", "title"];
       else if (this.classindex == 5)
-        temp = ["书名", "书名", "书名", "书名", "书名"];
+        temp = ["title", "title", "title", "title", "title"];
       else
-        temp = ["标题", "标题", "标题", "标题", "标题"];
+        temp = ["title", "title", "title", "title", "title"];
       this.value = temp
       this.classObj.forEach((item) => {
         item.isAdd = false;
@@ -527,11 +566,11 @@ export default {
     // 确保响应父组件传递的 prop 更改
     classindex(newVal) {
       if (newVal == 1)
-        this.value = ["专利名", "专利名", "专利名", "专利名", "专利名"]
+        this.value = ["title", "title", "title", "title", "title"]
       else if (this.classindex == 5)
-        this.value = ["书名", "书名", "书名", "书名", "书名"];
+        this.value = ["title", "title", "title", "title", "title"];
       else
-        this.value = ["标题", "标题", "标题", "标题", "标题"]
+        this.value = ["title", "title", "title", "title", "title"]
     }
   },
   mounted() {
