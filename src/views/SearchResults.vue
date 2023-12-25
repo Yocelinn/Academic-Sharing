@@ -165,14 +165,17 @@
           loading.value=true;
           sr_loading.value=true;
           // query=this.$route.query.query
-          console.log(useRoute())
+          // console.log(useRoute())
           // console.log(query)
-          console.log(strategy)
-          console.log(store)
-          if(store.state.searchType===""){
+          // console.log(strategy)
+          console.log("searchType")
+          console.log(sessionStorage.getItem('saveSearchType'))
+          if(sessionStorage.getItem('saveSearchType')==null){
             console.log("It's null")
           }else{
-            curAcademyType=store.state.searchType;
+            // curAcademyType=store.state.searchType;
+            curAcademyType.value=sessionStorage.getItem('saveSearchType')
+
           }
           console.log(curAcademyType)
           await getResults();
@@ -202,7 +205,8 @@
       
       //————————————————————————————————一些调用接口用的全局变量————————————————————————————
         var aggregations=ref({});//当前类别下选中的过滤关键词，每次改变curAcademyType时会被清空
-        var curAcademyType=ref("articles") //当前选中的成果类别，保存的是academyTypes的key
+        var curAcademyType=ref("articles")
+        // sessionStorage.getItem('saveSearchType')==null?"articles":sessionStorage.getItem('saveSearchType') //当前选中的成果类别，保存的是academyTypes的key
         
         // console.log(curAcademyType.value)
         const sizePerPage=ref(6);
@@ -255,7 +259,7 @@
         strategy.value.type=useRoute().query.type;
 
         strategy.value.content=useRoute().query.content;
-       
+       console.log(strategy.value)
         // const strategy = useRoute().query.strategy;
         const timeRange=ref("时间范围");
         const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'},{value:'10years',label:"近十年"}]
@@ -274,7 +278,6 @@
           sciencedata.value={};
           books.value={};
           // console.log("init "+curPage.value)
-
         }
         //默认六种学术成果类型
         const academyTypes=ref([{id:1,type:"论文",key:"articles"},
@@ -310,7 +313,6 @@
             aggregations.value[thing.tag].splice(indexToRemove,1)
           } 
           handleClassfierChange();
-         
         }
         function handleTimeRangeChange(){
           console.log(timeRange)
@@ -343,6 +345,8 @@
           await getResults();
           await getGroupClassifier();
           this.$store.commit('changeSearchType',curAcademyType.value);
+          console.log("afterChnage")
+          console.log(sessionStorage.getItem('saveSearchType'))
           // await new Promise(resolve => setTimeout(resolve, 300));
           
         }
@@ -404,7 +408,7 @@
               grouptype.value=response;
               const tagNames = response.map(item => item.tag);
               // console.log(tagNames)
-              
+              console.log(grouptype.value)
                 
                 tagNames.forEach(name => {
                   if(aggregations.value[name]==undefined){
