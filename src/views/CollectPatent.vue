@@ -72,10 +72,10 @@
     },
     setup(){
       const cancleCollect = (row)=>{
-        var promise=DeleteThesis(row.pspatentId,row.patentName)
+        var promise=DeletePatent(row.pspatentId,row.patentName)
         promise.then((response)=>{
           console.log(response.code)
-          var promise2 = GetPapers()
+          var promise2 = GetPatents()
           promise2.then((response=>{
           console.log(response.data)
           collectpatents.value = response.data
@@ -83,12 +83,14 @@
         })
       }
       const searchcollectspatents=()=>{
+        if(input.value!=''){
         var promise=SelectCP(input.value,"fragment")
         promise.then((response=>{
           console.log(response.data)
           collectpatents.value = response.data
           console.log(collectpatents.value)
         }))
+      }
       } 
       const username='Z-ARC'
       const identity='普通用户'
@@ -100,22 +102,6 @@
       const zone='计算机'
       const interest='数据库 架构 数据库系统'
       const collectpatents=ref([])
-      const history = [
-        {
-          "date":"2023-09-02T12:47:13.219Z",
-          "name":"地底人会梦见螺旋星系吗",
-          "id": 1,
-          "zone": "科学",
-          "writer": "我也不知道",
-        },
-        {
-          "date":"2023-09-02T12:47:13.219Z",
-          "name":"调休打败了中秋国庆",
-          "id": 2,
-          "zone": "历史",
-          "writer": "我也不知道",
-        },
-      ]
       onMounted(()=>{
         var promise = GetPatents()
         promise.then((response=>{
@@ -176,6 +162,7 @@
   </script>
   <style>
   .card114515{
+    margin-top: 40px;
     height: 120px;
   }
   .collectcard{

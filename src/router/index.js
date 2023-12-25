@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store';
 import { match } from 'path-to-regexp';
-import { el } from 'element-plus/es/locale';
 const routes = [
   {
     path: '/',              // 首页
@@ -120,10 +119,16 @@ const routes = [
     name:'allInstitution',
     component: () => import('../views/AllInstitutionDisplay.vue')
   },
-   { path: '/collectPaper',
+  { 
+    path: '/collectPaper',
     name: 'collectPaper',
     component: () => import('../views/CollectPaper.vue')
   },
+  {
+    path: '/collectPatent',
+    name: 'collectPatent',
+    component: () => import('../views/CollectPatent.vue')
+  }
 ]
 
 const router = createRouter({
