@@ -1,9 +1,10 @@
 <template>
     <div class="institution">
         <el-card class="institutionCard">
-            <div class="header">
+            <div class="header" @click="this.jumpToInstitutions()">
                 <el-icon><OfficeBuilding /></el-icon>
                 知名机构
+                <div class="moreInstitution">更多<el-icon style="position: absolute;height: 100%;width: 100%;top: -15%;right: -5px;"><Right /></el-icon></div>
             </div>
             <div class="body">
                 <div class="institutionItem">
@@ -42,7 +43,9 @@ export default{
 
     },
     methods:{
-
+        jumpToInstitutions(){
+            this.$router.push('/allInstitution');
+        }
     },
 }
 </script>
@@ -99,5 +102,14 @@ export default{
 .institutionItem:hover{
     cursor: pointer;
     color: #4a7c59;
+}
+.moreInstitution{
+    position: absolute;
+    width: 20%;
+    height: 100%;
+    top: 20%;
+    right: 0%;
+    font-size: 16px;
+    font-weight: 600;
 }
 </style>

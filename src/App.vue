@@ -1,15 +1,18 @@
 <template>
   <navigationBar></navigationBar>
   <router-view/>
+  <statement></statement>
 </template>
 
 <script>
 import store from './store';
 import navigationBar from './components/home/navigationBar.vue';
+import statement from '@/components/home/statement.vue';
 
 export default{
   components: {
     navigationBar,
+    statement,
   },
   data(){
     return{
@@ -22,6 +25,7 @@ export default{
   mounted(){
     let userInfo = JSON.parse(localStorage.getItem('savedVuex'));
     let searchType = sessionStorage.getItem('saveSearchType');
+    let administratorInfo = JSON.parse(sessionStorage.getItem('saveAdministrator'));
     if(userInfo===null){
       store.state.userInfo.isLogin=false;
       store.state.userInfo.token='';
@@ -34,12 +38,18 @@ export default{
     } else{
       store.state.searchType=searchType;
     }
+    if(administratorInfo===null){
+      store.state.administratorInfo.isLogin=false;
+      store.state.administratorInfo.token='';
+    } else{
+      store.state.administratorInfo=administratorInfo;
+    }
   }
 }
 
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

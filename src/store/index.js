@@ -8,6 +8,10 @@ export default createStore({
       token: "",
       showName: "",
     },
+    administratorInfo:{
+      isLogin: false,
+      token: "",
+    },
     searchType: "",
     currentPage: "",
     isHome: false,
@@ -42,6 +46,16 @@ export default createStore({
     changeCurrentPage(state, currentPage){
       state.currentPage=currentPage;
     },
+    administratorLogin(state, token){
+      state.administratorInfo.token=token;
+      state.administratorInfo.isLogin=true;
+      sessionStorage.setItem('saveAdministrator', JSON.stringify(state.administratorInfo));
+    },
+    administratorLogout(state){
+      state.administratorInfo.isLogin=false;
+      state.administratorInfo.token="";
+      sessionStorage.setItem('saveAdministrator', JSON.stringify(state.administratorInfo));
+    }
   },
   actions: {
   },
