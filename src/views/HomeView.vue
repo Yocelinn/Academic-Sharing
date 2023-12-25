@@ -123,7 +123,7 @@ export default {
   position: relative;
   width: 30%;
   min-width: 360px;
-  height: 800px;
+  height: 400px;
   left: 2%;
   top: 0%;
 }
@@ -138,8 +138,8 @@ export default {
 }
 .hotPaperBlock{
   position: absolute;
-  width: 66%;
-  min-width: 792px;
+  width: 100%;
+  min-width: 1200px;
   height: 400px;
   right: 0%;
   top: 400px;
