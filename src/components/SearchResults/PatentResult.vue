@@ -4,13 +4,13 @@
       <el-card type="primary" class="card" shadow="hover"> 
           <div class="result">
               <div class="info">
-              <div class="title"><div v-html="paper.title"></div></div>
-              <div class="authors">
+              <div class="title" @click="jumpToPatent(paper.id)"><div v-html="paper.title"></div></div>
+              <div class="authors" v-if="paper.inventors&&paper.inventors.length!=0">
                 
                 <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
                 <!-- <span class="alias-info">发明人</span> -->
-                <!-- <div v-html="paper.inventors.join(', ')"></div> -->
-                {{ paper.inventors.join(', ') }}
+                <span v-html="paper.inventors.join(', ')"></span>
+                <!-- {{ paper.inventors.join(', ') }} -->
               </div>
               <div class="date">
                 <span class="alias-info">申请日:</span> {{ paper.apply_date }}
@@ -65,7 +65,20 @@ export default defineComponent({
         }
         // console.log(displayAll.value)
     }
-  return {toggleText,displayAll}
+    function jumpToPatent(id){
+
+        // this.$router.push(`/paper/detail/${id}`,"_blank");
+        // this.$router.push(`/paper/detail/${id}`).then(() => {
+      // After the route has been pushed successfully, open a new window or tab
+      // window.open(`/paper/detail/${id}`, '_blank');
+      // this.$router.push()
+      let routerJump = this.$router.resolve({ 
+                    path: "/patent/detail/",
+                    query: {patentId:id } 
+                });
+                window.open(routerJump.href, '_blank');
+        }
+  return {toggleText,displayAll,jumpToPatent}
   }
 })
 </script>

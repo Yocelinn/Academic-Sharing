@@ -37,8 +37,8 @@
                       <el-tab-pane :label=item.type :name="item.key">
                         <div class="selectedTag">
                          <div class="TagTitle">筛选条件：</div> 
-                         <div v-if="query">
-                          <el-tag class="SingleTag">{{ query }}</el-tag>
+                         <div v-if="content!='null'&&key!='null'">
+                          <el-tag class="SingleTag"><span  >{{content}}:{{ key }} </span></el-tag>
                         </div>
                          <div v-for="thing in grouptype" :key="thing">
                        
@@ -177,7 +177,22 @@
             curAcademyType.value=sessionStorage.getItem('saveSearchType')
 
           }
-          console.log(curAcademyType)
+          
+          if(strategy.value.type==="simple"){
+            content.value=simpleContentTransfer(strategy.value.content);
+            key.value=query;
+          }
+          else if(strategy.value.type==="advanced"){
+            content.value="高级检索";
+            key.value=strategy.value.content;
+          }
+          else if(strategy.value.type==="professional"){
+            content.value="专业检索";
+            key.value=strategy.value.content;
+          }
+       
+        console.log("content")
+        console.log(content.value);
           await getResults();
           await getGroupClassifier();
           await new Promise(resolve => setTimeout(resolve, 2000));
@@ -253,13 +268,16 @@
         // const route=useRoute();
         // console.log(route)
         const query =useRoute().query.query;
+       
         console.log(query)
         const store=useStore();
         var strategy=ref({type:"",content:""})
         strategy.value.type=useRoute().query.type;
-
         strategy.value.content=useRoute().query.content;
-       console.log(strategy.value)
+         //Tag 中 主题：searchContent，content为冒号前内容，key为冒号后的内容
+        var content=ref("null")
+        var key=ref("null")
+      //  console.log(strategy.value)
         // const strategy = useRoute().query.strategy;
         const timeRange=ref("时间范围");
         const TimeRangeOptions=[{value:'current',label:'今年'},{value:'3years',label:'近三年'},{value:'5years',label:'近五年'},{value:'10years',label:"近十年"}]
@@ -427,7 +445,60 @@
             console.error("Error fetching data:", error);
           });
         }
-        
+        function simpleContentTransfer(content){
+          console.log("1"+content)
+          const article = [{ key: "", value: "主题" },{ key: "title", value: "标题" },
+                              { key: "keyword", value: "关键词" },{ key: "author", value: "作者" },
+                              { key: "institution", value: "机构" },{ key: "source", value: "出版物" },
+                              { key: "abstract", value: "摘要" },{ key: "doi", value: "DOI" }
+                          ];
+          const patent = [
+          { key: "", value: "主题" },
+          { key: "title", value: "专利名" },
+          { key: "inventor", value: "发明人" },
+          { key: "applicant", value: "申请人" },
+          { key: "apply_number", value: "申请号" },
+          { key: "issue_number", value: "公开号" },
+          { key: "ipc", value: "IPC" },
+          { key: "cpc", value: "CPC" }
+        ];
+        const report = [
+          { key:  "", value: "主题" },
+          { key: "title", value: "标题" },
+          { key: "subject", value: "领域" },
+          { key: "author", value: "编译者" },
+          { key: "source", value: "快报产品" },
+          { key: "platform", value: "来源" },
+          { key: "abstract", value: "摘要" }
+        ];
+
+        const scientificData = [
+          { key:  "", value: "主题" },
+          { key: "title", value: "标题" },
+          { key: "author", value: "作者" },
+          { key: "keyword", value: "关键词" },
+          { key: "provider", value: "发布机构" },
+          { key: "abstract", value: "摘要" },
+          { key: "cstr", value: "CSTR" }
+        ];
+
+        const book = [
+          { key:  "", value: "主题" },
+          { key: "title", value: "书名" },
+          { key: "isbn", value: "ISBN" },
+          { key: "author", value: "作者" },
+          { key: "publisher", value: "出版社" }
+        ];
+        var matchedItem=null;
+        if(curAcademyType.value==="articles"){  matchedItem = article.find(item => item.key === content);}
+        else if(curAcademyType.value==="patents"){ matchedItem = patent.find(item => item.key === content);}
+        // else if(curAcademyType.value==="bulletins"){  JSON.stringify(bulletins.value)=="{}"?bulletins.value=response:bulletins.value.content.push(...response.content); }
+        else if(curAcademyType.value==="reports"){ matchedItem = report.find(item => item.key === content);}
+        else if(curAcademyType.value==="sciencedata"){ matchedItem = scientificData.find(item => item.key === content);}
+        else if(curAcademyType.value==="books"){matchedItem = book.find(item => item.key === content);}
+        console.log(matchedItem.value)
+        return matchedItem ? matchedItem.value : "null";
+        }
          
         return {
             articles,patents,bulletins,reports,sciencedata,books,papers_total,
@@ -435,7 +506,7 @@
             TimeRangeOptions,RankingOptions,handleTimeRangeChange,handleRankingChange,getResults,handleClassfierChange,
             count,getGroupClassifier,curAcademyType,changeCurAcademyType,aggregations,sizePerPage,curPage,loading,sr_loading,
             init,papersLoad,srPaperResultsRef ,handleScroll,articlesWithSkeleton,isLastPage,handleClose,
-            query,strategy,store
+            query,strategy,store,simpleContentTransfer,content,key
           }
     },
    

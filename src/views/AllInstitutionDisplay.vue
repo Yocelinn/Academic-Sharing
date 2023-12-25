@@ -32,7 +32,6 @@ export default defineComponent({
         //    await getData();
         get('/institution/getInstitutionsForMainPage')
         .then(response=>{
-
             institution.value=response.results;
             totalPage.value=Math.ceil(institution.value.length /InstitutionPerPage.value);
             console.log(institution.value)

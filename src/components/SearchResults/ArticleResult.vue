@@ -7,8 +7,8 @@
                 <div class="title" v-if="paper.title" @click="jumpToPaper(paper.id)"><div v-html="paper.title"></div></div>
                 <div class="authors" v-if="paper.author&&paper.author.length!=0">
                   <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
-                  <!-- <div v-html="paper.author.join( )"></div> -->
-                  {{ paper.author.join(' ') }}
+                  <span v-html="paper.author.join( )"></span>
+                  <!-- {{ paper.author.join(' ') }} -->
                  </div>
                 <div class="date">
                   <span class="alias-info">日期: </span>
@@ -95,9 +95,16 @@
         // this.$router.push(`/paper/detail/${id}`,"_blank");
         // this.$router.push(`/paper/detail/${id}`).then(() => {
       // After the route has been pushed successfully, open a new window or tab
-      window.open(`/paper/detail/${id}`, '_blank');
+      // window.open(`/paper/detail/${id}`, '_blank');
+      // this.$router.push()
+      let routerJump = this.$router.resolve({ 
+                    path: "/paper/detail",
+                    query: {workId:id } 
+                });
+                window.open(routerJump.href, '_blank');
+        }
     // });
-      }
+      
       return {toggleText,displayAll,jumpToPaper}
       }
     })
