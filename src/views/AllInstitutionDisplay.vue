@@ -1,6 +1,6 @@
 <template>
     <div >
-        <institutionDisplay :institution="institution"></institutionDisplay>
+        <institutionDisplay :institution="displayedInstitution"></institutionDisplay>
         <div class="pagination"> 
         <el-pagination
             v-if="totalPage>1"
@@ -29,22 +29,33 @@ export default defineComponent({
     setup() {
        onMounted(async()=>{
         try{
-           await getData();
-           totalPage.value=Math.ceil(institution.value.length /InstitutionPerPage.value)
+        //    await getData();
+        get('/institution/getInstitutionsForMainPage')
+        .then(response=>{
+            institution.value=response.results;
+            totalPage.value=Math.ceil(institution.value.length /InstitutionPerPage.value);
+            console.log(institution.value)
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+           
+        //    console.log(totalPage.value)
         }
         catch(error){
 
         }
        })
-   
+       var InstitutionPerPage=ref(8);
+       var currentPage=ref(1);
         const displayedInstitution = computed(() => {
+            console.log(institution.value)
             const startIndex = (currentPage.value - 1) * InstitutionPerPage.value;
             const endIndex = startIndex + InstitutionPerPage.value;
             console.log(institution.value.slice(startIndex, endIndex))
             return institution.value.slice(startIndex, endIndex);
         });
-        var currentPage=ref(1);
-        var InstitutionPerPage=ref(12);
+  
     //     const institution=ref([{id:1,name:11111,introduction:"aaaaaa"},
     //                            {id:2,name:11111,introduction:"aaaaaa"},
     //                            {id:3,name:11111,introduction:"aaaaaa"},
@@ -70,23 +81,16 @@ export default defineComponent({
     //                            {id:23,name:3111,introduction:"aaaaaa"},
     //                            {id:24,name:12211,introduction:"aaaaaa"},
     // ])
-    var institution=ref()
-    async function getData(){
-        get('/institution/getInstitutionsForMainPage')
-        .then(response=>{
-            institution.value=response.data;
-            console.log(institution.value)
-        })
-        .catch(error=>{
-            console.log(error)
-        })
-    }
+    var institution=ref([])
+    // async function getData(){
+       
+    // }
     const totalPage=ref()
     function handlePageChange(newPage){
         currentPage.value=newPage;
 
     }
-        return {institution,currentPage,InstitutionPerPage,handlePageChange,displayedInstitution,totalPage,getData}
+        return {institution,currentPage,InstitutionPerPage,handlePageChange,displayedInstitution,totalPage}
     },
 })
 </script>
