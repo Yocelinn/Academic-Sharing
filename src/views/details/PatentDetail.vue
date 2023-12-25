@@ -71,12 +71,14 @@
                 <h2 class="recommend-title" >相关内容推荐</h2> 
             </div>
             <ol class="paper-list" v-if="patentList.length > 1">
-              <li class="list-item" v-for="(item, index) in patentList" :key="index">
-                <div class="recommend-papar-name"> {{ item.name }} </div>
+              <li class="list-item" v-for="(item, index) in patentList" :key="index" >
+                <div class="recommend-papar-name" @click="goPatent(item.id)"> {{ item.title }} </div>
                 <div class="detail-list" >
-                  <div class="detail-item" v-for="(person, index) in item.authors" :key="index"> {{ person }}. </div>
+                  <div class="detail-item" v-for="(person, index) in item.inventors" :key="index">
+                     {{ person }}  <div v-if="index < item.inventors.length-1"> , </div>
+                  </div>
                 </div>
-                <div class="detail-list"> {{ item.resource }} </div>
+                <div class="detail-list">  {{ item.issue_number + "  " + item.issue_date }} </div>
               </li>
             </ol>
             <el-skeleton v-else  animated :rows="3"> 
@@ -178,7 +180,7 @@
   </template>
   
   <script>
-  import { onMounted,ref,reactive } from 'vue';
+  import { onMounted,ref,reactive, defineExpose } from 'vue';
   import { useRoute } from 'vue-router';
   import * as PatentApi from '../../api/patent';
   import moment from 'moment'; 
@@ -224,41 +226,43 @@
         abstract: '',
         links: '',
       });
-      var title = '';
+      const title = ref('')
+      const count = ref(0)
 
+      // defineExpose({
+      //     title
+      // })
 
-      onMounted(async () => {
-        try{
-          await getDetailInfo();
+      onMounted( () => {
+       
+          getDetailInfo();
           getComments();
-        } catch{
-          console.log("getDetailInfo error!")
-        }
-        
-        getPaperList();
+                 
       })
 
       async function getDetailInfo() {
         if(patentId == null){
           patentId = '2ce8e8808848041f175895139ff8795a';
         }
-        let flag = 0;
+        count.value ++;
         PatentApi.GetPatentById(patentId)
         .then((response) => {
+          count.value ++;
+
             detailInfo.value = response;
-            title = response.title;
-            
+            title.value = response.title;
+            console.log(count.value + " :"+title.value)
+            getPaperList();
         })
 
-        console.log("^_^ call get paper!")
-        console.log(detailInfo)
       }
 
       function getPaperList() {
-        console.log(title)
+        console.log(count.value)
+        console.log(title.value)
         // console.log(JSON.stringify(title.t))
 
-        PatentApi.GetPatentRecommendById(title)
+        PatentApi.GetPatentRecommendById(title.value)
         .then((response) => {
 
             patentList.value = response;
@@ -275,7 +279,6 @@
             comments.value = response;
             for(var i=0; i < comments.value.length; i++) {
               comments.value[i].time = moment(comments.value[i].time).utcOffset(8).format('YYYY/MM/DD HH:mm:ss')
-
             }
 
           // } else {
@@ -356,6 +359,7 @@
             duration: 2000,
         });
       }
+    
 
       return {
         patentList,
@@ -408,7 +412,7 @@
           }
         });
       },
-      gotoPaper(patentId) {
+      goPatent(patentId) {
         var patentId = String(patentId)
         this.$router.push({name:'PatentDetail', query:{patentId} });
         console.log(patentId)
@@ -513,14 +517,13 @@
   .author-item {
     margin-right: 8px;
     text-align: left;
-    cursor: pointer;
     border-bottom: white 1px solid;
     display: flex;
   }
-  .author-item:hover {
-    /* border-bottom: #45bc82 1px dotted; */
+  /* .author-item:hover {
+    border-bottom: #45bc82 1px dotted;
     background-color: #e8f3ee;
-  }
+  } */
   
   .little-title {
     font-weight: 600;
@@ -588,13 +591,14 @@
     color: #45bc82;
   }
   .detail-list {
-    display: flex;
+    display: inline-flex;
     font-size: 14px;
     color: #989d9a;
     margin-top: 5px;
   }
   .detail-item {
     margin-right: 5px;
+    display: flex;
   }
   /* 评论区内容 */
   .comment-card {

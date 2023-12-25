@@ -54,6 +54,13 @@
                           <div class="little-title">发表日期：</div>
                           <div class="content">{{ detailInfo.publicationDate }}</div>
                       </div>
+
+                      <div class="content-container">
+                          <div class="little-title">基金项目：</div>
+                          <div class="content" v-for="(funder, index) in funders" :key="index">{{ funder.funderName }}
+                            <div v-if="index < detailInfo.authors.length-1"> , </div>
+                          </div>
+                      </div>
                   
                   </div>
 
@@ -253,6 +260,8 @@
       })
       const successVisible = ref(false)
       const alertLogVisible = ref(false)
+      const openId = ref('')
+      const funders = ref([{}])
       
       onMounted( () => {
         // getPaperList();
@@ -271,6 +280,11 @@
           // console.log(response)
           if(response.code == 200) {
             detailInfo.value = response.data;
+            openId.value = response.data.openalexId;
+            if(detailInfo.value.publicationDate.concat("T")) {
+              var time = detailInfo.value.publicationDate
+              detailInfo.value.publicationDate = moment(time).utcOffset(8).format('YYYY-MM-DD')
+            }
             console.log(detailInfo.value)
           } else {
             console.log(response.code)
@@ -290,16 +304,17 @@
               // comments.value[i].userName = store.state.userInfo.nickName
             }
 
-            console.log(comments.value)
-          // } else {
-          //   console.log(response.code)
-          // }
+            // console.log(comments.value)
+          
         })
       }
 
       function postComment() {
         var textarea = document.getElementById('commentBox');
-
+        if(!store.state.userInfo.isLogin){
+          alertLogVisible.value = true;
+          return;
+        }
         // 获取 textarea 的值（文本内容）
         var content = textarea.value;
         const commentData = ref({
@@ -310,8 +325,8 @@
         commentData.value.workId = workId;
         PaperApi.PostComment(commentData.value, workId )
         .then((response) => {
-          console.log("postComment result:" + response)
-            if(response == 'true') {
+          // console.log("postComment result:" + response)
+            if(response) {
               textarea.value = '';
               ElNotification({
                   message: "评论发布成功！",
@@ -322,6 +337,37 @@
               });
               getComments();
             }
+        })
+      }
+
+      function getAuthor(authorName) {
+        PaperApi.GetAuthorByName(detailInfo.value.title, authorName)
+        .then( (response) => {
+          if(response.code == 200) {
+
+          } else {
+            console.error();
+          }
+        })
+      }
+      function getInstitution(institution) {
+        PaperApi.GetInstituByName(institution)
+        .then( (response) => {
+          if(response.code == 200) {
+
+          } else {
+            console.error();
+          }
+        })
+      }
+      function getFunder() {
+        PaperApi.GetFundersById(openId)
+        .then( (response)=>{
+          if(response.code == 200) {
+
+          } else {
+            console.error();
+          }
         })
       }
 
@@ -345,7 +391,7 @@
 
       const onSubmit = () => {
         successVisible.value = true;
-        console.log('submit!')
+        // console.log('submit!')
       }
       const closeDialog = () => {
         dialogVisible.value = false;
