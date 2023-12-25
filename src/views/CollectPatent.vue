@@ -10,9 +10,9 @@
               <el-col :span="16" style="padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
                 <el-card style="height:640px" class="collectcard">
                   <el-table :data="collectpatents" style="width: 100%">
-                    <el-table-column label="收藏id" width="170" >
+                    <el-table-column label="收藏者id" width="170" >
                       <template #default="scope">
-                        {{ scope.row.userid }}
+                        {{ scope.row.userId }}
                       </template>
                     </el-table-column>
                     <el-table-column label="学术专利名称" width="258" >
@@ -27,7 +27,7 @@
                     </el-table-column>
                     <el-table-column label="作者" width="175" >
                       <template #default="scope">
-                        {{ scope.row.writer }}
+                        {{ scope.row.author }}
                       </template>
                     </el-table-column>  
                     <el-table-column fixed="right" label="操作" width="140">
@@ -44,7 +44,7 @@
                 <el-card class="card114515">
                   <div class="findcollect">
                     <el-input v-model="input" placeholder="输入你需要查找的收藏成果" class="collectinput" />
-                    <el-button class="collectbutton" type="success" @click="serchpatents">搜索</el-button>
+                    <el-button class="collectbutton" type="success" @click="searchcollectspatents">搜索</el-button>
                   </div>
                 </el-card>
                 <el-card class="collectcard2" style="height: 390px;"> 
@@ -63,18 +63,12 @@
   import * as echarts from 'echarts';
   import { onMounted,ref } from 'vue';
   import {post,get} from "../api/api.js"
-  import {GetPatents,SelectCT,DeletePatent,GetData} from "../api/favorite.js"
+  import {GetPatents,SelectCP,DeletePatent,GetData} from "../api/favorite.js"
   export default {
     components: {
       Personaside,
     },
     methods:{
-      serchpatents(){
-        var promise=SelectCT(this.input)
-        promise.then((response=>{
-          console.log(response.data)
-        }))
-      }
     },
     setup(){
       const cancleCollect = (row)=>{
@@ -88,10 +82,19 @@
         }))
         })
       }
+      const searchcollectspatents=()=>{
+        var promise=SelectCP(input.value,"fragment")
+        promise.then((response=>{
+          console.log(response.data)
+          collectpatents.value = response.data
+          console.log(collectpatents.value)
+        }))
+      } 
       const username='Z-ARC'
       const identity='普通用户'
       const userid='1'
       const name='测试'
+      const input=ref('')
       const phone='1234578910'
       const email='123456789@qq.com'
       const zone='计算机'
@@ -130,21 +133,27 @@
             data:[
             {
               value: 1,
-              name: '科学'
+              name: '论文'
             },
             {
               value: 1,
-              name: '历史'
+              name: '专利'
             },
             ]
           }
         ]
       }
-      echart1.setOption(echarts1option)
-      var test=GetData()
-      test.then((response=>{
-        console.log(response.data)
-      }))
+      var promise2 = GetData()
+        promise2.then((response=>{
+          console.log(response.data)
+          echarts1option.series[0].data[0].value=response.data.numThesis
+          echarts1option.series[0].data[1].value=response.data.numPatent
+          console.log(echarts1option.series[0].data[0].value)
+          console.log(echarts1option.series[0].data[1].value)
+          console.log(echarts1option)
+          var echart1 = echarts.init(document.getElementById('graph'))
+          echart1.setOption(echarts1option)
+        }))
       })
       return{
         collectpatents,
@@ -154,9 +163,12 @@
         phone,
         email,
         zone,
+        ref,
         interest,
         history,
         userid,
+        input,
+        searchcollectspatents,
         cancleCollect
       }
     },

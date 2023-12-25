@@ -36,7 +36,7 @@
                         <el-button link type="primary" size="small" @click="historydelete(scope.row)"
                           >删除</el-button
                         >
-                        <el-button link type="primary" size="small">收藏</el-button>
+                        <el-button link type="primary" size="small">查看</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -107,32 +107,25 @@
           console.log(response.data),
           history.value = response.data
         }))
-        const echart1 = echarts.init(document.getElementById('graph'))
-        const echarts1option = {
+        let echarts1option = {
         title: {
               text: '历史浏览成果领域分布'
             },
         series:[
           {
             type: 'pie',
-            data:[
-            {
-              value: 1,
-              name: '科学'
-            },
-            {
-              value: 1,
-              name: '历史'
-            },
-            {
-              value: 1,
-              name: '伦理'
-            },
-            ]
+            data:[]
           }
         ]
-      }
-      echart1.setOption(echarts1option)
+        }
+        var promise2 = GetData()
+        promise2.then((response=>{
+          console.log(response.data)
+          echarts1option.series[0].data=response.data
+          console.log(echarts1option.series)
+          const echart1 = echarts.init(document.getElementById('graph'))
+          echart1.setOption(echarts1option)
+        }))
       })
       return{
         username,

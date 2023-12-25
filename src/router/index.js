@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import store from '@/store';
+import { match } from 'path-to-regexp';
 const routes = [
   {
     path: '/',              // 首页
@@ -128,5 +129,34 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
-
+const whiteList = ['/', '/searchResults', '/allInstitution']
+const excludedRoute = '/paper/detail/:workId?';
+const excludedRoute2 = '/patent/detail/:patentId?';
+const excludedRoute3 = '/program/detail/:funderId?';
+router.beforeEach((to, from, next) => {
+  const isExcluded = match(excludedRoute)(to.path);
+  const isExcluded2 = match(excludedRoute2)(to.path);
+  const isExcluded3 = match(excludedRoute3)(to.path);
+  if (whiteList.indexOf(to.path) !== -1) {
+    // 放行，进入下一个路由
+    next()
+  }
+  else if(isExcluded)
+  {
+    next()
+  } 
+  else if(isExcluded2)
+  {
+    next()
+  }
+  else if(isExcluded3)
+  {
+    next()
+  }
+  else if (store.state.userInfo.isLogin==false) {
+    next('/');
+  } else {
+    next()
+  }
+})
 export default router
