@@ -27,9 +27,8 @@ export function GetPatentById(patentId){
 }
 
 export function GetPatentRecommendById(patentTitle){
-    console.log("%%%%%%%%%5")
-    console.log(patentTitle)
     let data={};
     data.title=patentTitle;
-    return get('/patents/patent-recommendations', data);
+    console.log(data)
+    return post('/patents/patent-recommendations', data);
 }
