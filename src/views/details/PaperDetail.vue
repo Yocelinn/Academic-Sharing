@@ -21,7 +21,7 @@
                 <div class="author">
                   <el-icon style="margin-right:10px"><Avatar /></el-icon>
                   <div class="author-list" v-if="detailInfo.authors!=''">
-                    <div class="author-item" v-for="(item, index) in detailInfo.authors" :key="index">
+                    <div class="author-item" v-for="(item, index) in detailInfo.authors" :key="index" @click="getAuthor(detailInfo.title, item)">
                       <!-- <div class="rela-index" v-for="(rela, rela_index) in detailInfo.relation_index" :key="rela_index"> -->
                         {{ item }}
                         <div class="rela-id" v-for="(rela, rela_id) in detailInfo.relation_index[index]" :key="rela_id">{{ rela }},</div> 
@@ -32,7 +32,8 @@
                   </div>
                 
                   <div class="institution" v-if="detailInfo.keywords != ''">
-                    <div class="institution-item" v-for="(institu, index) in detailInfo.institutions" :key="index">{{ index+1+"." +  institu.name }}</div>
+                    <div class="institution-item" v-for="(institu, index) in detailInfo.institutions" :key="index" @click="getInstitution(institu.name)">
+                      {{ index+1+"." +  institu.name }}</div>
                   </div>
                   <div class="detail" v-if="detailInfo.keywords != ''">
                       <div class="content-container">
@@ -55,10 +56,10 @@
                           <div class="content">{{ detailInfo.publicationDate }}</div>
                       </div>
 
-                      <div class="content-container">
+                      <div class="content-container" v-if="funders != ''">
                           <div class="little-title">基金项目：</div>
                           <div class="content" v-for="(funder, index) in funders" :key="index">{{ funder.funderName }}
-                            <div v-if="index < detailInfo.authors.length-1"> , </div>
+                            <div v-if="index < funders.length-1"> , </div>
                           </div>
                       </div>
                   
@@ -100,7 +101,7 @@
             <ol class="paper-list" v-if="detailInfo.keywords != ''">
               <li class="list-item" v-for="(item, index) in detailInfo.ref_articles" :key="index">
                 <!-- <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div> -->
-                <div class="recommend-papar-name"  v-html=" item.title "></div>
+                <div class="inference-papar-name"  v-html=" item.title "></div>
 
                 <div class="detail-list"> {{ item.info }}</div>
               </li>
@@ -124,8 +125,8 @@
                 <div class="comment-input"><textarea id="commentBox" class="reply-box" placeholder="我的评论"></textarea><button @click="postComment()" class="reply-button">发布</button></div>
                 <div class="replys" v-if="comments.length == 0">还没有评论</div>
                 <div v-else class="comment-list" v-for="(item, index) in comments" :key="index">
-                  <div class="comment-user">{{ item.userName }}</div>
-                  <div class="comment-content">{{ item.content }}</div>
+                  <div class="comment-user">{{ item.userName }} <div class="complain-button">投诉</div></div>
+                  <div class="comment-content">{{ item.content }} </div>
                   <div class="comment-time">{{ item.time }}</div>
                 </div>
              </div>
@@ -138,7 +139,7 @@
             <div class="info-box">
               <div class="info-title"><el-icon><Link /></el-icon>文章来源</div>
               
-              <div class="button-container" v-if="detailInfo.links != ''">
+              <div class="button-container" v-if="detailInfo.links != '' && detailInfo.links!=null">
                 <!-- <div class="button-container"> -->
                   <!-- {{ detailInfo.link }} -->
                  <a class="button-list"  target="_blank" :href="detailInfo.links[0].url"><el-icon><Connection /></el-icon>去往来源</a>
@@ -261,7 +262,8 @@
       const successVisible = ref(false)
       const alertLogVisible = ref(false)
       const openId = ref('')
-      const funders = ref([{}])
+      const funders = ref('')
+      const isCollected = ref(false)
       
       onMounted( () => {
         // getPaperList();
@@ -339,36 +341,19 @@
             }
         })
       }
-
-      function getAuthor(authorName) {
-        PaperApi.GetAuthorByName(detailInfo.value.title, authorName)
-        .then( (response) => {
-          if(response.code == 200) {
-
-          } else {
-            console.error();
-          }
-        })
-      }
-      function getInstitution(institution) {
-        PaperApi.GetInstituByName(institution)
-        .then( (response) => {
-          if(response.code == 200) {
-
-          } else {
-            console.error();
-          }
-        })
-      }
+      
       function getFunder() {
         PaperApi.GetFundersById(openId)
         .then( (response)=>{
           if(response.code == 200) {
-
+            
           } else {
             console.error();
           }
         })
+      }
+      function getCollected() {
+
       }
 
       function reportError() {
@@ -387,24 +372,66 @@
             alertLogVisible.value = true;
         }
       }
-      
 
-      const onSubmit = () => {
-        successVisible.value = true;
+      const onSubmit = () => {        
+        // console.log(openId.value)
+        PaperApi.ReportPaperError(openId.value, formInline.content) 
+        .then((response)=>{
+          console.log(response)
+          if(response.code == 200){
+            successVisible.value = true;
+          } else {
+            ElNotification({
+                  message: "",
+                  type: 'error',
+                  showClose: true,
+                  position: 'top-right',
+                  duration: 2000,
+              });
+          }
+        })
+        formInline.content = '';
         // console.log('submit!')
       }
       const closeDialog = () => {
         dialogVisible.value = false;
         successVisible.value = false;
       }
+      // const collect = () => {
+      //   ElNotification({
+      //       message: "收藏成功！",
+      //       type: 'success',
+      //       showClose: true,
+      //       position: 'top-right',
+      //       duration: 2000,
+      //   });
+      // }
       const collect = () => {
-        ElNotification({
-            message: "收藏成功！",
-            type: 'success',
-            showClose: true,
-            position: 'top-right',
-            duration: 2000,
-        });
+        var title = detailInfo.value.title;
+        var id = detailInfo.value.workId;
+        var author = detailInfo.value.authors;
+        PaperApi.PostCollect(id, title, author)
+        .then((response) => {
+          console.log(response)
+          if(response.code == 200){
+              ElNotification({
+                  message: "收藏成功！",
+                  type: 'success',
+                  showClose: true,
+                  position: 'top-right',
+                  duration: 2000,
+              });
+          } else {
+            ElNotification({
+                  message: "重复收藏！",
+                  type: 'error',
+                  showClose: true,
+                  position: 'top-right',
+                  duration: 2000,
+              });
+          }
+        })
+        
       }
       const promote = () => {
         ElNotification({
@@ -424,6 +451,7 @@
         formInline,
         successVisible,
         alertLogVisible,
+        funders,
 
         postComment,
         reportError,
@@ -432,6 +460,7 @@
         closeDialog,
         collect,
         promote,
+        getFunder,
       };
 
       
@@ -481,7 +510,30 @@
         this.$router.push({name:'PaperDetail', query:{workId} });
         console.log(paperId)
       },
-      
+      getAuthor(workName, authorName) {
+        console.log("get author")
+        PaperApi.GetAuthorByName(workName, authorName)
+        .then( (response) => {
+          if(response) {
+            console.log(response)
+            this.$router.push({name:'PersonalDoorPage', query:{query: response,} });
+          } else {
+            return;
+          }
+        })
+      },
+      getInstitution(institution) {
+        console.log("get institu")
+        PaperApi.GetInstituByName(institution)
+        .then( (response) => {
+          if(response) {
+            console.log(response);
+            this.$router.push({name:'institution', query:{id: response,} });
+          } else {
+            return;
+          }
+        })
+      }
     }
   }
   </script>
@@ -675,6 +727,10 @@
     font-weight: 500;
     cursor: pointer;
   }
+  .inference-papar-name {
+    font-size: 16px;
+    font-weight: 500;
+  }
   .recommend-papar-name:hover {
     color: #45bc82;
   }
@@ -752,6 +808,16 @@
     width: 80px;
     border-radius: 10px;
   }
+  .complain-button {
+    height: 25px;
+    /* background-color: #c2e8d6; */
+    border: #c2e8d6 1px solid;
+    width: 70px;
+    border-radius: 10px;
+    font-weight: 500;
+    text-align: center;
+    
+  }
   .comment-list {
     text-align: left;
     border-bottom: #5dd39a 1px solid;
@@ -760,6 +826,8 @@
   }
   .comment-user {
     font-weight: 600;
+    display: flex;
+    justify-content: space-between;
   }
   .comment-content {
     font-weight: normal;

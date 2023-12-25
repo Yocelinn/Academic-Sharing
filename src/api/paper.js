@@ -63,3 +63,24 @@ export function GetAuthorByName(workName, authorName){
     param.authorName = authorName;
     return get('/author/getAuthorId', param)
 }
+
+export function PostCollect(thesisId, thesisName, author){
+    let param={};
+    param.thesisId = thesisId;
+    param.thesisName = thesisName;
+    param.author = author;
+    return post('/user/collectThesis', param)
+}
+
+export function IsCollected(thesisId){
+    let param={};
+    param.thesisId = thesisId;
+    return get('/user/checkcollectT', param)
+}
+
+export function ReportPaperError(openalexID, comment){
+    let param={};
+    param.openalexID = openalexID;
+    param.comment = comment;
+    return get('/report/workReport', param)
+}
