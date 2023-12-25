@@ -1,14 +1,18 @@
 <template>
-  <FindDoor v-model="isDialoVisibal" :item="nowPerson">
+  <div v-loading="isLoading" style="margin-top: 100px;" v-if="isLoading">
+
+  </div>
+
+  <FindDoor v-model="isDialoVisibal" :item="nowPerson" v-if="!isLoading">
 
   </FindDoor>
-  <div style="position: relative;display: flex;justify-content: center;min-width: 900px;">
+  <div style="position: relative;display: flex;justify-content: center;min-width: 900px;" v-if="!isLoading">
 
-    <div class="mainContainer">
-      <div class="searchContainer">
+    <div class="mainContainer1">
+      <div class="searchContainer1">
         <div class="search">
-          <el-input v-model="searchInput2" placeholder="请输入成果名" class="searchInput" clearable  />
-          <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput" clearable style="margin-top: 20px;" />
+          <el-input v-model="searchInput2" placeholder="请输入成果名" class="searchInput1" clearable />
+          <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput1" clearable style="margin-top: 20px;" />
           <div style="margin-top: 20px;margin-bottom: 20px;">
             <el-button type="primary" class="searchButton" @click="search">搜索</el-button>
             <el-button type="danger" class="searchButton" @click="searchInput1 = ''; searchInput2 = ''">重置</el-button>
@@ -42,7 +46,7 @@
             <div class="otherThing" style="display: flex;flex-wrap: wrap;">
               <span>成果：</span>
               <span v-for="(e, i) in item.myWorkDisArrayList" :key="i" style="margin-left: 10px;">
-                {{"《" + e.title + "》" }}
+                {{ "《" + e.title + "》" }}
               </span>
             </div>
             <span class="otherThing">{{ "简介 : " + ((item.introduce == null) ? "暂无" : item.introduce) }}</span>
@@ -52,7 +56,8 @@
           <div
             style="display: flex;flex-direction: column;position: absolute;justify-content: center;float: right;right: 0;">
             <!-- <el-button type="primary">查看信息</el-button> -->
-            <el-button type="primary" style="margin-top: 20px;" @click="findauthor(item)">认领门户</el-button>
+            <el-button type="primary" style="margin-top: 20px;" @click="findauthor(item)" >认领门户</el-button>
+            <el-button type="primary" style="margin-top: 20px;" @click="changeRoute(item.id)">查看资料</el-button>
           </div>
         </div>
       </div>
@@ -85,7 +90,7 @@
   margin-left: 150px;
   top: 50px;
   text-align: left;
-  box-shadow: 2px 2px 5px #409EFF;
+  box-shadow: 2px 2px 5px #42b983;
 }
 
 .otherThing {
@@ -111,7 +116,7 @@
   margin-bottom: 10px;
 }
 
-.searchContainer {
+.searchContainer1 {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -127,14 +132,14 @@
 
 }
 
-.mainContainer {
+.mainContainer1 {
   width: 75%;
   min-width: 1100px;
-  background-color: #FAFCFF;
+  background-color: #f0f9eb;
   position: relative;
   display: flex;
   flex-direction: column;
-  box-shadow: 3px 3px 3px 3px #409EFF;
+  box-shadow: 2px 2px 5px #42b983;
   margin-bottom: 10px;
   margin-top: 10px;
 }
@@ -147,12 +152,12 @@
   flex-direction: column;
 }
 
-.searchInput {
+.searchInput1 {
   position: relative;
   display: flex;
   height: 50px;
   width: 600px;
-  box-shadow: 2px 2px 5px #409EFF;
+  box-shadow: 2px 2px 5px #42b983;
   justify-content: center;
   /* 水平居中 */
 }
@@ -181,9 +186,18 @@ export default {
       isDialoVisibal: false,
       nowPerson: {},
       isErrorOccur: false,
+      isLoading: false,
     }
   },
   methods: {
+    changeRoute(id){
+      this.$router.push({
+        path: "/PersonalDoorPage",
+        query: {
+          query: id,
+        }
+      })
+    },
     changeclass(index) {
       this.pos = index;
       var array = Array.from(document.querySelectorAll(".class"));
@@ -212,6 +226,7 @@ export default {
         })
         return
       }
+      this.isLoading = true;
       var promise = searchPortal(this.searchInput1, this.searchInput2)
       promise.then((result) => {
         this.jsonData = result.data
@@ -226,17 +241,19 @@ export default {
           }
           this.jsonData[i].interests = temp
         }
-
+        this.isLoading = false
       })
     },
     findauthor(item) {
       this.isDialoVisibal = true;
       this.nowPerson = item;
+      this.nowPerson.uid = item.id
       console.log(this.isDialoVisibal)
     },
   },
   mounted() {
-
+    this.isLoading = false
+    console.log(this.isLoading)
   },
 }
 </script>
