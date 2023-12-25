@@ -1,5 +1,5 @@
 <template>
-    <div class="back">
+    <!-- <div class="back">
         <div class="total">
             <div class="border"> </div>
             <div class="title">
@@ -17,6 +17,15 @@
                 知名机构
             </div>
         </div>
+    </div> -->
+    <div class="paper">
+        <el-card class="paperCard">
+            <!-- <div class="top-left"></div> -->
+            <div class="leftLine"></div>
+            <div class="paperTitle">热门文献</div>
+            <div class="rightLine"></div>
+            <div class="middle"></div>
+        </el-card>
     </div>
 </template>
 
@@ -42,6 +51,68 @@ export default{
 </script>
 
 <style scoped>
+.paper{
+    position: relative;
+    width: 90%;
+    height: 90%;
+    left: 5%;
+    top: 0%;
+
+}
+.paperCard{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.middle{
+    position: absolute;
+    width: 50%;
+    height: 75%;
+    left: 0%;
+    top: 20%;
+    border-right: 1px solid silver;
+}
+.top-left{
+    position: absolute;
+    width: 2%;
+    height: 10%;
+    left: 0%;
+    top: 0%;
+    border-bottom-right-radius: 100px;
+    border-right: 40px solid #B1D182;
+    border-bottom: 40px solid #B1D182;
+
+}
+.leftLine{
+    position: absolute;
+    width: 45%;
+    height: 10%;
+    left: 0%;
+    top: 0%;
+    border-bottom: 5px solid #B1D182;
+    border-bottom-left-radius: 50px;
+}
+.rightLine{
+    position: absolute;
+    width: 45%;
+    height: 10%;
+    left: 55%;
+    top: 0%;
+    border-bottom: 5px solid #B1D182;
+    border-bottom-right-radius: 50px;
+}
+.paperTitle{
+    position: absolute;
+    width: 10%;
+    height: 10%;
+    left: 45%;
+    top: 5%;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 900;
+
+}
+
 .back{
     position: relative;
     left: 5%;

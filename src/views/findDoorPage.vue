@@ -2,16 +2,16 @@
   <FindDoor v-model="isDialoVisibal" :item="nowPerson">
 
   </FindDoor>
-  <div style="position: relative;display: flex;justify-content: center;">
+  <div style="position: relative;display: flex;justify-content: center;min-width: 900px;">
 
     <div class="mainContainer">
       <div class="searchContainer">
         <div class="search">
-          <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput" clearable />
-          <el-input v-model="searchInput2" placeholder="请输入成果名" class="searchInput" clearable style="margin-top: 20px;"/>
-          <div style="margin-top: 20px;">
+          <el-input v-model="searchInput2" placeholder="请输入成果名" class="searchInput" clearable  />
+          <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput" clearable style="margin-top: 20px;" />
+          <div style="margin-top: 20px;margin-bottom: 20px;">
             <el-button type="primary" class="searchButton" @click="search">搜索</el-button>
-            <el-button type="danger" class="searchButton" @click="searchInput1 = '';searchInput2 = ''">重置</el-button>
+            <el-button type="danger" class="searchButton" @click="searchInput1 = ''; searchInput2 = ''">重置</el-button>
           </div>
         </div>
         <!-- <div style="margin-top: 20px;color: #909399;cursor: pointer;">
@@ -28,20 +28,23 @@
 
       <div class="searchResultContainer">
         <div v-for="(item, index) in jsonData" :key="index"
-          style="display: flex;text-align: left;margin-top: 10px;border-bottom-style: solid;border-bottom-color: #909399;border-bottom-width: 2px;">
+          style="display: flex;text-align: left;margin-top: 10px;border-bottom-style: solid;border-bottom-color: #909399;border-bottom-width: 2px;min-width: 900px;">
           <div style="display:flex;flex-direction: column;margin-left: 100px;">
             <span class="nameSpan">{{ (index + 1) + " . " + item.name }}</span>
-            <span class="otherThing">{{ "作者机构：" + item.company }}</span>
+            <span class="otherThing">{{ "成果数量：" + item.achievementsNum }}</span>
+            <span class="otherThing">{{ "被引次数：" + item.citationsNum }}</span>
             <div class="otherThing" style="display: flex;">
-              <span>文章：</span>
-              <span v-for="(e, i) in item.essay" :key="i">
-                {{ "《" + e + "》" }}
+              <span>关注领域：</span>
+              <span v-for="(e, i) in item.interests" :key="i" style="margin-left: 10px;">
+                {{ e }}
               </span>
             </div>
-            <span class="otherThing">{{ "年份 : " + item.year }}</span>
-            <span class="otherThing">{{ "来源 : " + item.source }}</span>
+            <span class="otherThing">{{ "简介 : " + ((item.introduce == null) ? "暂无" : item.introduce) }}</span>
+            <span class="otherThing">{{ "邮箱 : " + ((item.email == null) ? "暂无" : item.email) }}</span>
+            <span class="otherThing">{{ "机构 : " + ((item.organization == null) ? "暂无" : item.organization) }}</span>
           </div>
-          <div style="display: flex;flex-direction: column;position: relative;left: 50%;justify-content: center;">
+          <div
+            style="display: flex;flex-direction: column;position: absolute;justify-content: center;float: right;right: 0;">
             <!-- <el-button type="primary">查看信息</el-button> -->
             <el-button type="primary" style="margin-top: 20px;" @click="findauthor(item)">认领门户</el-button>
           </div>
@@ -88,7 +91,7 @@
   color: black;
   font-size: 22px;
   font-weight: 500;
-  cursor: pointer;
+  /* cursor: pointer; */
 
 }
 
@@ -120,6 +123,7 @@
 
 .mainContainer {
   width: 75%;
+  min-width: 1100px;
   background-color: #FAFCFF;
   position: relative;
   display: flex;
@@ -153,6 +157,8 @@
 </style>
 <script>
 import FindDoor from '@/components/FindDoor.vue';
+import { searchPortal } from "../api/portal"
+import { ElNotification } from 'element-plus';
 export default {
   components: {
     FindDoor
@@ -162,12 +168,13 @@ export default {
       searchInput1: "",
       searchInput2: "",
       pos: 0,
-      jsonData: require("../components/author.JSON"),
+      jsonData: [],
       jsonObj: require("../components/object.JSON"),
       object: "",
       jsonSchool: require("../components/school.JSON"),
       isDialoVisibal: false,
       nowPerson: {},
+      isErrorOccur: false,
     }
   },
   methods: {
@@ -191,14 +198,39 @@ export default {
       this.object = ""
     },
     search() {
-      this.pos = 1;
-      this.changeclass(1)
+      if (this.searchInput2 == "") {
+        ElNotification({
+          title: 'Error',
+          message: '成果名字一栏不能为空',
+          type: 'error',
+        })
+        return
+      }
+      var promise = searchPortal(this.searchInput1, this.searchInput2)
+      promise.then((result) => {
+        this.jsonData = result.data
+        console.log(this.jsonData)
+        for (var i = 0; i < this.jsonData.length; i++) {
+          var temp = [];
+          var num = (this.jsonData[i].interests.length < 5) ? this.jsonData[i].interests.length : 5;
+          console.log(num)
+          for (var j = 0; j < num; j++) {
+            console.log("test")
+            temp.push(this.jsonData[i].interests[j])
+          }
+          this.jsonData[i].interests = temp
+        }
+
+      })
     },
     findauthor(item) {
       this.isDialoVisibal = true;
       this.nowPerson = item;
       console.log(this.isDialoVisibal)
     },
-  }
+  },
+  mounted() {
+
+  },
 }
 </script>

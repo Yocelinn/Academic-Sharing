@@ -207,10 +207,10 @@
                   <span style="margin-left: 20px">
                     <div class="block">
                       <el-date-picker v-model="dateValue1" type="year" :shortcuts="shortcuts" range-separator="To"
-                        start-placeholder="Start date" end-placeholder="End date" format="YYYY" value-format="YYYY"/>
-                        <span style="font-size: 20px;margin-right: 10px;">to</span>
+                        start-placeholder="Start date" end-placeholder="End date" format="YYYY" value-format="YYYY" />
+                      <span style="font-size: 20px;margin-right: 10px;">to</span>
                       <el-date-picker v-model="dateValue2" type="year" :shortcuts="shortcuts" range-separator="To"
-                        start-placeholder="Start date" end-placeholder="End date" format="YYYY" value-format="YYYY"/>
+                        start-placeholder="Start date" end-placeholder="End date" format="YYYY" value-format="YYYY" />
                     </div>
                   </span>
                   <!-- <el-select v-model="updateTime" class="m-2" placeholder="更新时间" size="default" style="
@@ -452,7 +452,7 @@ export default {
           tempInput[i] = this.input[i]
           tempValue[i] = this.value[i]
         }
-        for(var i = 0;i < 2;i++){
+        for (var i = 0; i < 2; i++) {
           tempSelect[i] = this.select[i]
         }
         for (var i = 0; i < this.isFass.length; i++)
@@ -461,17 +461,18 @@ export default {
           else
             tempIsFass[i] = ""
         content += tempValue[0] + "=" + tempInput[0] + tempIsFass[0]
-        content +=  " " + tempSelect[0] + " "
+        content += " " + tempSelect[0] + " "
         content += tempValue[1] + "=" + tempInput[1] + tempIsFass[1]
-        content +=  " " + tempSelect[1] + " "
+        content += " " + tempSelect[1] + " "
         content += tempValue[2] + "=" + tempInput[2] + tempIsFass[2]
-        if(this.dateValue1 !== "")
-        {
+        if (this.dateValue1 !== "") {
           content += " AND year=" + this.dateValue1 + "," + this.dateValue2
         }
         this.$router.push({
-        path: '/searchResults/' + type + "/" + content
-      });
+          path: '/searchResults/' + type + "/" + content
+        }).then(() => {
+          window.location.reload();
+        });;;
 
       }
     },

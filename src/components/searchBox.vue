@@ -1,6 +1,7 @@
 <template>
   <seniorSearchBox v-model="isDialoVisibal" :classindex=radio1></seniorSearchBox>
-  <div :class="{ 'mainContainer': isLargeModel, 'mainContainerSmallModel': !isLargeModel }" :style="{ width: `${width}%` }">
+  <div :class="{ 'mainContainer': isLargeModel, 'mainContainerSmallModel': !isLargeModel }"
+    :style="{ width: `${width}%` }">
     <div class="container">
       <div :class="{ 'searchDiv': isLargeModel, 'searchDivSmallModel': !isLargeModel }"
         :style="{ backgroundColor: color }">
@@ -16,10 +17,12 @@
         <div :class="{ 'inputContainer': isLargeModel, 'inputContainerSmallModel': !isLargeModel }">
           <el-input placeholder="中文文献、外文文献" class="input" v-model="localQuery" @input="updateQuery" />
         </div>
-        <el-button type="primary" style="position: relative;margin-right:20px;top: 5px;width : 15%;max-width: 60px;float: right;"
+        <el-button type="primary"
+          style="position: relative;margin-right:20px;top: 5px;width : 15%;max-width: 60px;float: right;"
           @click="emitSearch" v-if="!isLargeModel" size="small">搜索</el-button>
-        <el-button type="primary" style="position: relative;right: 20px;top: 15px;width : 15%;max-width: 60px;float: right;"
-          @click="emitSearch" v-if="isLargeModel">搜索</el-button>
+        <el-button type="primary"
+          style="position: relative;right: 20px;top: 15px;width : 15%;max-width: 60px;float: right;" @click="emitSearch"
+          v-if="isLargeModel">搜索</el-button>
       </div>
       <div :class="{ 'classDiv': isLargeModel, 'classDivSmallModel': !isLargeModel }" :style="{ width: `${width}%` }"
         v-if="isClassVisible">
@@ -300,7 +303,7 @@ export default {
   },
   data() {
     return {
-      dialogTableVisible : true,
+      dialogTableVisible: true,
       radio1: 0,
       radio: 0,
       localQuery: this.searchQuery,
@@ -487,17 +490,18 @@ export default {
     if (this.$store.state.searchType === "")
       this.radio1 = 0
     else {
-      if (newValue === "articles")
+      if (this.$store.state.searchType === "articles")
         this.radio1 = 0;
-      else if (newValue === "patents")
+      else if (this.$store.state.searchType === "patents")
         this.radio1 = 1;
-      else if (newValue === "reports")
+      else if (this.$store.state.searchType === "reports")
         this.radio1 = 3;
-      else if (newValue === "sciencedata")
+      else if (this.$store.state.searchType === "sciencedata")
         this.radio1 = 4;
-      else if (newValue === "books")
+      else if (this.$store.state.searchType === "books")
         this.radio1 = 5;
     }
+    
     console.log(this.radio1)
     console.log(this.titleList)
   },
@@ -522,8 +526,7 @@ export default {
       this.$emit('update:searchQuery', value);
     },
     emitSearch() {
-      if(this.localQuery === "")
-      {
+      if (this.localQuery === "") {
         return;
       }
       let map = new Map();
@@ -540,21 +543,16 @@ export default {
       console.log(this.titleList[this.radio1])
       var content = this.titleList[this.radio1];
       //path: '/searchResults/:query?/:type?/:content?',
-      if (content === "") {
-        this.$router.push({
-          path: '/searchResults/' + query
-        }).then(() => {
-          window.location.reload();
-        });;
-      }
-      else {
-        var type = "symple"
-        this.$router.push({
-          path: '/searchResults/' + query + "/" + type + "/" + content
-        }).then(() => {
-          window.location.reload();
-        });;
-      }
+      this.$router.push({
+        path: "/searchResults",
+        query: {
+          query: query,
+          type: "simple",
+          content: content
+        }
+      }).then(() => {
+        window.location.reload();
+      });
 
     }
   },

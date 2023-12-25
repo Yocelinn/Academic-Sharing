@@ -6,7 +6,7 @@
         <div id="home" class="address" style="width: 5%;left: 20%;" @click="">首页</div>
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="">个人主页</div>
         <div id="" class="address" style="width: 7%;left: 32%;" @click="">网站介绍</div>
-        <div class="searchBlock">
+        <div v-if="!this.$store.state.isHome" class="searchBlock">
             <searchBox width=100 color="white" :isClassVisible=false  :isLargeModel = false></searchBox>
         </div>
         <div v-if="this.$store.state.userInfo.isLogin" class="button" style="width: 15%;right: 2%;">
