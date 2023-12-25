@@ -68,6 +68,7 @@ export default{
                 barList[i-1].style.height="0%";
                 barList[i-1].style.width="5%";
                 barList[i-1].style.backgroundColor="#68b0ab";
+                barList[i-1].style.textAlign='center';
                 var number=document.createElement("div");
                 number.textContent=this.hotAreaList[i-1].count;
                 number.style.position="absolute";
@@ -131,6 +132,7 @@ export default{
     left: 45%;
     z-index: 1;
     font-size: 20px;
+    text-align: center;
     color: white;
 }
 .hot-title::before,.hot-title::after{

@@ -20,3 +20,13 @@ export function GetData(){
     let param={}
     return get("/record/getConcept",param)
 }
+
+export function Hotfield(){
+    let param={}
+    return get("/record/hotfield",param);
+}
+
+export function Hotspots(){
+    let param={}
+    return get("/record/hotspots",param);
+}

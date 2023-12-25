@@ -8,7 +8,7 @@ const localAddress2 = 'http://localhost:8090/api'
 
 export function post(url, data){
     return new Promise((resolve, reject)=>{
-        axios.post(localAddress1+url,data,{headers:{'Authorization': store.state.userInfo.token}}).then(response=>{
+        axios.post(serverAddress+url,data,{headers:{'Authorization': store.state.userInfo.token}}).then(response=>{
             resolve(response.data)
         }).catch((error)=>{
                 ElNotification({
