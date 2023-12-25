@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store';
 import { match } from 'path-to-regexp';
+import { el } from 'element-plus/es/locale';
 const routes = [
   {
     path: '/',              // 首页
@@ -129,14 +130,16 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
-const whiteList = ['/', '/searchResults', '/allInstitution']
+const whiteList = ['/', '/searchResults', '/allInstitution','/institution']
 const excludedRoute = '/paper/detail/:workId?';
 const excludedRoute2 = '/patent/detail/:patentId?';
 const excludedRoute3 = '/program/detail/:funderId?';
+const excludedRoute4 = '/manage'
 router.beforeEach((to, from, next) => {
   const isExcluded = match(excludedRoute)(to.path);
   const isExcluded2 = match(excludedRoute2)(to.path);
   const isExcluded3 = match(excludedRoute3)(to.path);
+  const isExcluded4 = match(excludedRoute4)(to.path)
   if (whiteList.indexOf(to.path) !== -1) {
     // 放行，进入下一个路由
     next()
@@ -153,9 +156,16 @@ router.beforeEach((to, from, next) => {
   {
     next()
   }
-  else if (store.state.userInfo.isLogin==false) {
+  else if (store.state.userInfo.isLogin==false&&store.state.administratorInfo.isLogin==false){
     next('/');
-  } else {
+  }
+  else if(store.state.userInfo.isLogin==true&&isExcluded4){
+    next('/')
+  } 
+  else if(store.state.administratorInfo==true&&!isExcluded4){
+    next('/')
+  }
+  else {
     next()
   }
 })
