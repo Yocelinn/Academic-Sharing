@@ -5,7 +5,7 @@
             <div class="result">
                 <div class="info">
                 <div class="title" v-if="paper.title" @click="jumpToPaper(paper.id)"><div v-html="paper.title"></div></div>
-                <div class="authors" v-if="paper.author">
+                <div class="authors" v-if="paper.author&&paper.author.length!=0">
                   <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
                   <!-- <div v-html="paper.author.join( )"></div> -->
                   {{ paper.author.join(' ') }}

@@ -506,16 +506,20 @@
 }
 .sr-check-item{
   margin:10px;
-  max-width:30px;
-
-
+  max-width:100%;
 }
 .sr-main{
     width:80%;
     padding:0 20px;
     /* height:80vh; */
 }
+:deep(.el-checkbox__label){
 
+max-width: 100%;
+overflow: hidden;
+white-space:normal;
+text-align:start;
+}
 .selectedTag{
   display:flex;
 

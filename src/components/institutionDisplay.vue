@@ -1,6 +1,5 @@
 <template>
     <div class="recommend-display">
-
         <div class="recommend-pagination-container">
           <div class="recommend-container">
             <div v-for="thing in institution" :key="thing.id" class="recommend-item">
@@ -8,7 +7,7 @@
               <div class="recommend-img-container"  >
                 <img class="recommend-img" :src="thing.logo" @click="jumpToInstitution(thing.id)" >
               </div>
-                <div class="recommend-title" @click="jumpToInstitution(thing.id)">{{ thing.display_name }} </div>
+                <div class="recommend-title" @click="jumpToInstitution(thing.id)">{{ thing.displayName }} </div>
               <!-- </router-link> -->
             </div>
           </div>
@@ -40,6 +39,7 @@ export default defineComponent({
 <style scoped>
 .recommend-display{
   margin:50px;
+  margin-bottom:30px;
   display: flex;
   padding: 10px;
   flex-direction:row;
@@ -58,6 +58,7 @@ export default defineComponent({
   width: 100%;
   height: 250px;
   position: relative;
+  cursor: pointer;
   /* margin-bottom: 10px; */
  
     /* overflow: hidden; 隐藏溢出部分 */
