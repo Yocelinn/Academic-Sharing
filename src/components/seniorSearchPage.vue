@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="localIsVisibal" title="高级检索" style="width: 1100px;">
+  <el-dialog v-model="localIsVisibal" title="高级检索" style="width: 1100px;background-color: white;">
     <div class="home">
       <div class="allContainer">
         <div class="radioContaner">
@@ -750,6 +750,7 @@ export default {
   align-items: center;
   /* 水平居中 */
   justify-content: center;
+  background-color: white;
 }
 
 .elButton {

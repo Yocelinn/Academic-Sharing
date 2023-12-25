@@ -8,11 +8,11 @@
   </FindDoor>
   <div style="position: relative;display: flex;justify-content: center;min-width: 900px;" v-if="!isLoading">
 
-    <div class="mainContainer">
-      <div class="searchContainer">
+    <div class="mainContainer1">
+      <div class="searchContainer1">
         <div class="search">
-          <el-input v-model="searchInput2" placeholder="请输入成果名" class="searchInput" clearable />
-          <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput" clearable style="margin-top: 20px;" />
+          <el-input v-model="searchInput2" placeholder="请输入成果名" class="searchInput1" clearable />
+          <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput1" clearable style="margin-top: 20px;" />
           <div style="margin-top: 20px;margin-bottom: 20px;">
             <el-button type="primary" class="searchButton" @click="search">搜索</el-button>
             <el-button type="danger" class="searchButton" @click="searchInput1 = ''; searchInput2 = ''">重置</el-button>
@@ -116,7 +116,7 @@
   margin-bottom: 10px;
 }
 
-.searchContainer {
+.searchContainer1 {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -132,7 +132,7 @@
 
 }
 
-.mainContainer {
+.mainContainer1 {
   width: 75%;
   min-width: 1100px;
   background-color: #f0f9eb;
@@ -152,7 +152,7 @@
   flex-direction: column;
 }
 
-.searchInput {
+.searchInput1 {
   position: relative;
   display: flex;
   height: 50px;

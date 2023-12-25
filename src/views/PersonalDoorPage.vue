@@ -8,7 +8,7 @@
 
         </FindDoor>
         <div class="allContainer">
-            <div class="mainContainer">
+            <div class="mainContainer1">
                 <div class="main">
                     <div style="top:30px;width: 100%;display: flex;position: relative;align-items: flex-start;">
                         <div class="header">
@@ -175,7 +175,7 @@
     width: 100%;
 }
 
-.mainContainer {
+.mainContainer1 {
     position: relative;
     display: flex;
     justify-content: center;
