@@ -55,7 +55,7 @@
                     </select>
                   </div>
                   <div class="inputContainer">
-                    <el-input v-model="input[0]" placeholder="中文文献、外文文献" class="input" @keydown.enter="seniorSearch"/>
+                    <el-input v-model="input[0]" placeholder="中文文献、外文文献" class="input" @keydown.enter="seniorSearch" />
                   </div>
                 </div>
                 <el-select v-model="isFass[0]" class="m-2" placeholder="AND" size="large" style="
@@ -151,7 +151,8 @@
               <div style="position: relative;height: 170px;width:90%;box-shadow: 4px 4px 10px #c8c9cc ;margin-top: 20px;"
                 @click.stop="isKeyboardShown = true">
                 <el-input v-model="professionInput" placeholder="请输入专业检索式" :rows="7" type="textarea"
-                  style="height: 90%;width: 99%;box-shadow: box-shadow: 2 2 2 5px var(--el-input-border-color, var(--el-border-color)) inset;;margin-top:7px" @keydown.enter="seniorSearch" />
+                  style="height: 90%;width: 99%;box-shadow: box-shadow: 2 2 2 5px var(--el-input-border-color, var(--el-border-color)) inset;;margin-top:7px"
+                  @keydown.enter="seniorSearch" />
               </div>
             </div>
             <div class="eachContainer" v-if="radioValue == '3'">
@@ -270,8 +271,8 @@
               </div>
               <div class="bottomThing">
                 <el-button @click="reset">重置条件</el-button>
-                <el-button type="primary" style="margin-left: 100px" @click="seniorSearch" >检索</el-button>
-              </div> 
+                <el-button type="primary" style="margin-left: 100px" @click="seniorSearch">检索</el-button>
+              </div>
             </div>
           </div>
         </div>
@@ -283,6 +284,7 @@
 // @ is an alias to /src
 import { ref } from "vue";
 import { ElNotification } from 'element-plus';
+import { translateQuery } from "../components/getContent.js"
 export default {
   watch: {
     isVisibal(newVal) {
@@ -449,6 +451,8 @@ export default {
           return
         }
         content = this.professionInput;
+
+
         type = "professional"
         this.$router.push({
           path: "/searchResults",
@@ -502,8 +506,7 @@ export default {
         if (this.dateValue1 !== "") {
           content += " AND year=" + this.dateValue1 + "," + this.dateValue2
         }
-        console.log(content)
-          this.$router.push({
+        this.$router.push({
           path: "/searchResults",
           query: {
             query: query,
