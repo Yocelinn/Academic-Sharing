@@ -2,9 +2,11 @@
     <h1>Welcome!</h1>
     <h1>处理进度如下：</h1>
     <div id="main" :style="{width: '80%', height: '80%'}" class="chart-container"></div>
+    <el-button type="primary" @click="logout">登出</el-button>
 </template>
   
 <script>
+import store from '@/store';
 // import AuthorRelationNet from "../AuthorRelationNet.vue"
   import {GetNum} from '../../api/report.js'
   import * as echarts from 'echarts/core';
@@ -56,6 +58,7 @@
       }
     },
     mounted() {
+      document.documentElement.scrollTop = 0;
       var promise = GetNum()
       promise.then((result =>{
         this.scholarAll = result.data.totalRelate
@@ -68,6 +71,12 @@
       }))
     },
     methods: {
+      logout() {
+        store.state.administratorInfo.isLogin = false;
+        store.state.administratorInfo.token = "";
+        window.sessionStorage.removeItem("saveAdministrator")
+        this.$router.push('/')
+      },
       initChat(){
         var chartDom = document.getElementById('main');
         var myChart = echarts.init(chartDom);
