@@ -5,11 +5,13 @@
 </template>
   
 <script>
+// import AuthorRelationNet from "../AuthorRelationNet.vue"
   import {GetNum} from '../../api/report.js'
   import * as echarts from 'echarts/core';
   import { GaugeChart } from 'echarts/charts';
   import { CanvasRenderer } from 'echarts/renderers';
   export default {
+    // components: { AuthorRelationNet },
     data() {
       return {
         scholarAll: 3,
@@ -18,6 +20,39 @@
         paperFinish: 2,
         commmentAll: 4,
         commentFinish: 1,
+        // authors: [
+        //   {
+        //       "name": "Cory Merow"
+        //   },
+        //   {
+        //       "name": "Matthew J. Smith"
+        //   },
+        //   {
+        //       "name": "Thomas C. Edwards"
+        //   },
+        //   {
+        //       "name": "Antoine Guisan"
+        //   },
+        //   {
+        //       "name": "Sean M. McMahon"
+        //   },
+        //   {
+        //       "name": "Signe Normand"
+        //   },
+        //   {
+        //       "name": "Wilfried Thuiller"
+        //   },
+        //   {
+        //       "name": "Rafael O. Wüest"
+        //   },
+        //   {
+        //       "name": "Niklaus E. Zimmermann"
+        //   },
+        //   {
+        //       "name": "Jane Elith"
+        //   }
+        // ],
+        // name: "Cory Merow"
       }
     },
     mounted() {

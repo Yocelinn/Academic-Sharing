@@ -10,8 +10,8 @@ import { GetAuthorsByAuthor } from "../api/authorRelation.js"
   export default {
     name: "VueRalation",
     props: {
-      name: String,
-      id: String,
+      authors: Array,
+      name: String
     },
     data () {
       return {
@@ -28,9 +28,8 @@ import { GetAuthorsByAuthor } from "../api/authorRelation.js"
       }
     },
     mounted(){
-      var promise = GetAuthorsByAuthor(this.id);
-      promise.then((result =>{
-        for(let item of result.data){
+      for(let item of this.authors){
+        if(item.name!=this.name){
           this.data.push({
             name: item.name,
             draggable: true,
@@ -44,17 +43,22 @@ import { GetAuthorsByAuthor } from "../api/authorRelation.js"
             source: this.name,
           })
         }
-        this.initChart();
-      }))
+      }
+      this.initChart();
+      
     },
     methods: {
       randomColor(){
-        var colors = ['#c8d5b9', '#8fc0a9', "#68b0ab", "#4a7c59", "#B1D182"];
+        var colors = ['#c8d5b9', '#8fc0a9', "#68b0ab", "#F4F1E9", "#B1D182"];
         return colors[parseInt(Math.random() * 5)];
       },
       initChart() {
         this.chart = this.$echarts.init(document.getElementById("author_relation_chart"));
         const option = {
+          title: {
+            text: this.name,
+            x: "center"
+          },
           tooltip: {
             show: true
           },
