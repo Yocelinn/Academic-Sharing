@@ -38,7 +38,11 @@
       <el-table :data="commentList" border stripe>
         <el-table-column type="index"></el-table-column>
         <el-table-column label="发起人" prop="reporterName"></el-table-column>
-        <el-table-column label="时间" prop="time"></el-table-column>
+        <el-table-column label="时间">
+          <template  #default="scope">
+            {{this.convertTime(scope.row.time)}}
+          </template>
+        </el-table-column>
         <el-table-column label="评论内容" prop="reporteeComment"></el-table-column>
         <el-table-column label="举报理由" prop="reason"></el-table-column>
         <el-table-column label="状态">
@@ -76,7 +80,7 @@
             <!-- <el-input v-model="infoForm.reporterName" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="时间" prop="time">
-            <el-text>{{infoForm.time}}</el-text>
+            <el-text>{{this.convertTime(infoForm.time)}}</el-text>
             <!-- <el-input v-model="infoForm.time" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="评论内容" prop="reporteeComment">
@@ -105,7 +109,7 @@
             <!-- <el-input v-model="infoForm.reporterName" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="时间" prop="time">
-            <el-text>{{handleForm.time}}</el-text>
+            <el-text>{{this.convertTime(handleForm.time)}}</el-text>
             <!-- <el-input v-model="infoForm.time" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="评论内容" prop="reporteeComment">
@@ -145,6 +149,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import store from '@/store';
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
@@ -161,42 +166,6 @@ export default {
 				pagesize:2
 			},
       commentList: [
-        // {
-        //   id: 1,
-        //   reporterName: "Test",
-        //   time: "2023年11月19日22:02:58",
-        //   commentContent: "ffffffffffffffff",
-        //   reason: "人身攻击",
-        //   description: "testtesttest",
-        //   ischeck: 0,
-        // },
-        // {
-        //   id: 2,
-        //   reporterName: "Test2",
-        //   time: "2023年11月19日22:17:58",
-        //   commentContent: "xxxxxxxxxxxxxxxxxxx",
-        //   reason: "内容无关",
-        //   description: "testtesttest",
-        //   ischeck: 1,
-        // },
-        // {
-        //   id: 3,
-        //   reporterName: "Test3",
-        //   time: "2023年11月19日22:19:58",
-        //   commentContent: "12345678999999",
-        //   reason: "违法违规",
-        //   description: "testtesttest",
-        //   ischeck: 2,
-        // },
-        // {
-        //   id: 4,
-        //   reporterName: "Test4",
-        //   time: "2023年11月26日22:19:58",
-        //   commentContent: "nnnnnnnnnnnnnnnnnnn",
-        //   reason: "不实信息",
-        //   description: "testtesttest",
-        //   ischeck: 1,
-        // },
       ],
       options: [
         {
@@ -222,24 +191,8 @@ export default {
       handleVisible: false,
       rejectDialogVisible: false,
       infoForm: {
-        id: 3,
-        reporterName: "Test3",
-        time: "2023年11月19日22:19:58",
-        commentContent: "12345678999999",
-        reason: "违法违规",
-        description: "testtesttesttesttesttest\
-        testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest\
-        testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest",
-        ischeck: 2,
       },
       handleForm: {
-        id: 3,
-        reporterName: "Test3",
-        time: "2023年11月19日22:19:58",
-        commentContent: "12345678999999",
-        reason: "违法违规",
-        description: "testtesttest",
-        ischeck: 2,
       },
       handlingReport: {}
     }
@@ -248,6 +201,9 @@ export default {
     this.getAllCommentReport()
   },
   methods: {
+    convertTime(time) {
+      return moment(time).utcOffset(8).format('YYYY/MM/DD HH:mm:ss')
+    },
     logout() {
       store.state.administratorInfo.isLogin = false;
       store.state.administratorInfo.token = "";

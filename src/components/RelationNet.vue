@@ -177,10 +177,13 @@ import "echarts-wordcloud/dist/echarts-wordcloud.min";
         };
         this.chart.setOption(option);
         // this.chart.on("click", (params) => {
-        //   this.$router.push({
-        //     name: 'institution',
-        //     query: {id: params.data.node_id}
-        //   })
+        //   if(params.data.node_id!=null){
+        //     window.open(`http://localhost:8080/institution?id=${params.data.node_id}`)
+        //   }
+        //   // this.$router.push({
+        //   //   name: 'institution',
+        //   //   query: {id: params.data.node_id}
+        //   // })
         // });
       },
     }
