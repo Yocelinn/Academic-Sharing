@@ -64,6 +64,8 @@ export default{
     position: relative;
     width: 100%;
     height: 40px;
+    left: 0%;
+    top: 0px;
     line-height: 100%;
     text-align: left;
     font-size: 24px;

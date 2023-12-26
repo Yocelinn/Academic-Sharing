@@ -15,13 +15,13 @@ export function post(url, data) {
         resolve(response.data);
       })
       .catch((error) => {
-        ElNotification({
-          message: "网络连接失败",
-          type: "error",
-          showClose: true,
-          position: "top-right",
-          duration: 2000,
-        });
+        // ElNotification({
+        //   message: "网络连接失败",
+        //   type: "error",
+        //   showClose: true,
+        //   position: "top-right",
+        //   duration: 2000,
+        // });
       });
   });
 }
@@ -36,13 +36,13 @@ export function get(url, param) {
         resolve(response.data);
       })
       .catch((error) => {
-        ElNotification({
-          message: "网络连接失败",
-          type: "error",
-          showClose: true,
-          position: "top-right",
-          duration: 2000,
-        });
+        // ElNotification({
+        //   message: "网络连接失败",
+        //   type: "error",
+        //   showClose: true,
+        //   position: "top-right",
+        //   duration: 2000,
+        // });
       });
   });
 }
