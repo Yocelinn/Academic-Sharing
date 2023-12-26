@@ -172,7 +172,7 @@ router.beforeEach((to, from, next) => {
   else if(store.state.userInfo.isLogin==true&&isExcluded4){
     next('/')
   } 
-  else if(store.state.administratorInfo==true&&!isExcluded4){
+  else if(store.state.administratorInfo.isLogin==true&&!isExcluded4){
     next('/')
   }
   else {
