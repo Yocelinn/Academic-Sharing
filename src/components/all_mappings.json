@@ -1,0 +1,44 @@
+[
+    {
+        "title": "标题",
+        "keyword": "关键词",
+        "author": "作者",
+        "institution": "机构",
+        "abstract": "摘要",
+        "source": "期刊"
+    },
+    {
+        "title": "专利名",
+        "inventor": "发明人",
+        "applicant": "专利权人",
+        "apply_number": "申请号",
+        "ipc": "IPC分类号",
+        "cpc": "CPC分类号"
+    },
+    {
+        "title": "标题",
+        "subject": "服务领域",
+        "institution": "主办单位"
+    },
+    {
+        "title": "标题",
+        "subject": "服务领域",
+        "source": "情报产品",
+        "author": "编译者",
+        "abstract": "摘要"
+    },
+    {
+        "title": "标题",
+        "keyword": "关键词",
+        "provider": "提交者",
+        "author": "作者",
+        "abstract": "摘要",
+        "cstr": "CSTR"
+    },
+    {
+        "title": "书名",
+        "isbn": "ISBN",
+        "publisher": "出版社",
+        "author": "作者"
+    }
+]

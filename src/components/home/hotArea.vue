@@ -13,16 +13,15 @@
 </template>
 
 <script>
-
+import { Hotfield } from '@/api/record'
+import { ElText } from 'element-plus';
 
 export default{
     data(){
         return{
             showType: "barGraph",
             typeString:"扇形图展示",
-            hotAreaList:[{name: "医学", count: "3000"},{name: "1", count: "3000"},{name: "1", count: "2500"},{name: "1", count: "3000"},
-            {name: "1", count: "3000"},{name: "1", count: "3000"},{name: "1", count: "1000"},{name: "1", count: "3000"},
-            {name: "1", count: "3000"},{name: "1", count: "3000"},],
+            hotAreaList:[],
             heightList:[0,0,0,0,0,0,0,0,0,0],
         }
     },
@@ -40,14 +39,21 @@ export default{
         },
         getData(){
             //获取数据的代码
-
-            if(this.showType==="barGraph"){
-                this.typeString="扇形图展示";
-                this.loadBar();
-            } else{
-                this.typeString="柱状图展示";
-                this.loadPie();
-            }
+            var promise=Hotfield();
+            promise.then((result) => {
+                if(result.code==200){
+                    for(var i=0;i<10;i++){
+                        this.hotAreaList.push({"name":result.data[i].name, "count":result.data[i].hotNum});
+                    }
+                    if(this.showType==="barGraph"){
+                        this.typeString="扇形图展示";
+                        this.loadBar();
+                    } else{
+                        this.typeString="柱状图展示";
+                        this.loadPie();
+                    }
+                }
+            })
         },
         loadBar(){
             var barGraph=document.getElementById("bar");
@@ -78,7 +84,8 @@ export default{
                 number.style.width="100%"
                 barList[i-1].appendChild(number);
                 var name=document.createElement("div");
-                name.textContent=this.hotAreaList[i-1].name;
+                name.textContent=this.hotAreaList[i-1].name.substring(0, 6);
+                if(this.hotAreaList[i-1].name.length>6) name.textContent+="...";
                 name.style.position="absolute";
                 name.style.bottom="-20px";
                 name.style.fontSize="14px";

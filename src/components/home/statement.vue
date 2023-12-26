@@ -65,8 +65,9 @@ export default {
     },
     methods:{
         administratorClick(){
-            if(store.state.administratorInfo.isLogin) this.$router.push('/manage');
-            else{
+            if(store.state.administratorInfo.isLogin){
+                this.$router.push("/manage");
+            } else{
                 this.open=true;
                 this.login.username='';
                 this.login.password='';
@@ -87,7 +88,7 @@ export default {
                                 duration: 2000,
                             });
                             this.open=false;
-                            this.$router.push('/manage');
+                            this.$router.push("/manage");
                         } else{
                             ElNotification({
                                 message: result.info,

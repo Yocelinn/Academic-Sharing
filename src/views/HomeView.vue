@@ -52,7 +52,6 @@ import information from '@/components/home/information.vue';
 import searchBox from '@/components/searchBox.vue';
 import hotInstitution from '@/components/home/hotInstitution.vue';
 import { GetAllFields } from '@/api/home';
-import { Hotfield, Hotspots } from '@/api/record';
 
 export default {
   name: 'HomeView',
@@ -81,14 +80,6 @@ export default {
         this.filedInfo[i].count=result[key];
         i++;
       }
-    })
-    var hotarea=Hotfield();
-    hotarea.then((result) => {
-      console.log(result);
-    })
-    var hotspots=Hotspots();
-    hotspots.then((result) => {
-      console.log(result);
     })
   }
 }
@@ -157,7 +148,7 @@ export default {
 }
 .hotInstitutionBlock{
   position: relative;
-  width: 30%;
+  width: 33%;
   min-width: 360px;
   height: 400px;
   left: 2%;

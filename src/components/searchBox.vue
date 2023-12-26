@@ -484,10 +484,6 @@ export default {
     };
   },
   mounted() {
-    var query = this.$route.query
-    this.localQuery = query.query
-    console.log(this.localQuery)
-    console.log(this.$route.query)
     for (var i = 0; i < this.options.length; i++) {
       this.titleList.push(this.options[i][0].value);
     }
@@ -530,7 +526,8 @@ export default {
       this.$emit('update:searchQuery', value);
     },
     emitSearch() {
-      if (this.localQuery === "") {
+      console.log(this.localQuery)
+      if (this.localQuery == "") {
         return;
       }
       let map = new Map();

@@ -9,7 +9,7 @@
         </el-breadcrumb>
       </el-col>
       <el-col :span="2">
-        <el-button type="primary">登出</el-button>
+        <el-button type="primary" @click="logout">登出</el-button>
       </el-col>
     </el-row>
 
@@ -134,6 +134,7 @@
 </template>
 
 <script>
+import store from '@/store';
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
 import {AllScholarApproval, SearchScholarApproval, FilterScholarApproval, GetScholarApproval, HandelScholarApproval} from '../../api/scholar.js'
@@ -213,6 +214,12 @@ export default {
     this.getAllScholar()
   },
   methods: {
+    logout() {
+      store.state.administratorInfo.isLogin = false;
+      store.state.administratorInfo.token = "";
+      window.sessionStorage.removeItem("saveAdministrator")
+      this.$router.push('/')
+    },
     getAllScholar(){
       var promise = AllScholarApproval();
       promise.then((result)=>{

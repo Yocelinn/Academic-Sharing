@@ -342,13 +342,31 @@
         successVisible.value = false;
       }
       const collect = () => {
-        ElNotification({
-            message: "收藏成功！",
-            type: 'success',
-            showClose: true,
-            position: 'top-right',
-            duration: 2000,
-        });
+        var title = detailInfo.value.title;
+        var id = detailInfo.value.workId;
+        var author = detailInfo.value.authors;
+        PatentApi.PostCollect(id, title, author)
+        .then((response) => {
+          console.log(response)
+          if(response.code == 200){
+              ElNotification({
+                  message: "收藏成功！",
+                  type: 'success',
+                  showClose: true,
+                  position: 'top-right',
+                  duration: 2000,
+              });
+          } else {
+            ElNotification({
+                  message: "重复收藏！",
+                  type: 'error',
+                  showClose: true,
+                  position: 'top-right',
+                  duration: 2000,
+              });
+          }
+        })
+        
       }
       const promote = () => {
         ElNotification({

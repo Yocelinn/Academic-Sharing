@@ -11,3 +11,8 @@ export function GetInstitustionWorks(institutionId){
   param.institutionId=institutionId;
   return get('/institution/getInstitutionWorks', param);
 }
+
+export function GetInstitutionsForMainPage(){
+  let param={};
+  return get('/institution/getInstitutionsForMainPage', param);
+}
