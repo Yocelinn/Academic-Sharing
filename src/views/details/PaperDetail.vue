@@ -31,21 +31,21 @@
                   </div>
                   </div>
                 
-                  <div class="institution" v-if="detailInfo.keywords != ''">
+                  <div class="institution" v-if="detailInfo.title != ''">
                     <div class="institution-item" v-for="(institu, index) in detailInfo.institutions" :key="index" @click="getInstitution(institu.name)">
                       {{ index+1+"." +  institu.name }}</div>
                   </div>
-                  <div class="detail" v-if="detailInfo.keywords != ''">
-                      <div class="content-container">
-                        <div class="little-title">关键词：</div>
-                        <div class="content" v-if="detailInfo.keywords != ''"> 
+                  <div class="detail" v-if="detailInfo.title != ''">
+                      <div class="content-container" v-if="detailInfo.keywords != ''">
+                        <div class="little-title" >关键词：</div>
+                        <div class="content" > 
                             <div class="keyword-item"  v-for="(keyword, index) in detailInfo.keywords" :key="index" >
                               {{ keyword }}
                             </div>
                         </div>
                         
                       </div>
-                      <div class="content-container">
+                      <div class="content-container" v-if="detailInfo.abstract != ''">
                           <div class="little-title">摘要：</div>
                           <!-- <div class="content">{{ detailInfo.abstractContent }}</div> -->
                           <div v-html="detailInfo.abstract" class="content"></div>
@@ -56,12 +56,12 @@
                           <div class="content">{{ detailInfo.publicationDate }}</div>
                       </div>
 
-                      <div class="content-container" v-if="funders != ''">
+                      <!-- <div class="content-container" v-if="funders != '' && funders.length>0">
                           <div class="little-title">基金项目：</div>
                           <div class="content" v-for="(funder, index) in funders" :key="index">{{ funder.funderName }}
                             <div v-if="index < funders.length-1"> , </div>
                           </div>
-                      </div>
+                      </div> -->
                   
                   </div>
 
@@ -76,7 +76,7 @@
                 <h2 class="recommend-title" >相关文献推荐</h2> 
             </div>
           
-            <ol class="paper-list" v-if="detailInfo.keywords != ''">
+            <ol class="paper-list" v-if="detailInfo.title != ''">
               <li class="list-item" v-for="(item, index) in detailInfo.recommendations" :key="index">
                 <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div>
                 <!--因为v-html，有的文章标题是有格式的
@@ -98,7 +98,7 @@
             <div>
                 <h2 class="recommend-title" >引用文献</h2> 
             </div>
-            <ol class="paper-list" v-if="detailInfo.keywords != ''">
+            <ol class="paper-list" v-if="detailInfo.title != ''">
               <li class="list-item" v-for="(item, index) in detailInfo.ref_articles" :key="index">
                 <!-- <div class="recommend-papar-name" @click="gotoPaper(item.id)" v-html=" item.title "></div> -->
                 <div class="inference-papar-name"  v-html=" item.title "></div>
@@ -125,7 +125,7 @@
                 <div class="comment-input"><textarea id="commentBox" class="reply-box" placeholder="我的评论"></textarea><button @click="postComment()" class="reply-button">发布</button></div>
                 <div class="replys" v-if="comments.length == 0">还没有评论</div>
                 <div v-else class="comment-list" v-for="(item, index) in comments" :key="index">
-                  <div class="comment-user">{{ item.userName }} <div class="complain-button">投诉</div></div>
+                  <div class="comment-user">{{ item.userName }} <div class="complain-button" @click="openComplain(item.id)">投诉</div></div>
                   <div class="comment-content">{{ item.content }} </div>
                   <div class="comment-time">{{ item.time }}</div>
                 </div>
@@ -140,8 +140,6 @@
               <div class="info-title"><el-icon><Link /></el-icon>文章来源</div>
               
               <div class="button-container" v-if="detailInfo.links != '' && detailInfo.links!=null">
-                <!-- <div class="button-container"> -->
-                  <!-- {{ detailInfo.link }} -->
                  <a class="button-list"  target="_blank" :href="detailInfo.links.url"><el-icon><Connection /></el-icon>去往来源</a>
                 <!-- <a class="button-list"  target="_blank" :href="detailInfo.location.pdf_url"><el-icon><Reading /></el-icon>查看全文</a>  -->
 
@@ -151,14 +149,11 @@
               
               <div class="info-title"><el-icon><Operation /></el-icon>常用操作</div>
               <div class="button-container">
-                <div class="button-list" @click="collect"><el-icon><Star /></el-icon>收藏</div>
+                <div class="button-list" @click="collect" v-if="haveCollect==false"><el-icon><Star /></el-icon>收藏</div>
+                <div class="button-list"  v-else><el-icon><StarFilled /></el-icon>已收藏</div>
                 <div class="button-list" @click="promote"><el-icon><Promotion /></el-icon>推荐</div>
               </div>
             </div>
-            <!-- <div class="info-box">
-              <div class="info-title"><el-icon><Histogram /></el-icon>被引次数：
-                <div style="font-style: italic; color:gray">{{detailInfo.citedByCount}}</div></div>
-            </div> -->
             <div class="info-box">
 
               <div class="info-title"><el-icon><Edit /></el-icon>问题反馈</div>
@@ -171,6 +166,7 @@
 
       </el-col>
       <el-backtop :right="100" :bottom="100" color="#8fc0a9"/>
+      <!-- 以下是论文举报的对话框 -->
       <el-dialog v-model="dialogVisible" :title="dialog.title" width="40%" center>
         <div class="input-container" v-if="!successVisible">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -178,9 +174,6 @@
               <el-input v-model="formInline.content" placeholder="请填写申请信息" type="textarea" clearable >
                 </el-input>
             </el-form-item>
-            <!-- <el-form-item label="联系方式" style="width:500px;">
-              
-            </el-form-item> -->
           </el-form>
         </div>
         <el-result icon="success" title="提交成功" sub-title="感谢您的反馈！" v-else>
@@ -197,6 +190,7 @@
           </span>
         </template>
       </el-dialog>
+      <!-- 以下是报错没有登录对话框 -->
       <el-dialog v-model="alertLogVisible" title="提示" width="30%" center>
         <el-form-item>
           <span style="width: 100%;text-align: center;font-weight: 600;font-size: 15px;">  您还未登录，请先登录 </span>
@@ -205,6 +199,37 @@
           <span class="dialog-footer">
             <el-button type="primary" @click="alertLogVisible = false">
               好
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+
+      <!-- 以下是投诉评论的对话框 -->
+      <el-dialog v-model="complainVisible" :title="complain.title" width="40%" center>
+        <div class="input-container" v-if="!successVisible">
+          <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="投诉原因" style="width:500px;">
+              <el-input v-model="formInline.reason" placeholder="请填写原因" clearable >
+                </el-input>
+            </el-form-item>
+
+            <el-form-item label="详细描述" style="width:500px;">
+              <el-input v-model="formInline.content" placeholder="请填写详细描述" type="textarea" clearable >
+                </el-input>
+            </el-form-item>
+           
+          </el-form>
+        </div>
+        <el-result icon="success" title="提交成功" sub-title="感谢您的反馈！" v-else>
+          <template #extra>
+            <el-button type="primary" @click="closeComplain">关闭</el-button>
+          </template>
+        </el-result>
+        <template #footer v-if="!successVisible">
+          <span class="dialog-footer" >
+            <el-button @click="complainVisible = false">取消</el-button>
+            <el-button type="primary" @click="submitComplain">
+              提交
             </el-button>
           </span>
         </template>
@@ -256,14 +281,22 @@
       })
       const formInline = reactive({
         content: '',
-        contact:'',
+        reason:'',
         date: '',
       })
       const successVisible = ref(false)
       const alertLogVisible = ref(false)
       const openId = ref('')
       const funders = ref('')
-      const isCollected = ref(false)
+      const haveCollect = ref(false)
+      
+
+      const complain = ref({
+        id: 0,
+        title: '',
+        content: '',
+      })
+      const complainVisible = ref(false)
       
       onMounted( () => {
         // getPaperList();
@@ -302,12 +335,10 @@
           // if(response.code == 200) {
             comments.value = response;
             for(var i=0; i < comments.value.length; i++) {
-              comments.value[i].time = moment(comments.value[i].time).utcOffset(8).format('YYYY/MM/DD HH:mm:ss')
+              comments.value[i].time = moment(comments.value[i].time).utcOffset(8).format('YYYY-MM-DD HH:mm:ss')
               // comments.value[i].userName = store.state.userInfo.nickName
             }
 
-            // console.log(comments.value)
-          
         })
       }
 
@@ -342,19 +373,7 @@
         })
       }
       
-      function getFunder() {
-        PaperApi.GetFundersById(openId)
-        .then( (response)=>{
-          if(response.code == 200) {
-            
-          } else {
-            console.error();
-          }
-        })
-      }
-      function getCollected() {
-
-      }
+      
 
       function reportError() {
         if(store.state.userInfo.isLogin){
@@ -373,6 +392,17 @@
         }
       }
 
+      function openComplain(commentId) {
+        if(store.state.userInfo.isLogin){
+          complain.value.title = "投诉评论";
+          complainVisible.value = true;
+          complain.value.id = commentId;
+        } else {
+          alertLogVisible.value = true;
+        }
+        
+      }
+
       const onSubmit = () => {        
         // console.log(openId.value)
         PaperApi.ReportPaperError(openId.value, formInline.content) 
@@ -382,7 +412,7 @@
             successVisible.value = true;
           } else {
             ElNotification({
-                  message: "",
+                  message: "提交失败",
                   type: 'error',
                   showClose: true,
                   position: 'top-right',
@@ -391,21 +421,39 @@
           }
         })
         formInline.content = '';
-        // console.log('submit!')
       }
+
       const closeDialog = () => {
         dialogVisible.value = false;
         successVisible.value = false;
       }
-      // const collect = () => {
-      //   ElNotification({
-      //       message: "收藏成功！",
-      //       type: 'success',
-      //       showClose: true,
-      //       position: 'top-right',
-      //       duration: 2000,
-      //   });
-      // }
+
+      const submitComplain = () => {        
+        PaperApi.ReportCommentError(complain.value.id, formInline.content, formInline.reason) 
+        .then((response)=>{
+          console.log(response)
+          if(response.code == 200){
+            successVisible.value = true;
+          } else {
+            ElNotification({
+                  message: "提交失败",
+                  type: 'error',
+                  showClose: true,
+                  position: 'top-right',
+                  duration: 2000,
+              });
+          }
+        })
+        formInline.content = '';
+        formInline.reason = '';
+      }
+
+      const closeComplain = () => {
+        complainVisible.value = false;
+        successVisible.value = false;
+      }
+      
+      
       const collect = () => {
         var title = detailInfo.value.title;
         var id = detailInfo.value.workId;
@@ -421,6 +469,7 @@
                   position: 'top-right',
                   duration: 2000,
               });
+              haveCollect.value = true
           } else {
             ElNotification({
                   message: "重复收藏！",
@@ -452,6 +501,9 @@
         successVisible,
         alertLogVisible,
         funders,
+        complainVisible,
+        complain,
+        haveCollect,
 
         postComment,
         reportError,
@@ -460,7 +512,9 @@
         closeDialog,
         collect,
         promote,
-        getFunder,
+        closeComplain,
+        submitComplain,
+        openComplain,
       };
 
       
@@ -696,6 +750,7 @@
     box-shadow: 0 0.0625rem 0.125rem #0000004d;
     align-items: center;
     display: flex;
+    cursor: pointer;
 
   }
   /* 相关文献推荐 */

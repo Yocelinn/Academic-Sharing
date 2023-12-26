@@ -9,12 +9,12 @@ export function GetCommentByWorkIdAndType(workId){
     return get('/comment/getByWorkIdAndType', param);
 }
 
-export function ReportCommentError(commentID, reason, description){
+export function ReportCommentError(commentID, description, reason){
     let param={};
     param.commentID = commentID;
-    param.reason = reason;
     param.description = description;
-    return get('/report/ReportComment', param);
+    param.reason = reason;
+    return get('/report/ReportComment', param)
 }
 
 export function PostComment(content, workId){
