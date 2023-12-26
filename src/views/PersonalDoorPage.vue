@@ -203,6 +203,7 @@
     height: 100%;
     width: 90%;
     align-items: flex-start;
+    left: 5%;
 }
 
 .header {
