@@ -135,7 +135,7 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
-const whiteList = ['/', '/searchResults', '/allInstitution','/institution']
+const whiteList = ['/', '/searchResults', '/allInstitution','/institution','/findDoor']
 const excludedRoute = '/paper/detail/:workId?';
 const excludedRoute2 = '/patent/detail/:patentId?';
 const excludedRoute3 = '/program/detail/:funderId?';
@@ -169,10 +169,10 @@ router.beforeEach((to, from, next) => {
   else if (store.state.userInfo.isLogin==false&&store.state.administratorInfo.isLogin==false){
     next('/');
   }
-  else if(store.state.userInfo.isLogin==true&&isExcluded4){
+  else if(store.state.administratorInfo.isLogin==false&&isExcluded4){
     next('/')
-  } 
-  else if(store.state.administratorInfo==true&&!isExcluded4){
+  }
+  else if(store.state.administratorInfo.isLogin==true&&store.state.userInfo.isLogin==false&&!isExcluded4){
     next('/')
   }
   else {

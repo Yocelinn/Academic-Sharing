@@ -9,7 +9,7 @@
             <el-row>
               <el-col :span="16" style="padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
                 <el-card style="height:640px" class="collectcard">
-                  <el-table :data="collectpatents" style="width: 100%">
+                  <el-table :data="collectpatents" style="width: 100%" height="640">
                     <el-table-column label="收藏者id" width="170" >
                       <template #default="scope">
                         {{ scope.row.userId }}
@@ -35,6 +35,7 @@
                         <el-button link type="primary" size="small" @click="cancleCollect(scope.row)"
                           >移除收藏</el-button
                         >
+                        <el-button link type="primary" size="small" @click="jumppatent(scope.row)">查看</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -64,6 +65,7 @@
   import { onMounted,ref } from 'vue';
   import {post,get} from "../api/api.js"
   import {GetPatents,SelectCP,DeletePatent,GetData} from "../api/favorite.js"
+  import router from "@/router";
   export default {
     components: {
       Personaside,
@@ -71,6 +73,10 @@
     methods:{
     },
     setup(){
+      const jumppatent = (row)=>{
+        let workId=row.pspatentId
+        router.push(`/patent/detail/?patentId=${workId}`);
+      }
       const cancleCollect = (row)=>{
         var promise=DeletePatent(row.pspatentId,row.patentName)
         promise.then((response)=>{
@@ -154,6 +160,7 @@
         history,
         userid,
         input,
+        jumppatent,
         searchcollectspatents,
         cancleCollect
       }

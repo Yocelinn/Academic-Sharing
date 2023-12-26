@@ -90,7 +90,7 @@ import Personaside from '@/components/Personaside.vue';
 import * as echarts from 'echarts';
 import { reactive,onMounted ,ref} from 'vue';
 import {post,get} from "../api/api.js"
-import { GetUserInformation,UpdateUserInformation,ChangePasswd} from "../api/loginAndRegister.js"
+import { GetUserInformation,UpdateUserInformation,ChangePasswd,GetScholarId} from "../api/loginAndRegister.js"
 import {GetData} from "../api/record.js"
 import store from '@/store';
 import router from "@/router";
@@ -127,7 +127,12 @@ export default {
             type:'success',
           })
         this.username=response.data.nick_name;
-        this.persondescription=response.data.person_description;
+        if(response.data.person_description.length!=0){
+        persondescription.value = response.data.person_description;
+        }
+        else{
+          persondescription.value='个人简介'
+        }
         }
       })
       this.dialogFormVisible = false;
@@ -161,6 +166,18 @@ export default {
       if(this.identity=='普通用户')
       {
       router.push(`/findDoor`);
+      }
+      else{
+        var promise=GetScholarId()
+        promise.then((response=>{
+          console.log(response)
+          this.$router.push({
+          path: "/PersonalDoorPage",
+          query: {
+          query: response.data,
+        }
+      })
+        }))
       }
     }
   },
@@ -196,9 +213,17 @@ export default {
       promise.then((response)=>{
         console.log(store.state.token);
         console.log(response);
+        if(response.data.isAuthor==true){
+          identity.value='学者'
+        }
         username.value = response.data.nick_name;
         email.value = response.data.email;
+        if(response.data.person_description.length!=0){
         persondescription.value = response.data.person_description;
+        }
+        else{
+          persondescription.value='个人简介'
+        }
       })
       let echarts1option = {
         title: {
@@ -207,16 +232,23 @@ export default {
         series:[
           {
             type: 'pie',
-            data:[]
+            data:[
+            {
+              value: 1,
+              name: '欢迎您的使用'
+            },
+          ]
           }
         ]
         }
         var promise2 = GetData()
         promise2.then((response=>{
           console.log(response.data)
+          console.log(response.data.length)
+          console.log('test')
+          if(response.data.length!=0){
           echarts1option.series[0].data=response.data
-          if(response.data!=null){
-          console.log(response.data[0])
+          console.log(response.data)
           interest1.value=response.data[0].name;
           interest2.value=response.data[1].name;
           interest3.value=response.data[2].name;
@@ -224,10 +256,12 @@ export default {
           const echart1 = echarts.init(document.getElementById('graph'))
           echart1.setOption(echarts1option)
           }
-          else if(response.data==null){
+          else if(response.data.length==0){
             interest1.value='兴趣关键词1';
             interest2.value='兴趣关键词2';
             interest3.value='兴趣关键词3';
+            const echart1 = echarts.init(document.getElementById('graph'))
+            echart1.setOption(echarts1option)
           }
         }))
     })

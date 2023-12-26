@@ -9,7 +9,7 @@
             <el-row>
               <el-col :span="16" style="padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
                 <el-card style="height:640px" class="collectcard">
-                  <el-table :data="collectpapers" style="width: 100%">
+                  <el-table :data="collectpapers" style="width: 100%" height="640">
                     <el-table-column label="收藏者id" width="170" >
                       <template #default="scope">
                         {{ scope.row.userId }}
@@ -35,6 +35,7 @@
                         <el-button link type="primary" size="small" @click="cancleCollect(scope.row)"
                           >移除收藏</el-button
                         >
+                        <el-button link type="primary" size="small" @click="jumppaper(scope.row)">查看</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -65,6 +66,7 @@
   import {post,get} from "../api/api.js"
   import {GetPapers,SelectCT,DeleteThesis,GetData} from "../api/favorite.js"
   import store from '@/store';
+  import router from "@/router";
   export default {
     components: {
       Personaside,
@@ -83,6 +85,10 @@
           collectpapers.value = response.data
         }))
         })
+      }
+      const jumppaper = (row)=>{
+        let workId=row.psthesisId
+        router.push(`/paper/detail/?workId=${workId}`);
       }
       const papernum=ref('')
       const patentnum=ref('')
@@ -112,7 +118,9 @@
         promise.then((response=>{
           console.log(response.data)
           collectpapers.value = response.data
+          
           console.log(store.state.userInfo.token)
+          console.log(collectpapers)
         }))
         var echarts1option = {
         title: {
@@ -159,6 +167,7 @@
         userid,
         papernum,
         patentnum,
+        jumppaper,
         searchcollectspapers,
         cancleCollect
       }

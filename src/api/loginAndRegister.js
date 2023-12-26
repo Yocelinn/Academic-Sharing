@@ -65,6 +65,10 @@ export function AdminLogin(userName, password){
     return get("/report/adminLogin", param);
 }
 
+export function GetScholarId(){
+    let param={};
+    return get("/user/getScholarIdSelf",param)
+}
 export function ForgotPassword(email, newPw, code){
     let param={};
     param.email=email;
