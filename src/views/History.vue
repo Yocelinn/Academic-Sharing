@@ -65,6 +65,7 @@
   import { onMounted,ref} from 'vue';
   import {post,get} from "../api/api.js"
   import {GetHistory,DeleteHistory,SearchHistory,GetData}from "../api/record.js"
+  import { moment } from 'moment';
   export default {
     components: {
       Personaside,
@@ -106,6 +107,9 @@
         promise.then((response=>{
           console.log(response.data),
           history.value = response.data
+          for(var i=0;i<history.value.length;i++){
+            history.value[i].time=moment(history.value[i].time).utcOffset(8).format('YYYY/MM/DD HH:mm:ss')
+          }
         }))
         let echarts1option = {
         title: {
@@ -114,15 +118,22 @@
         series:[
           {
             type: 'pie',
-            data:[]
+            data:[
+            {
+              value: 1,
+              name: '欢迎您的使用'
+            },
+            ]
           }
         ]
         }
         var promise2 = GetData()
         promise2.then((response=>{
           console.log(response.data)
-          echarts1option.series[0].data=response.data
           console.log(echarts1option.series)
+          if(response.data.length!=0){
+          echarts1option.series[0].data=response.data
+          }
           const echart1 = echarts.init(document.getElementById('graph'))
           echart1.setOption(echarts1option)
         }))

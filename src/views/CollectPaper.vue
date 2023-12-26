@@ -35,6 +35,7 @@
                         <el-button link type="primary" size="small" @click="cancleCollect(scope.row)"
                           >移除收藏</el-button
                         >
+                        <el-button link type="primary" size="small" @click="jumppaper(scope.row)">查看</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -65,6 +66,7 @@
   import {post,get} from "../api/api.js"
   import {GetPapers,SelectCT,DeleteThesis,GetData} from "../api/favorite.js"
   import store from '@/store';
+  import router from "@/router";
   export default {
     components: {
       Personaside,
@@ -83,6 +85,10 @@
           collectpapers.value = response.data
         }))
         })
+      }
+      const jumppaper = (row)=>{
+        let workId=row.psthesisId
+        router.push(`/paper/detail/?workId=${workId}`);
       }
       const papernum=ref('')
       const patentnum=ref('')
@@ -159,6 +165,7 @@
         userid,
         papernum,
         patentnum,
+        jumppaper,
         searchcollectspapers,
         cancleCollect
       }

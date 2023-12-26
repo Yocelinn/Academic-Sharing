@@ -64,3 +64,8 @@ export function AdminLogin(userName, password){
     param.password=password;
     return get("/report/adminLogin", param);
 }
+
+export function GetScholarId(){
+    let param={};
+    return get("/user/getScholarIdSelf",param)
+}
