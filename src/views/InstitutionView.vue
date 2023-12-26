@@ -45,7 +45,9 @@
             </ul> -->
             <ul>
               <li v-for="item in authors" :key="item" style="text-align: left;">
-                <el-link :href="`http://localhost:8080/PersonalDoorPage?query=${item.id}`" style="font-weight: bold;" target="_blank">{{item.display_name}}</el-link>
+                <el-link  @click="jumpToPersonPage(item.id)">{{ item.display_name }}</el-link>
+                
+                <!-- <el-link style="font-weight: bold;" target="_blank" :to="{path: '/PersonalDoorPage', query:{id:item.id}}">{{item.display_name}}</el-link> -->
                 <span class="affi">{{`发表了${item.works_count}篇学术成果;`}}</span>
                 <span class="orgn">{{`共被引用${item.cited_by_count}次;`}}</span>
               </li>
@@ -107,6 +109,7 @@ export default {
   components: { Net , RelationNet},
   data() {
     return{
+      personPage: "/PersonalDoorPage",
       instName: "",
       institutions: [
       ],
@@ -172,9 +175,21 @@ export default {
     }))
   },
   methods: {
+    jump(item) {
+      let routerJump = this.$router.push({
+        name: 'institution',
+        query: {id: item.id},
+      })
+      window.open(routerJump.href, '_blank')
+    },
     randomColor(){
       var colors = ['#c8d5b9', '#8fc0a9', "#68b0ab", "#4a7c59", "#2B463C"];
       return colors[parseInt(Math.random() * 5)];
+    },
+    jumpToPersonPage(id){
+      const url='PersonalDoorPage?query='+id;
+      console.log(url)
+      this.$router.push(url)
     }
   }
 }
@@ -217,6 +232,9 @@ export default {
   .other li{
     display: inline;
     margin-right: 24px;
+  }
+  .displayName{
+    color:#2b463c;
   }
   .affi, .orgn{
     margin-left: 14px;

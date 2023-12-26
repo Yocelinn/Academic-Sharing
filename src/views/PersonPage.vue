@@ -127,7 +127,7 @@ export default {
             type:'success',
           })
         this.username=response.data.nick_name;
-        if(response.data.person_description.length!=0){
+        if(response.data.person_description!==null){
         persondescription.value = response.data.person_description;
         }
         else{
@@ -189,7 +189,7 @@ export default {
     const rewritephone=ref('')
     const rewriteemail=ref('')
     const rewritedescription=ref('')
-    const persondescription = ref('只是一名路过的假面骑士罢了')
+    const persondescription = ref('个人简介')
     const identity=ref('普通用户')
     const Reidentity = () =>{
       identity.value = '学者'
@@ -218,7 +218,7 @@ export default {
         }
         username.value = response.data.nick_name;
         email.value = response.data.email;
-        if(response.data.person_description.length!=0){
+        if(response.data.person_description!==null){
         persondescription.value = response.data.person_description;
         }
         else{
