@@ -11,7 +11,8 @@
       <div class="mainContainer1">
         <div class="searchContainer1">
           <div class="search">
-            <el-input v-model="searchInput2" placeholder="请输入成果名" class="searchInput1" clearable />
+            <el-input v-model="searchInput2" placeholder="请输入成果名" class="searchInput1" clearable
+              @keydown.enter="search" />
             <el-input v-model="searchInput1" placeholder="请输入名字" class="searchInput1" clearable
               style="margin-top: 20px;" />
             <div style="margin-top: 20px;margin-bottom: 20px;">
@@ -36,18 +37,24 @@
             style="display: flex;text-align: left;margin-top: 10px;border-bottom-style: solid;border-bottom-color: #909399;border-bottom-width: 2px;min-width: 900px;">
             <div style="display:flex;flex-direction: column;margin-left: 100px;">
               <span class="nameSpan">{{ (index + 1) + " . " + item.name }}</span>
-              <span class="otherThing">{{ "成果数量：" + item.achievementsNum }}</span>
-              <span class="otherThing">{{ "被引次数：" + item.citationsNum }}</span>
+              <div class="otherThing">
+                <span>成果数量：</span>
+                <span style="font-weight: 700;">{{ item.achievementsNum }}</span>
+              </div>
+              <div class="otherThing">
+                <span>被引次数：</span>
+                <span style="font-weight: 700;">{{ item.citationsNum }}</span>
+              </div>
               <div class="otherThing" style="display: flex;">
                 <span>关注领域：</span>
-                <span v-for="(e, i) in item.interests" :key="i" style="margin-left: 10px;">
+                <span v-for="(e, i) in item.interests" :key="i" style="margin-left: 10px;font-weight: 700;">
                   {{ e }}
                 </span>
               </div>
-              <div class="otherThing" style="display: flex;flex-wrap: wrap;">
+              <div class="otherThing" style="display: flex;flex-wrap: wrap;flex-direction: column;">
                 <span>成果：</span>
-                <span v-for="(e, i) in item.myWorkDisArrayList" :key="i" style="margin-left: 10px;">
-                  {{ "《" + e.title + "》" }}
+                <span v-for="(e, i) in item.myWorkDisArrayList" :key="i" style="margin-left: 10px;font-weight: 700;"
+                  v-html="e.title">
                 </span>
               </div>
               <span class="otherThing">{{ "简介 : " + ((item.introduce == null) ? "暂无" : item.introduce) }}</span>
