@@ -127,7 +127,7 @@ export default {
             type:'success',
           })
         this.username=response.data.nick_name;
-        if(response.data.person_description.length!=0){
+        if(response.data.person_description!==null){
         persondescription.value = response.data.person_description;
         }
         else{
