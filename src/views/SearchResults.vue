@@ -521,6 +521,7 @@
     display:flex;
     justify-content: space-between;
     padding:10px 100px;
+    min-height:100vh;
     /* height:90vh; */
 }
 .sr-left-aside{

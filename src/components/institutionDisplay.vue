@@ -7,7 +7,7 @@
               <div class="recommend-img-container"  >
                 <img class="recommend-img" :src="thing.logo" @click="jumpToInstitution(thing.id)" >
               </div>
-                <div class="recommend-title" @click="jumpToInstitution(thing.id)">{{ thing.displayName }} </div>
+                <div class="recommend-title"  @click="jumpToInstitution(thing.id)">{{ thing.displayName }} </div>
               <!-- </router-link> -->
             </div>
           </div>
@@ -112,5 +112,8 @@ opacity: 0;
   -webkit-box-orient:vertical;
   -webkit-line-clamp:2;
   overflow:hidden;
+  
 }
+
+
 </style>
