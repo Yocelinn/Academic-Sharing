@@ -216,7 +216,7 @@ export default {
           console.log(response.data)
           echarts1option.series[0].data=response.data
           if(response.data!=null){
-          console.log(response.data[0])
+          console.log(response.data)
           interest1.value=response.data[0].name;
           interest2.value=response.data[1].name;
           interest3.value=response.data[2].name;
