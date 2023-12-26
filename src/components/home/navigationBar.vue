@@ -23,6 +23,8 @@ import LoinAndRegister from '@/components/user/LoinAndRegister.vue';
 import Loggedin from '../user/Loggedin.vue';
 import searchBox from '../searchBox.vue';
 import router from '@/router';
+import store from '@/store';
+import { ElNotification } from 'element-plus';
 
 export default {
     props:{
@@ -57,9 +59,19 @@ export default {
             this.$router.push("/");
         },
         jumpToPerson(){
-            this.$router.push("/person");
+            if(store.state.userInfo.isLogin==false){
+                ElNotification({
+                message: "请先登录",
+                type: 'warning',
+                showClose: true,
+                position: 'top-right',
+                duration: 2000,
+            })
+            } else{
+                this.$router.push("/person");
+            }
         },
-        jumpToFindDoor(){
+        jumpToFindDoor(){   
             this.$router.push("/findDoor");
         }
     },
