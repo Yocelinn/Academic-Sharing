@@ -4,7 +4,7 @@
           <div class="recommend-container">
             <div v-for="thing in institution" :key="thing.id" class="recommend-item">
               <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-              <div class="recommend-img-container"  >
+              <div class="recommend-img-container" v-loading="loading" >
                 <img class="recommend-img" :src="thing.logo" @click="jumpToInstitution(thing.id)" >
               </div>
                 <div class="recommend-title"  @click="jumpToInstitution(thing.id)">{{ thing.displayName }} </div>
@@ -20,18 +20,21 @@ import { defineComponent,ref,h, onMounted,onUnmounted,computed } from "vue";
 
 export default defineComponent({
     props:{
-        institution:Object
+        institution:Object,
+        loading:Boolean
     },
     setup() {
+     
+
         function jumpToInstitution(id){
-      
+          
         let routerJump = this.$router.resolve({ 
                     path: "/institution",
                     query: {id:id } 
                 });
                 window.open(routerJump.href, '_blank');
         }
-        console.log("inComponents")
+        // console.log("inComponents")
         return {jumpToInstitution}
     },
 })

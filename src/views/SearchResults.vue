@@ -169,10 +169,10 @@
           // console.log(useRoute())
           // console.log(query)
           // console.log(strategy)
-          console.log("searchType")
-          console.log(sessionStorage.getItem('saveSearchType'))
+          // console.log("searchType")
+          // console.log(sessionStorage.getItem('saveSearchType'))
           if(sessionStorage.getItem('saveSearchType')==null){
-            console.log("It's null")
+            // console.log("It's null")
           }else{
             // curAcademyType=store.state.searchType;
             curAcademyType.value=sessionStorage.getItem('saveSearchType')
@@ -187,15 +187,15 @@
             content.value="高级检索";
             // key.value=strategy.value.content;
             key.value=translateQuery(strategy.value.content,curAcademyType.value)
-            console.log(key.value)
+            // console.log(key.value)
           }
           else if(strategy.value.type==="professional"){
             content.value="专业检索";
             key.value=strategy.value.content;
           }
        
-        console.log("content")
-        console.log(content.value);
+        // console.log("content")
+        // console.log(content.value);
           await getResults();
           await getGroupClassifier();
           await new Promise(resolve => setTimeout(resolve, 2000));
@@ -252,7 +252,7 @@
             const scrollHeight = element.scrollHeight;
             const clientHeight = element.clientHeight;
             if(isLastPage.value===true){
-              console.log("It's lastPage")
+              // console.log("It's lastPage")
             }
             else if ((scrollTop + clientHeight >= scrollHeight - 100)) {
               // You can adjust the threshold (100 in this example) based on your preference
@@ -272,7 +272,7 @@
         // console.log(route)
         const query =useRoute().query.query;
        
-        console.log(query)
+        // console.log(query)
         const store=useStore();
         var strategy=ref({type:"",content:""})
         strategy.value.type=useRoute().query.type;
@@ -311,17 +311,6 @@
         
         var grouptype=ref({})
        // var selectedClassification=ref([{id:1,name:"haha"},{id:2,name:"1234"}])
-        // var groupClassifier=ref([{id:1,"type": {}},
-        //                           {id:2,"subject":{}},
-        //                           {id:3,"year": {}},
-        //                           {id:4,"source": {}},
-        //                           {id:5,"collection": {}},
-        //                           {id:6,"lang": {}},
-        //                           {id:7,"funding": {}},
-        //                           {id:8,"institution": {}},
-        //                           {id:9,"license": {}}
-        //                         ]
-        //                        )
         const activeNames = ref(['1'])
         const checkList=ref({})
       // 移除已选条件的标签，后续这个selectedClassification需要换为aggregations
@@ -336,10 +325,10 @@
           handleClassfierChange();
         }
         function handleTimeRangeChange(){
-          console.log(timeRange)
+          // console.log(timeRange)
         }
         function handleRankingChange(){
-          console.log(RankingMethod)
+          // console.log(RankingMethod)
         }
        async function handleClassfierChange(){
         // console.log("ClassiferChanged")
@@ -366,8 +355,8 @@
           await getResults();
           await getGroupClassifier();
           this.$store.commit('changeSearchType',curAcademyType.value);
-          console.log("afterChnage")
-          console.log(sessionStorage.getItem('saveSearchType'))
+          // console.log("afterChnage")
+          // console.log(sessionStorage.getItem('saveSearchType'))
           // await new Promise(resolve => setTimeout(resolve, 300));
           
         }
@@ -429,7 +418,7 @@
               grouptype.value=response;
               const tagNames = response.map(item => item.tag);
               // console.log(tagNames)
-              console.log(grouptype.value)
+              // console.log(grouptype.value)
                 
                 tagNames.forEach(name => {
                   if(aggregations.value[name]==undefined){
@@ -449,7 +438,7 @@
           });
         }
         function simpleContentTransfer(content){
-          console.log("1"+content)
+          // console.log("1"+content)
           const article = [{ key: "", value: "主题" },{ key: "title", value: "标题" },
                               { key: "keyword", value: "关键词" },{ key: "author", value: "作者" },
                               { key: "institution", value: "机构" },{ key: "source", value: "出版物" },
@@ -499,7 +488,7 @@
         else if(curAcademyType.value==="reports"){ matchedItem = report.find(item => item.key === content);}
         else if(curAcademyType.value==="sciencedata"){ matchedItem = scientificData.find(item => item.key === content);}
         else if(curAcademyType.value==="books"){matchedItem = book.find(item => item.key === content);}
-        console.log(matchedItem.value)
+        // console.log(matchedItem.value)
         return matchedItem ? matchedItem.value : "null";
         }
          
