@@ -47,7 +47,7 @@
               </div>
               <div class="otherThing" style="display: flex;">
                 <span>关注领域：</span>
-                <span v-for="(e, i) in item.interests" :key="i" style="margin-left: 10px;font-weight: 700;">
+                <span v-for="(e, i) in item.interests" :key="i" style="margin-left: 10px;font-weight: 700;border-style: solid;border-width: 1px;padding-left: 3px;padding-right: 3px;border-radius: 10px;border-color: #529b2e;">
                   {{ e }}
                 </span>
               </div>
