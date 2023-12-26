@@ -1,6 +1,6 @@
 <template>
   <div class="searchBlock">
-    <div class="searchBackgroundImage"></div>
+    <el-image class="searchBackgroundImage" :src="require('@/assets/home/searchBackground.jpg')" fit="fill"></el-image>
     <div class="search">
       <searchBox width=100 color="white" :isClassVisible=false  :isLargeModel = true></searchBox>
     </div>
