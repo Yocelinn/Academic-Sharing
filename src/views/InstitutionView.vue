@@ -45,7 +45,7 @@
             </ul> -->
             <ul>
               <li v-for="item in authors" :key="item" style="text-align: left;">
-                <el-link :href="item.id" style="font-weight: bold;" target="_blank">{{item.display_name}}</el-link>
+                <el-link :href="`http://localhost:8080/PersonalDoorPage?query=${item.id}`" style="font-weight: bold;" target="_blank">{{item.display_name}}</el-link>
                 <span class="affi">{{`发表了${item.works_count}篇学术成果;`}}</span>
                 <span class="orgn">{{`共被引用${item.cited_by_count}次;`}}</span>
               </li>
@@ -73,8 +73,12 @@
           <el-table :data="papers" style="width: 100%; margin-bottom: 20px" :show-header="false" v-loading="paper_loading">
             <el-table-column type="index" width="50" />
             <el-table-column prop="title" width="400" />
-            <el-table-column prop="authors" width="300" />
-            <el-table-column prop="field"/>
+            <el-table-column width="300">
+              <template  #default="scope">
+                {{scope.row.authors.slice(1, -1)}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="field" width="200"/>
             <el-table-column prop="date" />
             <el-table-column prop="cited_by_count" />
           </el-table>
@@ -120,7 +124,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$route.query.id)
     this.institutionId = this.$route.query.id
     var promise = GetInstitutionInfo(this.institutionId)
     promise.then((result =>{

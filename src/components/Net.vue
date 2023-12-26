@@ -119,7 +119,6 @@
       methods: {
         initChart() {
           this.chart = this.$echarts.init(document.getElementById("mywordcloud"));
-          console.log('lll');
           const option = {
             // title: {
             //   text: "专家关系网络",
@@ -184,7 +183,6 @@
             //   name: 'author',
             //   query: {id: params.data.id}
             // })
-            // console.log(params)
             window.open(params.data.id);
           });
         },

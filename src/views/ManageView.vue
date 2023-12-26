@@ -59,7 +59,8 @@ export default {
 
 <style lang="less" scoped>
 .home-container {
-  height: 100%;
+	min-height: 100vh;
+	height: 100%;
 }
 .el-aside {
   background-color: #333744;
