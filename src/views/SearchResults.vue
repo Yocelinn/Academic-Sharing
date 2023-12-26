@@ -147,6 +147,7 @@
   import { mapMutations } from "vuex";
   import {useStore} from "vuex"
   // import {post,get} from "../api/api.js"
+  import {translateQuery} from "../components/getContent.js"
   import {search,searchForAggregations} from "../api/classification.js"
   export default defineComponent ({
     components: {
@@ -184,7 +185,9 @@
           }
           else if(strategy.value.type==="advanced"){
             content.value="高级检索";
-            key.value=strategy.value.content;
+            // key.value=strategy.value.content;
+            key.value=translateQuery(strategy.value.content,curAcademyType.value)
+            console.log(key.value)
           }
           else if(strategy.value.type==="professional"){
             content.value="专业检索";
@@ -518,7 +521,8 @@
     display:flex;
     justify-content: space-between;
     padding:10px 100px;
-    height:90vh;
+    min-height:100vh;
+    /* height:90vh; */
 }
 .sr-left-aside{
     width:20%;

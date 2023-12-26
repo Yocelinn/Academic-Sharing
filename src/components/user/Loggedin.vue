@@ -29,6 +29,7 @@
 import store from '@/store';
 import { ElNotification } from 'element-plus';
 import { Logoff } from '@/api/loginAndRegister';
+import { match } from 'path-to-regexp';
 
 export default{
     props: {
@@ -37,10 +38,22 @@ export default{
     data() {
         return{
             nickName: "",
+            pathList:["/", "/searchResults", "/allInstitution", "/institution", "/paper/detail/:workId?", "/patent/detail/:patentId?", "/program/detail/:funderId?"],
         }
     },
     methods:{
         logOutClick(){
+            var path=this.$route.path;
+            var isPush=true;
+            for(var i=0;i<this.pathList.length;i++){
+                if(match(this.pathList[i])(path)){
+                    isPush=false;
+                    break;
+                }
+            }
+            if(isPush){
+                this.$router.push("/");
+            }
             ElNotification({
                 message: "再见，尊敬的"+store.state.userInfo.nickName,
                 type: 'success',
@@ -54,6 +67,17 @@ export default{
             var promise=Logoff();
             promise.then((result) => {
                 if(result.code==200){
+                    var path=this.$route.path;
+                    var isPush=true;
+                    for(var s in this.pathList){
+                        if(match(s)(path)){
+                            isPush=false;
+                            break;
+                        }
+                    }
+                    if(isPush){
+                        this.$router.push("/");
+                    }
                     ElNotification({
                         message: "注销成功，期待您的再次到来",
                         type: 'success',
