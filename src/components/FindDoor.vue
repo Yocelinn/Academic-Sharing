@@ -72,9 +72,7 @@ export default {
                 });
                 return ;
             }
-            console.log(this.item)
             var promise = claimPortal(this.item.uid, this.textarea);
-            console.log(this.item.uid,this.textarea)
             promise.then((result) => {
                 if (result.code == 1022) {
                     ElNotification({
@@ -96,7 +94,6 @@ export default {
                         });
                     }
                 }
-                console.log(result);
             })
         },
     },
