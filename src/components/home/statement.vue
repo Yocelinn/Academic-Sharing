@@ -112,7 +112,7 @@ export default {
     width: 100%;
     min-width: 1200px;
     height: 50px;
-    bottom: 0;
+    bottom: 0%;
     font-size: 16px;
     text-align: left;
     color: white;

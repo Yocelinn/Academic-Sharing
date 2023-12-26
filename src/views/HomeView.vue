@@ -164,12 +164,12 @@ export default {
   /* background-color: #faf3dd; */
 }
 .hotPaperBlock{
-  position: absolute;
+  position: relative;
   width: 100%;
   min-width: 1200px;
   height: 400px;
   right: 0%;
-  top: 400px;
+  top: 0px;
 }
 
 </style>

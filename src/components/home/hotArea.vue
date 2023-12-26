@@ -5,7 +5,6 @@
     <!-- <button class="typeButton" @click="this.switchShowType()">{{ this.typeString }}</button> -->
     <div v-show="this.showType==='barGraph'" class="barGraph">
         <div id="bar"></div>
-        <div id="barTitle"></div>
     </div>
     <div v-show="this.showType==='pieChart'" class="pieChart">
 
@@ -14,7 +13,6 @@
 
 <script>
 import { Hotfield } from '@/api/record'
-import { ElText } from 'element-plus';
 
 export default{
     data(){

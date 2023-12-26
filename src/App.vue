@@ -1,6 +1,8 @@
 <template>
   <navigationBar></navigationBar>
-  <router-view/>
+  <div style="position: relative;width: 100%;height: auto;min-width: 1200px;">
+    <router-view/>
+  </div>
   <statement></statement>
 </template>
 
