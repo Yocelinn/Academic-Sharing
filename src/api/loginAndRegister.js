@@ -69,3 +69,16 @@ export function GetScholarId(){
     let param={};
     return get("/user/getScholarIdSelf",param)
 }
+export function ForgotPassword(email, newPw, code){
+    let param={};
+    param.email=email;
+    param.newPw=newPw;
+    param.code=code;
+    return get("/user/forgotPassword", param);
+}
+
+export function SendForgotEmail(email){
+    let param={};
+    param.email=email;
+    return get("/user/sendForgotEmail", param);
+}

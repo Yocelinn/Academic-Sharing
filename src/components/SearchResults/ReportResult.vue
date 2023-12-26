@@ -5,23 +5,24 @@
             <div class="result">
                 <div class="info">
                 <div class="title"><span v-html="paper.title"></span></div>
-                <div class="authors">
+                <div class="authors" v-if="paper.author && paper.author.length!=0">
                   
                   <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
                   <!-- <span class="alias-info">发明人</span> -->
-                  {{ paper.author.join(', ') }}</div>
+                  <span v-html="paper.author.join(', ')"></span>
+                  </div>
                 <div class="date">
-                  <span class="alias-info">发布时间:</span> <span v-html="paper.date"></span>
-                  <span class="alias-info"> 所属服务:</span> <span v-html="paper.serverName"></span>
+                  <span class="alias-info" v-if="paper.date">发布时间:</span> <span v-html="paper.date"></span>
+                  <span class="alias-info" v-if="paper.serverName"> 所属服务:</span> <span v-html="paper.serverName"></span>
                 </div>
                
                 <div class="abstract-container" :id="`abstract-container_${paper.id}`">
-                   <div class="abstract">
+                   <div class="abstract" v-if="paper.abstracts">
                     <span class="alias-info"> 摘要: </span><span v-html="paper.abstracts"></span>
                     </div>
                    
                 </div>
-                <div class="button-block">
+                <div class="button-block" v-if="paper.abstracts">
                   <button class="expand-button" @click="toggleText(paper.id)">
                       <el-icon v-if="displayAll"><ArrowDown /></el-icon>
                       <el-icon v-else><ArrowUp /></el-icon>{{displayAll?'显示全部':'收起'}}

@@ -1,6 +1,9 @@
 <template>
     <div >
-        <institutionDisplay :institution="displayedInstitution"></institutionDisplay>
+           
+           <institutionDisplay :institution="displayedInstitution"></institutionDisplay>
+        
+       
         <div class="pagination"> 
         <el-pagination
             v-if="totalPage>1"
@@ -34,12 +37,11 @@ export default defineComponent({
         .then(response=>{
             institution.value=response.results;
             totalPage.value=Math.ceil(institution.value.length /InstitutionPerPage.value);
-            console.log(institution.value)
+            console.log(institution.value);
         })
         .catch(error=>{
             console.log(error)
         })
-           
         //    console.log(totalPage.value)
         }
         catch(error){
@@ -99,6 +101,8 @@ export default defineComponent({
 .pagination{
     display: flex;
     justify-content: center;
+    margin-bottom:10px;
+
 }
 </style>
   

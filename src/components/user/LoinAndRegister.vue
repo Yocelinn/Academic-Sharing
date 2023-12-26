@@ -19,7 +19,7 @@
                     </el-form-item>
                     <el-button class="loginButton" type="success" @click="this.loginClick()">登录</el-button>
                     <el-button class="loginToRegister" text="true" @click="this.switchToRegisterForm()">注册新用户</el-button>
-                    <el-button class="forgetButton" text="true">忘记密码</el-button>
+                    <el-button class="forgetButton" text="true" @click="this.switchToForgetPassword()">忘记密码</el-button>
                 </el-form>
             </div>
             <div class="register" v-if="this.formType==1">
@@ -44,12 +44,28 @@
                     <el-button class="registerButton" type="success" @click="this.registerClick()">注册</el-button>
                 </el-form>
             </div>
+            <div class="forgePassword" v-if="this.formType==2">
+                <el-button class="returnToLogin" type="success" text="true" @click="this.switchToLoginForm()"><el-icon><Back /></el-icon>登录页面</el-button>
+                <el-form class="forgetPasswordForm" ref="forgetPasswordRef" :model="this.forgetPassword" :rules="this.forgetPasswordRules">
+                    <el-form-item prop="email">
+                        <el-input class="input" type="text" v-model="this.forgetPassword.email" placeholder="您的邮箱" maxlength="25" prefix-icon="Message"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="vercode">
+                        <el-input class="input" type="text" v-model="this.forgetPassword.vercode" placeholder="请输入4位验证码" maxlength="6" style="width: 80%;" prefix-icon="ElementPlus"></el-input>
+                        <el-button class="input" type="success"  @click="this.sendVerCodeForForgetPassword()" style="width: 20%;font-size: 14px;">获取验证码</el-button>
+                    </el-form-item>
+                    <el-form-item prop="password">
+                        <el-input class="input" type="password" v-model="this.forgetPassword.password" placeholder="密码" maxlength="25" prefix-icon="Lock"></el-input>
+                    </el-form-item>
+                    <el-button class="registerButton" type="success" @click="this.forgetPasswordClick()">重置密码</el-button>
+                </el-form>
+            </div>
         </div>
     </el-dialog>
 </template>
 
 <script>
-import { Login, Register, SendVerifyCode } from '@/api/loginAndRegister';
+import { Login, Register, SendVerifyCode, ForgotPassword, SendForgotEmail } from '@/api/loginAndRegister';
 import store from '@/store';
 import { ElNotification } from 'element-plus';
 
@@ -78,7 +94,7 @@ export default {
             open: {
                 login: false,
             },
-            formType: 0,  //0为登录，1为注册
+            formType: 0,  //0为登录，1为注册，2为忘记密码
             loginButtonType: 'success',
             registerButtonType: 'info',
             login: {
@@ -90,6 +106,11 @@ export default {
                 password: '',
                 confirmPassword: '',
                 email: '',
+                vercode: '',
+            },
+            forgetPassword:{
+                email: '',
+                password: '',
                 vercode: '',
             },
             loginRules: {
@@ -155,7 +176,32 @@ export default {
                         }
                     }, type: 'string', trigger: 'blur'}],
             },
-
+            forgetPasswordRules: {
+                password: [{
+                    validator: (rule, value, callback)=>{
+                        if(value===''){
+                            callback(new Error("请输入密码"));
+                        } else{
+                            callback();
+                        }
+                    }, type: 'string', trigger: 'blur'}],
+                email: [{
+                    validator: (rule, value, callback)=>{
+                        if(value===''){
+                            callback(new Error("请输入邮箱"));
+                        } else{
+                            callback();
+                        }
+                    }, type: 'string', trigger: 'blur'}],
+                vercode: [{
+                    validator: (rule, value, callback)=>{
+                        if(value===''){
+                            callback(new Error("请输入验证码"));
+                        } else{
+                            callback();
+                        }
+                    }, type: 'string', trigger: 'blur'}],
+            },
         }
     },
     methods: {
@@ -167,6 +213,9 @@ export default {
             this.register.confirmPassword='';
             this.register.email='';
             this.register.vercode='';
+            this.forgetPassword.email='';
+            this.forgetPassword.password='';
+            this.forgetPassword.vercode='';
             this.open.login=true;
         },
         switchToLoginForm(){
@@ -185,6 +234,12 @@ export default {
             this.loginButtonType='info';
             this.registerButtonType='success';
             this.formType=1;
+        },
+        switchToForgetPassword(){
+            this.forgetPassword.email='';
+            this.forgetPassword.password='';
+            this.forgetPassword.vercode='';
+            this.formType=2;
         },
         loginClick(){
             this.$refs.loginRef.validate((valid) => {
@@ -228,6 +283,59 @@ export default {
                                 duration: 2000,
                             });
                             this.switchToLoginForm();
+                        } else{
+                            ElNotification({
+                                message: result.info,
+                                type: 'warning',
+                                showClose: true,
+                                position: 'top-right',
+                                duration: 2000,
+                            });
+                        }
+                    })
+                }
+            })
+        },
+        forgetPasswordClick(){
+            this.$refs.forgetPasswordRef.validate((valid) => {
+                if(valid){
+                    var promise=ForgotPassword(this.forgetPassword.email, this.forgetPassword.password, this.forgetPassword.vercode);
+                    promise.then((result)=>{
+                        if(result.code==200){
+                            ElNotification({
+                                message: '重置成功',
+                                type: 'success',
+                                showClose: true,
+                                position: 'top-right',
+                                duration: 2000,
+                            });
+                            this.switchToLoginForm();
+                        } else{
+                            ElNotification({
+                                message: result.info,
+                                type: 'warning',
+                                showClose: true,
+                                position: 'top-right',
+                                duration: 2000,
+                            });
+                        }
+                    })
+                }
+            })
+        },
+        sendVerCodeForForgetPassword(){
+            this.$refs.forgetPasswordRef.validateField('email', (valid)=>{
+                if(valid){
+                    var promise=SendForgotEmail(this.forgetPassword.email);
+                    promise.then((result)=>{
+                        if(result.code==200){
+                            ElNotification({
+                                message: result.data,
+                                type: 'success',
+                                showClose: true,
+                                position: 'top-right',
+                                duration: 2000,
+                            });
                         } else{
                             ElNotification({
                                 message: result.info,
@@ -316,6 +424,12 @@ export default {
     width: 90%;
     left: 5%;
     top: 17%;
+}
+.forgePassword{
+    position: relative;
+    width: 90%;
+    left: 5%;
+    top: 25%;
 }
 .loginForm{
     position: relative;

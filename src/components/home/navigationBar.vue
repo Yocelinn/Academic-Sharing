@@ -5,6 +5,7 @@
         </div>
         <div id="home" class="address" style="width: 5%;left: 20%;" @click="this.jumpToHome()">首页</div>
         <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="this.jumpToPerson()">个人主页</div>
+        <div id="findDoor" class="address" style="width: 7%;left: 32%;" @click="this.jumpToFindDoor()">查找门户</div>
         <div v-if="!this.$store.state.isHome" class="searchBlock">
             <searchBox width=100 color="white" :isClassVisible=false  :isLargeModel = false></searchBox>
         </div>
@@ -57,6 +58,9 @@ export default {
         jumpToPerson(){
             this.$router.push("/person");
         },
+        jumpToFindDoor(){
+            this.$router.push("/findDoor");
+        }
     },
     mounted(){
         this.setPage();
@@ -129,8 +133,8 @@ export default {
 .searchBlock{
     position: absolute;
     height: 100%;
-    width: 49%;
-    left: 33%;
+    width: 42%;
+    left: 40%;
     top: 5px;
 }
 

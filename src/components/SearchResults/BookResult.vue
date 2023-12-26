@@ -8,12 +8,12 @@
                   <div v-html="paper.title">
                   </div>
                 </div>
-                <div class="authors" v-if="paper.author">
+                <div class="authors" v-if="paper.author&&paper.author.length!=0">
                   <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
                   <!-- <span class="alias-info">发明人</span> -->
-                  {{ paper.author.join(', ') }}</div>
+                  <span v-html="paper.author.join(', ')"> </span></div>
                 <div class="date">
-                  <span class="alias-info" v-if="paper.year">出版时间: </span> {{ paper.year }}
+                  <span class="alias-info" v-if="paper.year">出版时间: </span><span v-html="paper.year"></span> 
                   <span class="alias-info" v-if="paper.publisher">&nbsp; 出版社: </span> <span v-html="paper.publisher"></span>
                   <span class="alias-info" v-if="paper.isbn"> &nbsp;ISBN: </span><div v-html=" paper.isbn" ></div>
                 </div>
@@ -26,7 +26,7 @@
                     </div>
                    
                 </div>
-                <div class="button-block">
+                <div class="button-block" v-if="paper.abstracts">
                   <button class="expand-button" @click="toggleText(paper.id)">
                       <el-icon v-if="displayAll"><ArrowDown /></el-icon>
                       <el-icon v-else><ArrowUp /></el-icon>{{displayAll?'显示全部':'收起'}}
