@@ -135,11 +135,11 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
-const whiteList = ['/', '/searchResults', '/allInstitution','/institution','/findDoor']
+const whiteList = ['/', '/searchResults', '/allInstitution','/institution','/findDoor','/manage/scholar','/manage/comments','/manage/paper']
 const excludedRoute = '/paper/detail/:workId?';
 const excludedRoute2 = '/patent/detail/:patentId?';
 const excludedRoute3 = '/program/detail/:funderId?';
-const excludedRoute4 = '/manage'
+const excludedRoute4 = '/manage/welcome'
 router.beforeEach((to, from, next) => {
   if(to.path==="/"){
     store.commit('isHome', true);
@@ -150,6 +150,8 @@ router.beforeEach((to, from, next) => {
   const isExcluded2 = match(excludedRoute2)(to.path);
   const isExcluded3 = match(excludedRoute3)(to.path);
   const isExcluded4 = match(excludedRoute4)(to.path)
+  console.log(store.state.administratorInfo.isLogin);
+  console.log(isExcluded4);
   if (whiteList.indexOf(to.path) !== -1) {
     // 放行，进入下一个路由
     next()
@@ -169,11 +171,14 @@ router.beforeEach((to, from, next) => {
   else if (store.state.userInfo.isLogin==false&&store.state.administratorInfo.isLogin==false){
     next('/');
   }
-  else if(store.state.administratorInfo.isLogin==false&&isExcluded4){
-    next('/')
+  else if(store.state.administratorInfo.isLogin&&isExcluded4){
+    next();
   }
-  else if(store.state.administratorInfo.isLogin==true&&store.state.userInfo.isLogin==false&&!isExcluded4){
-    next('/')
+  // else if(store.state.administratorInfo.isLogin==true&&store.state.userInfo.isLogin==false&&!isExcluded4){
+  //   next('/')
+  // }
+  else if(store.state.userInfo.isLogin==false){
+    next('/');
   }
   else {
     next()
