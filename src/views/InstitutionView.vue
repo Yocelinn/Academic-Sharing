@@ -178,7 +178,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .outer {
     width: 100%;
     background-image: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
