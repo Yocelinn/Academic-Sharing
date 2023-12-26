@@ -19,19 +19,19 @@ export function PostComment(content, patentId){
     return post("/comment/create", data)
 }
 
-export function ReportCommentError(commentID, reason, description){
+export function ReportCommentError(commentID, description, reason){
     let param={};
     param.commentID = commentID;
-    param.reason = reason;
     param.description = description;
-    return get('/report/ReportComment', param);
+    param.reason = reason;
+    return get('/report/ReportComment', param)
 }
 
 export function GetPatentById(patentId){
     let param={};
     param.patentid=patentId;
     let patentid = patentId;
-    return get(`/patents/${patentid}`);
+    return get(`/patents/${patentid}`,param);
 }
 
 export function GetPatentRecommendById(patentTitle){
@@ -62,3 +62,4 @@ export function ReportPaperError(openalexID, comment){
     param.comment = comment;
     return get('/report/workReport', param)
 }
+

@@ -98,7 +98,7 @@
                 <div class="comment-input"><textarea id="commentBox" class="reply-box" placeholder="我的评论"></textarea><button @click="postComment()" class="reply-button">发布</button></div>
                 <div class="replys" v-if="comments.length == 0">还没有评论</div>
                 <div v-else class="comment-list" v-for="(item, index) in comments" :key="index">
-                  <div class="comment-user">{{ item.userName }}</div>
+                  <div class="comment-user">{{ item.userName }} <div class="complain-button" @click="openComplain(item.id)">投诉</div></div>
                   <div class="comment-content">{{ item.content }}</div>
                   <div class="comment-time">{{ item.time }}</div>
                 </div>
@@ -120,8 +120,9 @@
                 
                 <div class="info-title"><el-icon><Operation /></el-icon>常用操作</div>
                 <div class="button-container">
-                  <div class="button-list" @click="collect()"><el-icon><Star /></el-icon>收藏</div>
-                  <div class="button-list"><el-icon><Promotion /></el-icon>推荐</div>
+                  <div class="button-list" @click="collect" v-if="haveCollect==false"><el-icon><Star /></el-icon>收藏</div>
+                  <div class="button-list"  v-else><el-icon><StarFilled /></el-icon>已收藏</div>
+                  <div class="button-list" @click="promote"><el-icon><Promotion /></el-icon>推荐</div>
                 </div>
               </div>
               <div class="info-box">
@@ -171,6 +172,37 @@
           <span class="dialog-footer">
             <el-button type="primary" @click="alertLogVisible = false">
               好
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+
+      <!-- 以下是投诉评论的对话框 -->
+      <el-dialog v-model="complainVisible" :title="complain.title" width="40%" center>
+        <div class="input-container" v-if="!successVisible">
+          <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="投诉原因" style="width:500px;">
+              <el-input v-model="formInline.reason" placeholder="请填写原因" clearable >
+                </el-input>
+            </el-form-item>
+
+            <el-form-item label="详细描述" style="width:500px;">
+              <el-input v-model="formInline.content" placeholder="请填写详细描述" type="textarea" clearable >
+                </el-input>
+            </el-form-item>
+           
+          </el-form>
+        </div>
+        <el-result icon="success" title="提交成功" sub-title="感谢您的反馈！" v-else>
+          <template #extra>
+            <el-button type="primary" @click="closeComplain">关闭</el-button>
+          </template>
+        </el-result>
+        <template #footer v-if="!successVisible">
+          <span class="dialog-footer" >
+            <el-button @click="complainVisible = false">取消</el-button>
+            <el-button type="primary" @click="submitComplain">
+              提交
             </el-button>
           </span>
         </template>
@@ -227,11 +259,15 @@
         links: '',
       });
       const title = ref('')
-      const count = ref(0)
 
-      // defineExpose({
-      //     title
-      // })
+      const haveCollect = ref(false)
+
+      const complain = ref({
+        id: 0,
+        title: '',
+        content: '',
+      })
+      const complainVisible = ref(false)
 
       onMounted( () => {
        
@@ -244,23 +280,19 @@
         if(patentId == null){
           patentId = '2ce8e8808848041f175895139ff8795a';
         }
-        count.value ++;
         PatentApi.GetPatentById(patentId)
         .then((response) => {
-          count.value ++;
 
             detailInfo.value = response;
             title.value = response.title;
-            console.log(count.value + " :"+title.value)
+            
+            console.log(detailInfo.value)
             getPaperList();
         })
 
       }
 
       function getPaperList() {
-        console.log(count.value)
-        console.log(title.value)
-        // console.log(JSON.stringify(title.t))
 
         PatentApi.GetPatentRecommendById(title.value)
         .then((response) => {
@@ -332,19 +364,71 @@
         }
       }
       
-
-      const onSubmit = () => {
-        successVisible.value = true;
-        console.log('submit!')
+      function openComplain(commentId) {
+        if(store.state.userInfo.isLogin){
+          complain.value.title = "投诉评论";
+          complainVisible.value = true;
+          complain.value.id = commentId;
+        } else {
+          alertLogVisible.value = true;
+        }
+        
       }
+
+      const onSubmit = () => { 
+        // console.log(openId.value)
+        PatentApi.ReportPaperError(detailInfo.value.id, formInline.content) 
+        .then((response)=>{
+          console.log(response)
+          if(response.code == 200){
+            successVisible.value = true;
+          } else {
+            ElNotification({
+                  message: "提交失败",
+                  type: 'error',
+                  showClose: true,
+                  position: 'top-right',
+                  duration: 2000,
+              });
+          }
+        })
+        formInline.content = '';
+      }
+
       const closeDialog = () => {
         dialogVisible.value = false;
         successVisible.value = false;
       }
+
+      const submitComplain = () => {        
+        PatentApi.ReportCommentError(complain.value.id, formInline.content, formInline.reason) 
+        .then((response)=>{
+          console.log(response)
+          if(response.code == 200){
+            successVisible.value = true;
+          } else {
+            ElNotification({
+                  message: "提交失败",
+                  type: 'error',
+                  showClose: true,
+                  position: 'top-right',
+                  duration: 2000,
+              });
+          }
+        })
+        formInline.content = '';
+        formInline.reason = '';
+      }
+
+      const closeComplain = () => {
+        complainVisible.value = false;
+        successVisible.value = false;
+      }
+
       const collect = () => {
         var title = detailInfo.value.title;
-        var id = detailInfo.value.workId;
-        var author = detailInfo.value.authors;
+        var id = detailInfo.value.id;
+        var author = detailInfo.value.inventors;
         PatentApi.PostCollect(id, title, author)
         .then((response) => {
           console.log(response)
@@ -356,6 +440,7 @@
                   position: 'top-right',
                   duration: 2000,
               });
+              haveCollect.value = true
           } else {
             ElNotification({
                   message: "重复收藏！",
@@ -389,6 +474,9 @@
         successVisible,
         alertLogVisible,
         title,
+        complainVisible,
+        complain,
+        haveCollect,
 
         postComment,
         reportError,
@@ -397,6 +485,9 @@
         closeDialog,
         collect,
         promote,
+        closeComplain,
+        submitComplain,
+        openComplain,
       };
 
       
@@ -576,6 +667,7 @@
     box-shadow: 0 0.0625rem 0.125rem #0000004d;
     align-items: center;
     display: flex;
+    cursor: pointer;
 
   }
   /* 相关文献推荐 */
@@ -681,14 +773,28 @@
     width: 80px;
     border-radius: 10px;
   }
+  .complain-button {
+    height: 25px;
+    /* background-color: #c2e8d6; */
+    border: #c2e8d6 1px solid;
+    width: 70px;
+    border-radius: 10px;
+    font-weight: 500;
+    text-align: center;
+    
+  }
   .comment-list {
     text-align: left;
     border-bottom: #5dd39a 1px solid;
     margin:10px 30px;
     padding: 5px 10px;
   }
+  
   .comment-user {
     font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+
   }
   .comment-content {
     font-weight: normal;
