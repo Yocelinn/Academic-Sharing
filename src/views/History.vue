@@ -65,7 +65,7 @@
   import { onMounted,ref} from 'vue';
   import {post,get} from "../api/api.js"
   import {GetHistory,DeleteHistory,SearchHistory,GetData}from "../api/record.js"
-  import { moment } from 'moment';
+  import  moment  from 'moment';
   export default {
     components: {
       Personaside,
@@ -107,6 +107,8 @@
         promise.then((response=>{
           console.log(response.data),
           history.value = response.data
+          console.log(history.value[0])
+          console.log('test')
           for(var i=0;i<history.value.length;i++){
             history.value[i].time=moment(history.value[i].time).utcOffset(8).format('YYYY/MM/DD HH:mm:ss')
           }
