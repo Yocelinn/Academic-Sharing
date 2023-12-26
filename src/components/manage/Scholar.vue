@@ -39,7 +39,11 @@
         <el-table-column type="index"></el-table-column>
         <el-table-column label="发起人" prop="approvePeople"></el-table-column>
         <el-table-column label="门户" prop="openalexID"></el-table-column>
-        <el-table-column label="时间" prop="time"></el-table-column>
+        <el-table-column label="时间">
+          <template  #default="scope">
+            {{this.convertTime(scope.row.time)}}
+          </template>
+        </el-table-column>
         <el-table-column label="状态">
           <template #default="scope">
             <el-button type="info" plain v-if="scope.row.ischeck==1">待处理</el-button>
@@ -75,7 +79,7 @@
             <!-- <el-input v-model="infoForm.approvePeople"></el-input> -->
           </el-form-item>
           <el-form-item label="时间：" prop="time">
-            <el-text>{{infoForm.time}}</el-text>
+            <el-text>{{this.convertTime(infoForm.time)}}</el-text>
             <!-- <el-input v-model="infoForm.time" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="申请门户：" prop="openalexID">
@@ -99,7 +103,7 @@
             <!-- <el-input v-model="handleForm.approvePeople" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="时间：" prop="time">
-            <el-text>{{handleForm.time}}</el-text>
+            <el-text>{{this.convertTime(handleForm.time)}}</el-text>
             <!-- <el-input v-model="handleForm.time" disabled></el-input> -->
           </el-form-item>
           <el-form-item label="申请门户：" prop="openalexID">
@@ -134,6 +138,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import store from '@/store';
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
@@ -196,16 +201,8 @@ export default {
       handleVisible: false,
       rejectDialogVisible: false,
       infoForm: {
-        id: 1,
-        approvePeople: 'Test',
-        time: '2023年11月19日22:19:58',
-        text: '这个是要和数据库交互所以点哪个都一样的',
       },
       handleForm: {
-        id: 1,
-        approvePeople: 'Test2',
-        time: '2023年11月19日22:19:58',
-        text: '和前面那个表格同理点哪个都一样',
       },
       handlingScholar: {},
     }
@@ -214,6 +211,9 @@ export default {
     this.getAllScholar()
   },
   methods: {
+    convertTime(time) {
+      return moment(time).utcOffset(8).format('YYYY/MM/DD HH:mm:ss')
+    },
     logout() {
       store.state.administratorInfo.isLogin = false;
       store.state.administratorInfo.token = "";

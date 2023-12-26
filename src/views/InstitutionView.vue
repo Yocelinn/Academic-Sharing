@@ -92,7 +92,6 @@
         <el-backtop :right="100" :bottom="100" />
       </el-main>
     </el-container>
-    <el-footer></el-footer>
   </div>
 </template>
 
