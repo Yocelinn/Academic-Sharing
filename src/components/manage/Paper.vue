@@ -242,7 +242,6 @@ export default {
       if(s.ischeck === 1){
         this.handleVisible = true
         this.handleForm.id = s.id
-        // console.log(this.handleForm.id)
         for(var paper of this.paperList){
           if(paper.id === this.handleForm.id){
             paper.ischeck = 2
@@ -355,7 +354,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-card{
   margin-top: 15px;
 }
