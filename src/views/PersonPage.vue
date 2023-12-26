@@ -127,7 +127,12 @@ export default {
             type:'success',
           })
         this.username=response.data.nick_name;
-        this.persondescription=response.data.person_description;
+        if(response.data.person_description.length!=0){
+        persondescription.value = response.data.person_description;
+        }
+        else{
+          persondescription.value='个人简介'
+        }
         }
       })
       this.dialogFormVisible = false;
@@ -169,7 +174,7 @@ export default {
           this.$router.push({
           path: "/PersonalDoorPage",
           query: {
-          query: 1,
+          query: response.data,
         }
       })
         }))
@@ -208,9 +213,17 @@ export default {
       promise.then((response)=>{
         console.log(store.state.token);
         console.log(response);
+        if(response.data.isAuthor==true){
+          identity.value='学者'
+        }
         username.value = response.data.nick_name;
         email.value = response.data.email;
+        if(response.data.person_description.length!=0){
         persondescription.value = response.data.person_description;
+        }
+        else{
+          persondescription.value='个人简介'
+        }
       })
       let echarts1option = {
         title: {

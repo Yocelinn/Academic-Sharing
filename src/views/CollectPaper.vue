@@ -9,7 +9,7 @@
             <el-row>
               <el-col :span="16" style="padding-right: 40px;"><div class="grid-content ep-bg-purple-light" />
                 <el-card style="height:640px" class="collectcard">
-                  <el-table :data="collectpapers" style="width: 100%">
+                  <el-table :data="collectpapers" style="width: 100%" height="640">
                     <el-table-column label="收藏者id" width="170" >
                       <template #default="scope">
                         {{ scope.row.userId }}
@@ -118,7 +118,9 @@
         promise.then((response=>{
           console.log(response.data)
           collectpapers.value = response.data
+          
           console.log(store.state.userInfo.token)
+          console.log(collectpapers)
         }))
         var echarts1option = {
         title: {
