@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
 export default createStore({
   state: {
@@ -13,7 +13,6 @@ export default createStore({
       token: "",
     },
     searchType: "",
-    currentPage: "",
     isHome: false,
   },
   getters: {
@@ -43,9 +42,6 @@ export default createStore({
       state.searchType=searchType;
       sessionStorage.setItem('saveSearchType', searchType);
     },
-    changeCurrentPage(state, currentPage){
-      state.currentPage=currentPage;
-    },
     administratorLogin(state, token){
       state.administratorInfo.token=token;
       state.administratorInfo.isLogin=true;
@@ -55,6 +51,9 @@ export default createStore({
       state.administratorInfo.isLogin=false;
       state.administratorInfo.token="";
       sessionStorage.setItem('saveAdministrator', JSON.stringify(state.administratorInfo));
+    },
+    isHome(state, isHome){
+      state.isHome=isHome;
     }
   },
   actions: {

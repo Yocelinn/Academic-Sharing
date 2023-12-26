@@ -237,7 +237,6 @@ export default {
     getScholarById(id){
       var promise = GetScholarApproval(id);
       promise.then((result)=>{
-        console.log(result.data[0])
         return result.data[0]
       })
     },
@@ -263,7 +262,6 @@ export default {
       if(s.ischeck === 1){
         this.handleVisible = true
         this.handleForm.id = s.id
-        // console.log(this.handleForm.id)
         for(var scholar of this.scholarList){
           if(scholar.id === this.handleForm.id){
             scholar.ischeck = 2
@@ -359,7 +357,6 @@ export default {
       if(this.value==""){
         this.getAllScholar()
       }else{
-        console.log(this.value)
         var promise = FilterScholarApproval(this.value);
         promise.then((result)=>{
           this.loading = false
@@ -378,7 +375,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-text{
   text-align: left;
 }

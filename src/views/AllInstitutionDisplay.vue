@@ -1,9 +1,8 @@
 <template>
     <div >
            
-           <institutionDisplay :institution="displayedInstitution"></institutionDisplay>
+        <institutionDisplay :institution="displayedInstitution" :loading="loading"></institutionDisplay>
         
-       
         <div class="pagination"> 
         <el-pagination
             v-if="totalPage>1"
@@ -37,7 +36,8 @@ export default defineComponent({
         .then(response=>{
             institution.value=response.results;
             totalPage.value=Math.ceil(institution.value.length /InstitutionPerPage.value);
-            console.log(institution.value);
+            // console.log(institution.value);
+            loading.value=false;
         })
         .catch(error=>{
             console.log(error)
@@ -50,49 +50,21 @@ export default defineComponent({
        })
        var InstitutionPerPage=ref(8);
        var currentPage=ref(1);
+       var loading=ref(true)
         const displayedInstitution = computed(() => {
-            console.log(institution.value)
+            // console.log(institution.value)
             const startIndex = (currentPage.value - 1) * InstitutionPerPage.value;
             const endIndex = startIndex + InstitutionPerPage.value;
-            console.log(institution.value.slice(startIndex, endIndex))
+            // console.log(institution.value.slice(startIndex, endIndex))
             return institution.value.slice(startIndex, endIndex);
         });
-  
-    //     const institution=ref([{id:1,name:11111,introduction:"aaaaaa"},
-    //                            {id:2,name:11111,introduction:"aaaaaa"},
-    //                            {id:3,name:11111,introduction:"aaaaaa"},
-    //                            {id:4,name:11111,introduction:"aaaaaa"},
-    //                            {id:5,name:11111,introduction:"aaaaaa"},
-    //                            {id:6,name:11111,introduction:"aaaaaa"},
-    //                            {id:7,name:11111,introduction:"aaaaaa"},
-    //                            {id:8,name:11111,introduction:"aaaaaa"},
-    //                            {id:9,name:11111,introduction:"aaaaaa"},
-    //                            {id:10,name:11111,introduction:"aaaaaa"},
-    //                            {id:11,name:99911111,introduction:"aaaaaa"},
-    //                            {id:12,name:11111,introduction:"aaaaaa"},
-    //                            {id:13,name:13461111,introduction:"aaaaaa"},
-    //                            {id:14,name:11111,introduction:"aaaaaa"},
-    //                            {id:15,name:11111,introduction:"aaaaaa"},
-    //                            {id:16,name:11341111,introduction:"aaaaaa"},
-    //                            {id:17,name:11111,introduction:"aaaaaa"},
-    //                            {id:18,name:32452111,introduction:"aaaaaa"},
-    //                            {id:19,name:8121111,introduction:"aaaaaa"},
-    //                            {id:20,name:67111,introduction:"aaaaaa"},
-    //                            {id:21,name:121111,introduction:"aaaaaa"},
-    //                            {id:22,name:123111,introduction:"aaaaaa"},
-    //                            {id:23,name:3111,introduction:"aaaaaa"},
-    //                            {id:24,name:12211,introduction:"aaaaaa"},
-    // ])
     var institution=ref([])
-    // async function getData(){
-       
-    // }
     const totalPage=ref()
     function handlePageChange(newPage){
         currentPage.value=newPage;
 
     }
-        return {institution,currentPage,InstitutionPerPage,handlePageChange,displayedInstitution,totalPage}
+        return {institution,currentPage,InstitutionPerPage,handlePageChange,displayedInstitution,totalPage,loading}
     },
 })
 </script>

@@ -1,6 +1,9 @@
 import { post, get } from "./api";
-export function claimPortal(url){
-    return get('/user/relateOpenalex/?openalexId='+url);
+export function claimPortal(url,text){
+    var param = {}
+    param.openalexId = url
+    param.text = text
+    return get('/user/relateOpenalex',param)
 }
 export function getAuthorInfo(uid){
     console.log(uid)

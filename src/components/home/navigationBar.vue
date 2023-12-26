@@ -4,7 +4,7 @@
             <el-image :src="require('@/assets/home/logo3.jpg')" style="height: 100%;" />
         </div>
         <div id="home" class="address" style="width: 5%;left: 20%;" @click="this.jumpToHome()">首页</div>
-        <div id="personPage" class="address" style="width: 7%;left: 25%;" @click="this.jumpToPerson()">个人主页</div>
+        <div id="person" class="address" style="width: 7%;left: 25%;" @click="this.jumpToPerson()">个人主页</div>
         <div id="findDoor" class="address" style="width: 7%;left: 32%;" @click="this.jumpToFindDoor()">查找门户</div>
         <div v-if="!this.$store.state.isHome" class="searchBlock">
             <searchBox width=100 color="white" :isClassVisible=false  :isLargeModel = false></searchBox>
@@ -22,7 +22,7 @@
 import LoinAndRegister from '@/components/user/LoinAndRegister.vue';
 import Loggedin from '../user/Loggedin.vue';
 import searchBox from '../searchBox.vue';
-import store from '@/store';
+import router from '@/router';
 
 export default {
     props:{
@@ -38,7 +38,8 @@ export default {
     },
     data(){
         return{
-            idList:["home","personPage"]
+            idList:["home","person","findDoor"],
+            currentPage: 0,
         }
     },
     methods:{
@@ -47,8 +48,8 @@ export default {
                 var tmp=document.getElementById(this.idList[i]);
                 tmp.className="address";
             }
-            if(this.page!=0){
-                var tmp=document.getElementById(this.idList[this.page-1]);
+            if(this.currentPage!=0){
+                var tmp=document.getElementById(this.idList[this.currentPage-1]);
                 tmp.className="choose";
             }
         },
@@ -63,7 +64,30 @@ export default {
         }
     },
     mounted(){
+        var path=this.$route.path;
+        if(path==="/"){
+           this.currentPage=1;
+        } else if(path==="/person"){
+            this.currentPage=2;
+        } else if(path==="/findDoor"){
+            this.currentPage=3;
+        } else{
+            this.currentPage=0;
+        }
         this.setPage();
+        router.beforeEach((to, from, next) => {
+            if(to.path==="/"){
+                this.currentPage=1;
+            } else if(to.path==="/person"){
+                this.currentPage=2;
+            } else if(to.path==="/findDoor"){
+                this.currentPage=3;
+            } else{
+                this.currentPage=0;
+            }
+            this.setPage();
+            next();
+        })
     }
 }
 

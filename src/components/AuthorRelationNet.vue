@@ -28,8 +28,6 @@ import { GetAuthorsByAuthor } from "../api/authorRelation.js"
       }
     },
     mounted(){
-      console.log(this.authors)
-      console.log(this.name)
       for(let item of this.authors){
         if(item.name!=this.name){ 
           this.data.push({

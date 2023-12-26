@@ -185,7 +185,7 @@ import store from '@/store';
   }
 </script>
   
-<style>
+<style scoped>
 .chart-container {
   margin: auto;
   display: block;

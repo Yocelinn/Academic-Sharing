@@ -72,7 +72,6 @@ export default {
                 });
                 return ;
             }
-            console.log(this.item)
             var promise = claimPortal(this.item.uid, this.textarea);
             promise.then((result) => {
                 if (result.code == 1022) {
@@ -87,7 +86,7 @@ export default {
                 else if (result.code == 200) {
                     {
                         ElNotification({
-                            message: "认领成功",
+                            message: "发送成功，等待审核",
                             type: 'success',
                             showClose: true,
                             position: 'top-right',
@@ -95,7 +94,6 @@ export default {
                         });
                     }
                 }
-                console.log(result);
             })
         },
     },

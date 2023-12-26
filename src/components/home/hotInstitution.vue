@@ -7,7 +7,7 @@
                 <div class="moreInstitution">更多<el-icon style="position: absolute;height: 100%;width: 100%;top: -15%;right: -5px;"><Right /></el-icon></div>
             </div>
             <div class="body">
-                <div v-for="i in institutionList.length" class="institutionItem">
+                <div v-for="i in institutionList.length" class="institutionItem" @click="this.jumpToInstitution(this.institutionList[i-1].id)">
                     <el-text size="large" truncated style="position: relative; top: 30%;">{{ this.institutionList[i-1].displayName }}</el-text>
                 </div>
             </div>
@@ -31,7 +31,10 @@ export default{
     methods:{
         jumpToInstitutions(){
             this.$router.push('/allInstitution');
-        }
+        },
+        jumpToInstitution(thisId){
+            this.$router.push({name:'institution', query:{id : thisId} });
+        },
     },
     mounted(){
         var promise=GetInstitutionsForMainPage();
@@ -39,7 +42,6 @@ export default{
             for(var i=0;i<5;i++){
                 this.institutionList.push(result.results[i]);
             }
-            console.log(this.institutionList);
         })
     }
 }

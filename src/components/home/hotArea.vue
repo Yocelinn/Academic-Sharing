@@ -4,7 +4,15 @@
     </div>
     <!-- <button class="typeButton" @click="this.switchShowType()">{{ this.typeString }}</button> -->
     <div v-show="this.showType==='barGraph'" class="barGraph">
-        <div id="bar"></div>
+        <div id="bar">
+            <div v-for="i in this.hotAreaList.length" class="barBlock" :id="`bar`+i" :style="`left: `+((i-1)*10+2.5)+`%;`">
+                <el-tooltip effect="dark" :content="this.hotAreaList[i-1].name" placement="left">
+                    <div class="barItem"></div>
+                </el-tooltip>
+                <div class="barCount">{{ this.hotAreaList[i-1].count }}</div>
+                <el-text class="barTitle" truncated>{{ this.hotAreaList[i-1].name }}</el-text>
+            </div>
+        </div>
     </div>
     <div v-show="this.showType==='pieChart'" class="pieChart">
 
@@ -45,7 +53,9 @@ export default{
                     }
                     if(this.showType==="barGraph"){
                         this.typeString="扇形图展示";
-                        this.loadBar();
+                        setTimeout(() => {
+                            this.loadBar();
+                        }, 1000)
                     } else{
                         this.typeString="柱状图展示";
                         this.loadPie();
@@ -54,7 +64,7 @@ export default{
             })
         },
         loadBar(){
-            var barGraph=document.getElementById("bar");
+            // var barGraph=document.getElementById("bar");
             var barList=[];
             var maxCount=0;
             for(var i=0;i<10;i++){
@@ -63,37 +73,42 @@ export default{
                 }
             }
             for(var i=1;i<=10;i++){
-                barList.push(document.createElement("div"));
-                barList[i-1].id="bar"+i;
-                barList[i-1].style.position="absolute";
+                barList.push(document.getElementById("bar"+i));
                 barList[i-1].style.left=((i-1)*10+2.5)+"%";
-                barList[i-1].style.bottom="0%";
                 this.heightList[i-1]=this.hotAreaList[i-1].count/maxCount*75;
-                barList[i-1].style.height="0%";
-                barList[i-1].style.width="5%";
-                barList[i-1].style.backgroundColor="#68b0ab";
-                barList[i-1].style.textAlign='center';
-                var number=document.createElement("div");
-                number.textContent=this.hotAreaList[i-1].count;
-                number.style.position="absolute";
-                number.style.top="-20px";
-                number.style.fontSize="14px";
-                number.style.fontStyle="italic";
-                number.style.width="100%"
-                barList[i-1].appendChild(number);
-                var name=document.createElement("div");
-                name.textContent=this.hotAreaList[i-1].name.substring(0, 6);
-                if(this.hotAreaList[i-1].name.length>6) name.textContent+="...";
-                name.style.position="absolute";
-                name.style.bottom="-20px";
-                name.style.fontSize="14px";
-                name.style.fontStyle="italic";
-                name.style.width="100%";
-                barList[i-1].appendChild(name);
             }
-            for(var i=0;i<10;i++){
-                barGraph.appendChild(barList[i]);
-            }
+            // for(var i=1;i<=10;i++){
+            //     barList.push(document.createElement("div"));
+            //     barList[i-1].id="bar"+i;
+            //     barList[i-1].style.position="absolute";
+            //     barList[i-1].style.left=((i-1)*10+2.5)+"%";
+            //     barList[i-1].style.bottom="0%";
+            //     this.heightList[i-1]=this.hotAreaList[i-1].count/maxCount*75;
+            //     barList[i-1].style.height="0%";
+            //     barList[i-1].style.width="5%";
+            //     barList[i-1].style.backgroundColor="#68b0ab";
+            //     barList[i-1].style.textAlign='center';
+            //     var number=document.createElement("div");
+            //     number.textContent=this.hotAreaList[i-1].count;
+            //     number.style.position="absolute";
+            //     number.style.top="-20px";
+            //     number.style.fontSize="14px";
+            //     number.style.fontStyle="italic";
+            //     number.style.width="100%"
+            //     barList[i-1].appendChild(number);
+            //     var name=document.createElement("div");
+            //     name.textContent=this.hotAreaList[i-1].name.substring(0, 6);
+            //     if(this.hotAreaList[i-1].name.length>6) name.textContent+="...";
+            //     name.style.position="absolute";
+            //     name.style.bottom="-20px";
+            //     name.style.fontSize="14px";
+            //     name.style.fontStyle="italic";
+            //     name.style.width="100%";
+            //     barList[i-1].appendChild(name);
+            // }
+            // for(var i=0;i<10;i++){
+            //     barGraph.appendChild(barList[i]);
+            // }
             this.drawOfBar();
         },
         drawOfBar(){
@@ -189,5 +204,33 @@ export default{
     width: 100%;
     height: 80%;
 }
-
+.barBlock{
+    position: absolute;
+    width: 5%;
+    bottom: 0%;
+}
+.barItem{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0%;
+    top: 0%;
+    background-color: #68b0ab;
+    text-align: center;
+}
+.barTitle{
+    position: absolute;
+    bottom: -20px;
+    left: 0%;
+    font-size: 14px;
+    font-style: italic;
+    width: 100%;
+}
+.barCount{
+    position: absolute;
+    top: -20px;
+    font-size: 14px;
+    font-style: italic;
+    width: 100%;
+}
 </style>

@@ -141,6 +141,11 @@ const excludedRoute2 = '/patent/detail/:patentId?';
 const excludedRoute3 = '/program/detail/:funderId?';
 const excludedRoute4 = '/manage'
 router.beforeEach((to, from, next) => {
+  if(to.path==="/"){
+    store.commit('isHome', true);
+  } else{
+    store.commit('isHome', false);
+  }
   const isExcluded = match(excludedRoute)(to.path);
   const isExcluded2 = match(excludedRoute2)(to.path);
   const isExcluded3 = match(excludedRoute3)(to.path);

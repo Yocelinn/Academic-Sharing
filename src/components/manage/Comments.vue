@@ -248,7 +248,6 @@ export default {
       if(s.ischeck === 1){
         this.handleVisible = true
         this.handleForm.id = s.id
-        // console.log(this.handleForm.id)
         for(var comment of this.commentList){
           if(comment.id === this.handleForm.id){
             comment.ischeck = 2
@@ -363,7 +362,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-text{
   text-align: left;
 }

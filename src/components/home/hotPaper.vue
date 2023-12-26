@@ -26,19 +26,23 @@
             <div class="rightLine"></div>
             <div class="middle"></div>
             <div class="left">
-                <div v-for="i in this.leftPapers.length" class="paperItem">
+                <div v-for="i in this.leftPapers.length" class="paperItem" @click="this.jump(this.leftPapers[i-1].id)">
                     <div style="position: relative;width: 100%;height: 65%;top: 20%;">
-                        <el-text size="large" truncated style="width: 100%;font-size: 16px;font-weight: 800;" @click="this.jump(this.leftPapers[i-1].id)">{{ this.leftPapers[i-1].name }}</el-text>
+                        <el-text size="large" truncated style="width: 100%;font-size: 16px;font-weight: 800;">{{ this.leftPapers[i-1].name }}</el-text>
                     </div>
-                    
+                    <div style="position: relative;width: 100%;height: 35%;top: 0%;">
+                        <el-text size="small" truncated style="width: 100%;font-size: 12px;font-weight: 400;">{{ this.leftPapers[i-1].author }}</el-text>
+                    </div>
                 </div>
             </div>
             <div class="right">
-                <div v-for="i in this.rightPapers.length" class="paperItem">
+                <div v-for="i in this.rightPapers.length" class="paperItem" @click="this.jump(this.leftPapers[i-1].id)">
                     <div style="position: relative;width: 100%;height: 65%;top: 20%;">
-                        <el-text size="large" truncated style="width: 100%;font-size: 16px;font-weight: 800;" @click="this.jump(this.leftPapers[i-1].id)">{{ this.rightPapers[i-1].name }}</el-text>
+                        <el-text size="large" truncated style="width: 100%;font-size: 16px;font-weight: 800;">{{ this.rightPapers[i-1].name }}</el-text>
                     </div>
-                    
+                    <div style="position: relative;width: 100%;height: 35%;top: 0%;">
+                        <el-text size="small" truncated style="width: 100%;font-size: 12px;font-weight: 400;">{{ this.rightPapers[i-1].author }}</el-text>
+                    </div>
                 </div>
             </div>
         </el-card>
@@ -68,10 +72,10 @@ export default{
         promise.then((result) => {
             if(result.code==200){
                 for(var i=0;i<4;i++){
-                    this.leftPapers.push({"name":result.data[i].name, "author": "", "id": result.data[i].id});
+                    this.leftPapers.push({"name":result.data[i].name, "author": result.data[i].author, "id": result.data[i].id});
                 }
                 for(var i=4;i<8;i++){
-                    this.rightPapers.push({"name":result.data[i].name, "author": "", "id": result.data[i].id});
+                    this.rightPapers.push({"name":result.data[i].name, "author": result.data[i].author, "id": result.data[i].id});
                 }
             }
         })
