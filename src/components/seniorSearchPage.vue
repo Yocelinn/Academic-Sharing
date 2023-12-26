@@ -551,7 +551,6 @@ export default {
       })
     },
     test() {
-      console.log(this.updateTime);
     },
     mouseOver() {
       var ele = document.querySelector(".documentClassLable");

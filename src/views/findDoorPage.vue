@@ -211,7 +211,6 @@ export default {
       this.pos = index;
       var array = Array.from(document.querySelectorAll(".class"));
       for (var i = 0; i < array.length; i++) {
-        console.log(array[i]);
         array[i].style.color = "#909399";
         array[i].style.borderBottomStyle = "none";
       }
@@ -221,7 +220,6 @@ export default {
       array[index].style.borderBottomWidth = "2px"
     },
     test() {
-      console.log(this.jsonData)
     },
     removeObject() {
       this.object = ""
@@ -239,13 +237,10 @@ export default {
       var promise = searchPortal(this.searchInput1, this.searchInput2)
       promise.then((result) => {
         this.jsonData = result.data
-        console.log(this.jsonData)
         for (var i = 0; i < this.jsonData.length; i++) {
           var temp = [];
           var num = (this.jsonData[i].interests.length < 5) ? this.jsonData[i].interests.length : 5;
-          console.log(num)
           for (var j = 0; j < num; j++) {
-            console.log("test")
             temp.push(this.jsonData[i].interests[j])
           }
           this.jsonData[i].interests = temp
@@ -257,12 +252,10 @@ export default {
       this.isDialoVisibal = true;
       this.nowPerson = item;
       this.nowPerson.uid = item.id
-      console.log(this.isDialoVisibal)
     },
   },
   mounted() {
     this.isLoading = false
-    console.log(this.isLoading)
   },
 }
 </script>

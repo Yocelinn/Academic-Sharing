@@ -282,7 +282,6 @@ export default {
     },
     methods: {
         mouseOverToChangeColor(id) {
-            console.log(id)
             var ele = document.querySelector("#" + id)
             ele.style.color = "#409EFF"
         },
@@ -300,22 +299,16 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$route.query.query)
         this.uid = this.$route.query.query
-        console.log(this.uid);
         var promise = getAuthorInfo(this.uid);
         promise.then((result) => {
-            console.log(result)
             if (result.code == 1008) {
                 this.authorIsExit = false;
                 return;
             }
             else {
-                console.log(result);
-
                 this.authorData = result.data;
                 this.detailField = this.authorData.interests
-                console.log(this.authorData)
                 this.authorName = result.data.name
                 this.messageList = this.authorData.myWorkDisArrayList
                 this.sameNamePerson = this.authorData.names
@@ -323,7 +316,6 @@ export default {
             var promise1 = GetAuthorsByAuthor(this.uid)
             promise1.then((result1) => {
                 this.relatePerson = result1.data
-                console.log(this.relatePerson)
                 this.isLoading = false;
             })
 

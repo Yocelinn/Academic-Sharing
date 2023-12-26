@@ -501,9 +501,6 @@ export default {
       else if (this.$store.state.searchType === "books")
         this.radio1 = 5;
     }
-    
-    console.log(this.radio1)
-    console.log(this.titleList)
   },
   methods: {
     mouseOverToChangeSeniorColor(id) {
@@ -518,7 +515,6 @@ export default {
       this.radio = 10;
     },
     test() {
-      console.log(isClassVisible);
 
     },
     updateQuery(value) {
@@ -526,7 +522,6 @@ export default {
       this.$emit('update:searchQuery', value);
     },
     emitSearch() {
-      console.log(this.localQuery)
       if (this.localQuery == "") {
         return;
       }
@@ -540,8 +535,6 @@ export default {
       var a = map.get(this.radio1);
       this.$emit('search', { query: this.localQuery, option: this.titleList[this.radio1], class: a });
       var query = this.localQuery;
-      console.log(query)
-      console.log(this.titleList[this.radio1])
       var content = this.titleList[this.radio1];
       //path: '/searchResults/:query?/:type?/:content?',
       this.$router.push({
