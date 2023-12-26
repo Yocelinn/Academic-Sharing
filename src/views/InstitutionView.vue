@@ -92,7 +92,6 @@
         <el-backtop :right="100" :bottom="100" />
       </el-main>
     </el-container>
-    <el-footer></el-footer>
   </div>
 </template>
 
@@ -178,7 +177,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .outer {
     width: 100%;
     background-image: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
