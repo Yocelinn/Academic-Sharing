@@ -12,7 +12,7 @@
                  </div>
                 <div class="date">
                   <span class="alias-info">日期: </span>
-                  {{ paper.date.split('T')[0] }}
+                  <span v-html="paper.date.split('T')[0]">  </span>
                   <!-- {{ }} -->
                 </div>
                 <div class="keywords" v-if="paper.keywords&&paper.keywords.length!=0">
@@ -24,13 +24,13 @@
                 </div>
                 <div class="abstract-container" :id="`abstract-container_${paper.id}`" >
                    <div class="abstract" :style="{'-webkit-line-clamp': displayAll?'3':'100'}">
-                    <span class="alias-info">摘要: </span>
+                    <span class="alias-info" v-if="paper.abstracts">摘要: </span>
                     <span v-html="paper.abstracts"></span>
                      
                     </div>
                    
                 </div>
-                <div class="button-block">
+                <div class="button-block" v-if="paper.abstracts">
                   <button class="expand-button" @click="toggleText(paper.id)">
                       <el-icon v-if="displayAll"><ArrowDown /></el-icon>
                       <el-icon v-else><ArrowUp /></el-icon>{{displayAll?'显示全部':'收起'}}
