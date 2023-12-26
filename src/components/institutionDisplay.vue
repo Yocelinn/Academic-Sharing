@@ -39,7 +39,7 @@ export default defineComponent({
 <style scoped>
 .recommend-display{
   margin:50px;
-  margin-bottom:30px;
+  margin-bottom:0px;
   display: flex;
   padding: 10px;
   flex-direction:row;

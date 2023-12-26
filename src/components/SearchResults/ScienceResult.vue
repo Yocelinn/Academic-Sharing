@@ -5,19 +5,19 @@
             <div class="result">
                 <div class="info">
                 <div class="title"><span v-html="paper.title"> </span></div>
-                <div class="authors" v-if="paper.author">
+                <div class="authors" v-if="paper.author&&paper.author.length!=0">
                     <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon>
-                    {{ paper.author.join(', ') }}
+                    <span v-html="paper.author.join(', ')" ></span> 
                 </div>
                 <div class="abstract" v-if="paper.institution">
                   
                   <!-- <el-icon color=var(--primary-color) class="author-icon"><UserFilled /></el-icon> -->
-                  <span class="alias-info">发布机构: </span>
-                    {{ paper.institution.join(' ') }}
+                  <span class="alias-info" v-if="paper.institution&&paper.institution.length!=0">发布机构: </span>
+                    <span v-html="paper.institution.join(' ')"> </span>
                 
                 </div>
-                <div class="date">
-                  <span class="alias-info">发布日期: </span> {{ paper.date }}
+                <div class="date" v-if="paper.date">
+                  <span class="alias-info">发布日期: </span> <span v-html="paper.date"></span>
                 </div>
                 <div class="keywords" v-if="paper.keywords">
                   <span class="alias-info">关键词: </span>
@@ -27,12 +27,12 @@
                      &nbsp;
                 </div>
                 <div class="abstract-container" :id="`abstract-container_${paper.id}`">
-                   <div class="abstract">
+                   <div class="abstract" v-if="paper.abstracts">
                     <span class="alias-info">摘要: </span><span v-html="paper.abstracts"></span>  
                     </div>
                    
                 </div>
-                <div class="button-block">
+                <div class="button-block" v-if="paper.abstracts">
                   <button class="expand-button" @click="toggleText(paper.id)">
                       <el-icon v-if="displayAll"><ArrowDown /></el-icon>
                       <el-icon v-else><ArrowUp /></el-icon>{{displayAll?'显示全部':'收起'}}

@@ -13,17 +13,17 @@
                 <!-- {{ paper.inventors.join(', ') }} -->
               </div>
               <div class="date">
-                <span class="alias-info">申请日:</span> {{ paper.apply_date }}
-                <span class="alias-info"> 申请号:</span> {{ paper.apply_number }}
+                <span class="alias-info" v-if="paper.apply_date">申请日:</span> <span v-html="paper.apply_date"> </span>
+                <span class="alias-info" v-if="paper.apply_number"> 申请号:</span>  <span v-html="paper.apply_number"> </span>
               </div>
              
               <div class="abstract-container" :id="`abstract-container_${paper.id}`">
-                 <div class="abstract">
+                 <div class="abstract" v-if="paper.abstracts">
                   <span class="alias-info">摘要:</span><span v-html="paper.abstracts"></span>
                   </div>
                  
               </div>
-              <div class="button-block">
+              <div class="button-block" v-if="paper.abstracts">
                 <button class="expand-button" @click="toggleText(paper.id)">
                     <el-icon v-if="displayAll"><ArrowDown /></el-icon>
                     <el-icon v-else><ArrowUp /></el-icon>{{displayAll?'显示全部':'收起'}}

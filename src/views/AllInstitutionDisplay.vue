@@ -99,6 +99,8 @@ export default defineComponent({
 .pagination{
     display: flex;
     justify-content: center;
+    margin-bottom:10px;
+
 }
 </style>
   

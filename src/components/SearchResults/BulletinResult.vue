@@ -4,14 +4,14 @@
         <el-card type="primary" class="card" shadow="hover"> 
             <div class="result">
                 <div class="info">
-                <div class="title">{{ paper.title }}</div>
-                <div class="authors" v-if="paper.sponsor">
+                <div class="title" v-if="paper.title"><span v-html=" paper.title"></span></div>
+                <div class="authors" v-if="paper.sponsor&&paper.sponsor.length!=0">
                   <span class="alias-info">主办单位: </span>
-                  {{ paper.sponsor.join(', ') }}
+                  <span v-html=" paper.sponsor.join(', ') "></span>
                 </div>
-                <div class="authors">
+                <div class="authors" v-if="paper.subject">
                   <span class="alias-info">领域: </span>
-                  {{ paper.subject.join(', ')}}
+                  <span v-html="paper.subject.join(', ')"></span>
                 </div>
                 <!-- <div class="authors">
                   
