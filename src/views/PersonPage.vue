@@ -218,7 +218,7 @@ export default {
         }
         username.value = response.data.nick_name;
         email.value = response.data.email;
-        if(response.data.person_description.length!=0){
+        if(response.data.person_description!==null){
         persondescription.value = response.data.person_description;
         }
         else{
